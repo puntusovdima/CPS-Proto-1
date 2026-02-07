@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
+    [Header("Ambiance Music Clips")]
+    [SerializeField] private AudioClip safeZoneMusic;
+    [SerializeField] private AudioClip puzzleZoneMusic;
+    [SerializeField] private AudioClip battleZoneMusic;
+    
     public static SoundManager Instance;
 
     private AudioSource _source;
@@ -52,5 +57,24 @@ public class SoundManager : MonoBehaviour
         SetAudioSource(source);
         _source.pitch = Random.Range(0.5f, 1.5f);
         _source.PlayOneShot(clip);
+    }
+
+    public void SetMusic(ZoneTypeEnum zone)
+    {
+        switch (zone)
+        {
+            case ZoneTypeEnum.Safe:
+                _source.clip = safeZoneMusic;
+                break;
+            case ZoneTypeEnum.Puzzle:
+                _source.clip = puzzleZoneMusic;
+                break;
+            case ZoneTypeEnum.Battle:
+                _source.clip = battleZoneMusic;
+                break;
+            default:
+                Debug.LogError("ERROR: ZoneType not recognized in SoundManager SetMusic");
+                break;
+        }
     }
 }
