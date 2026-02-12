@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour
 {
-    public static PlayerController Instance { get; private set; }
+    public static PlayerController Instance { get; private set; }// For the enemys.
 
     [Header("SPEED SETTINGS")]
     [Range(0f, 10f)] [SerializeField] private float normalMovementSpeed = 5f;
@@ -14,17 +14,21 @@ public class PlayerController : MonoBehaviour
     [Header("CROUCH SETTINGS")]
     [Range(0f, 10f)] [SerializeField] private float crouchSpeed = 10f;
 
+    [Header("JUMP SETTINGS")]
+    [Range(0f, 10f)][SerializeField] private float normalJumpForce = 5f;
+    [Range(0f, 10f)][SerializeField] private float runJumpForce = 8f;
+    [SerializeField] private bool _playerIsGrounded = true;
+
     [Header("ROTATION SETTINGS")]
     [Range(0f, 10f)] [SerializeField] private float rotationSpeed = 5f;
 
-    // RESPAWN -> only if is needed.
-        /*
-        [Header("REESPAWN SETTINGS")]
-        [SerializeField] private Transform RP;
-        [SerializeField] Animator fadeAnimation;
-        */
+    // RESPAWN SETTINGS
+    [Header("RESPAWN SETTINGS")]
+    [SerializeField] private Transform respawnPoint;
+    
     private Vector2 _currentInput;
     private Vector3 _velocity;
+    private float _verticalVelocity;
     private CharacterController _characterController;
     private Camera _camera;
     private Animator _animator;
@@ -32,10 +36,9 @@ public class PlayerController : MonoBehaviour
     private float gravity = 9.81f;
     public bool screenPaused;
     private bool _isRunning = false;
-    private bool _wasRunning = false;
-    private bool _wasWalking = false;
+    //private bool _wasRunning = false;
+   // private bool _wasWalking = false;
     public bool _isCrouching = false;
-
     private static readonly int Speed = Animator.StringToHash("Speed");
 
     private void Start()
@@ -51,12 +54,28 @@ public class PlayerController : MonoBehaviour
         InputManager.Instance.RunCanceled += RunOnCanceled;
         InputManager.Instance.CrouchPerformed += CrouchOnPerformed;
         InputManager.Instance.CrouchOnCanceled += CrouchOnCanceled;
+        InputManager.Instance.JumpPerformed += JumpOnPerformed;
         _currentSpeed = normalMovementSpeed;
+    }
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Update()
     {
         UpdateMovement();
+        UpdateVerticalVelocity();
         ApplyTotalVelocity();
     }
 
@@ -95,11 +114,11 @@ public class PlayerController : MonoBehaviour
         if (screenPaused) {
             return;
         }
-       _currentInput = InputManager.Instance.GetMovementInput();
+        _currentInput = InputManager.Instance.GetMovementInput();
 
             // Direcction.
-            Vector3 forward = new Vector3(1, 0, 1).normalized;
-            Vector3 right = new Vector3(1, 0, -1).normalized;
+            Vector3 forward = Vector3.forward;
+            Vector3 right =Vector3.right;
 
             Vector3 desiredMove = right * _currentInput.x + forward * _currentInput.y;
             desiredMove.y = 0f;
@@ -132,15 +151,34 @@ public class PlayerController : MonoBehaviour
             {
                 _animator.SetFloat(Speed, _currentInput.magnitude);
             }
+
+            // Ground detection -> with raycast
+            Vector3 rayOriginPoint = transform.position + Vector3.up * 0.2f;
+
+            // Raycast -> ground.
+            bool raycastHitToTheGround = Physics.Raycast(rayOriginPoint, Vector3.down, 2.0f);
+            _playerIsGrounded = raycastHitToTheGround;
+            
+            if(_playerIsGrounded && _verticalVelocity <= 0)
+            {
+                _verticalVelocity = -2f;
+            }
         }
         
     public void setPause(bool p) => screenPaused = p;
     private void ApplyTotalVelocity()
     {
-        _characterController.SimpleMove(_velocity);
+        _characterController.Move(_velocity * Time.deltaTime);
     }
         private void RunOnPerformed()
         {
+
+            // PLAYER MUSTN'T SPRINT IN THE MID AIR.
+            if(!_playerIsGrounded) {
+                
+                return;
+            }
+
             _isRunning = true;
             _currentSpeed = runSpeed;
         }
@@ -150,7 +188,14 @@ public class PlayerController : MonoBehaviour
             _isRunning = false;
             _currentSpeed = normalMovementSpeed;
         }
-
+        private void JumpOnPerformed(){
+            if(_playerIsGrounded){
+                // If player is running -> runjumpforce || if player is walking -> normaljumpforce.
+                float jumpForceA = _isRunning ? runJumpForce : normalJumpForce;
+                _verticalVelocity = jumpForceA;
+                _playerIsGrounded = false;
+            }
+        }
         private void CrouchOnPerformed()
         {
             _isCrouching = true;
@@ -181,5 +226,41 @@ public class PlayerController : MonoBehaviour
         {
             playerOnSight = true;
             return transform;
+        }
+
+        
+        // For the "respawn" of the player.
+        public void RespawnCoroutine()
+        {
+            StartCoroutine(RespawnSystem());
+        }
+
+        private IEnumerator RespawnSystem()
+        {
+            yield return new WaitForSecondsRealtime(0.5f);
+            Time.timeScale = 0f;
+
+            if (respawnPoint != null)
+            {
+                transform.position = respawnPoint.position;
+            }
+
+            // RESET OF THE MOVEMENT.
+            _characterController.enabled = false;
+            _velocity = Vector3.zero;
+            _verticalVelocity = 0f;
+            _characterController.enabled = true;
+
+            yield return new WaitForSecondsRealtime(1f);
+            Time.timeScale = 1f;
+        }
+
+        private void UpdateVerticalVelocity()
+        {
+            if (!_playerIsGrounded)
+            {
+                _verticalVelocity -= gravity *Time.deltaTime;
+            }
+            _velocity.y = _verticalVelocity;
         }
 }
