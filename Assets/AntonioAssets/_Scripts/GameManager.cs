@@ -27,7 +27,17 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        if(_checkpointManager == null) _checkpointManager = CheckpointManager.Instance;
+        if(_checkpointManager == null) _checkpointManager = GetComponent<CheckpointManager>();
+    }
+    
+    public Transform GetCurrentCheckpointPosition()
+    {
+        return _checkpointManager.GetCurrentCheckpointPosition();
+    }
+    
+    public void IncreaseCheckpoint()
+    {
+        _checkpointManager.IncreaseCheckPoint();
     }
 
     public void ToggleHasCompanion()

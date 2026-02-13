@@ -2,23 +2,20 @@ using UnityEngine;
 
 public class CheckpointManager : MonoBehaviour
 {
-    [Header("Checkpoint References  ")] 
+    [Header("Checkpoint References")] 
     [SerializeField] private GameObject[] checkpoints;
-
-    public static CheckpointManager Instance;
     
     private int _currCheckpointIndex = 0;
-    
-    private void Awake()
+
+    /// <summary>
+    /// Deactivates all checkpointes except the first one at the start of the game,
+    /// so the player can respawn at the first checkpoint if they die before reaching any other checkpoint.
+    /// </summary>
+    private void Start()
     {
-        if (Instance == null)
+        for (var i = 0; i < checkpoints.Length; i++)
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
+            checkpoints[i].SetActive(i == _currCheckpointIndex);
         }
     }
 
