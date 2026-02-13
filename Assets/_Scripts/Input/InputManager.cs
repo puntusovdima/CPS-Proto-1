@@ -31,6 +31,7 @@ public class InputManager : MonoBehaviour
         _inputActions.Player.Crouch.canceled += OnCrouchCanceled;
         _inputActions.Player.Sprint.performed += OnRunPerformed;
         _inputActions.Player.Sprint.canceled += OnRunCanceled;
+        _inputActions.Player.Jump.performed += OnJumpPerformed;
         _inputActions.UI.Cancel.performed += OnUnPausePerformed;
         _inputActions.UI.Cancel.canceled += OnPausePerformed;
         
@@ -48,6 +49,7 @@ public class InputManager : MonoBehaviour
         _inputActions.Player.Crouch.canceled -= OnCrouchCanceled;
         _inputActions.Player.Sprint.performed -= OnRunPerformed;
         _inputActions.Player.Sprint.canceled -= OnRunCanceled;
+        _inputActions.Player.Jump.performed -= OnJumpPerformed;
         _inputActions.UI.Cancel.performed -= OnUnPausePerformed;
         _inputActions.UI.Cancel.canceled -= OnPausePerformed;
     }
@@ -69,6 +71,10 @@ public class InputManager : MonoBehaviour
     {
         UnPausePerformed?.Invoke();
         EnableUIInputs();
+    }
+
+    private void OnJumpPerformed(InputAction.CallbackContext ctx){
+        JumpPerformed?.Invoke();
     }
 
     public void EnablePlayerInputs()
