@@ -9,8 +9,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameStateEnum gameState;
     
     public static GameManager Instance;
-    
     private CheckpointManager _checkpointManager;
+    
+    private bool _hasCompletedPuzzle = false;
     
     private void Awake()
     {
@@ -43,5 +44,10 @@ public class GameManager : MonoBehaviour
     public void ToggleHasCompanion()
     {
         hasCompanion = !hasCompanion;
+    }
+    
+    public void ToggleHasCompletedPuzzle()
+    {
+        _hasCompletedPuzzle = !_hasCompletedPuzzle;
     }
 }

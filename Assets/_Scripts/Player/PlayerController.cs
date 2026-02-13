@@ -47,8 +47,8 @@ public class PlayerController : MonoBehaviour
         _animator = GetComponentInChildren<Animator>();
         _camera = Camera.main;
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = true;
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = true;
         
         InputManager.Instance.RunPerformed += RunOnPerformed;
         InputManager.Instance.RunCanceled += RunOnCanceled;
@@ -56,6 +56,8 @@ public class PlayerController : MonoBehaviour
         InputManager.Instance.CrouchOnCanceled += CrouchOnCanceled;
         InputManager.Instance.JumpPerformed += JumpOnPerformed;
         _currentSpeed = normalMovementSpeed;
+
+        respawnPoint = GameManager.Instance.GetCurrentCheckpointPosition();
     }
 
     private void Awake()
@@ -77,6 +79,7 @@ public class PlayerController : MonoBehaviour
         UpdateMovement();
         UpdateVerticalVelocity();
         ApplyTotalVelocity();
+        respawnPoint = GameManager.Instance.GetCurrentCheckpointPosition();
     }
 
     private void UpdateMovement()
