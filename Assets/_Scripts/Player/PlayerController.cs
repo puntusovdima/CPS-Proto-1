@@ -18,11 +18,11 @@ public class PlayerController : MonoBehaviour
     [Range(0f, 10f)] [SerializeField] private float rotationSpeed = 5f;
 
     // RESPAWN -> only if is needed.
-        /*
-        [Header("REESPAWN SETTINGS")]
-        [SerializeField] private Transform RP;
-        [SerializeField] Animator fadeAnimation;
-        */
+    /*
+    [Header("RESPAWN SETTINGS")]
+    [SerializeField] private Transform RP;
+    [SerializeField] Animator fadeAnimation;
+    */
     private Vector2 _currentInput;
     private Vector3 _velocity;
     private CharacterController _characterController;
