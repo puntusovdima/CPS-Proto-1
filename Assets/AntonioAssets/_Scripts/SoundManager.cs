@@ -3,14 +3,17 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
+    [Header("Ambiance Music Audio Source")]
+    [SerializeField] private AudioSource musicSource;
+    
     [Header("Ambiance Music Clips")]
     [SerializeField] private AudioClip safeZoneMusic;
     [SerializeField] private AudioClip puzzleZoneMusic;
     [SerializeField] private AudioClip battleZoneMusic;
     
-    public static SoundManager Instance;
-
     private AudioSource _source;
+    
+    public static SoundManager Instance;
     
     private void Awake()
     {
