@@ -32,6 +32,7 @@ public class InputManager : MonoBehaviour
         _inputActions.Player.Sprint.performed += OnRunPerformed;
         _inputActions.Player.Sprint.canceled += OnRunCanceled;
         _inputActions.Player.Jump.performed += OnJumpPerformed;
+        _inputActions.Player.Interact.performed += OnInteractPerformed;
         _inputActions.UI.Cancel.performed += OnUnPausePerformed;
         _inputActions.UI.Cancel.canceled += OnPausePerformed;
         
@@ -50,6 +51,7 @@ public class InputManager : MonoBehaviour
         _inputActions.Player.Sprint.performed -= OnRunPerformed;
         _inputActions.Player.Sprint.canceled -= OnRunCanceled;
         _inputActions.Player.Jump.performed -= OnJumpPerformed;
+        _inputActions.Player.Interact.performed -= OnInteractPerformed;
         _inputActions.UI.Cancel.performed -= OnUnPausePerformed;
         _inputActions.UI.Cancel.canceled -= OnPausePerformed;
     }
@@ -77,6 +79,12 @@ public class InputManager : MonoBehaviour
         JumpPerformed?.Invoke();
     }
 
+    private void OnInteractPerformed(InputAction.CallbackContext ctx){
+        Debug.Log("[INPUT] E presionado - PickUpPerformed");
+
+        PickUpPerformed?.Invoke();
+    }
+
     public void EnablePlayerInputs()
     {
         DisableAllInputs();
@@ -90,6 +98,19 @@ public class InputManager : MonoBehaviour
     public void DisableAllInputs()
     {
         _inputActions.Disable();
+    }
+
+    public void DisablePuzzleInputs()
+    {
+        _inputActions.Player.Move.Disable();
+        _inputActions.Player.Jump.Disable();
+        _inputActions.Player.Sprint.Disable();
+        _inputActions.Player.Crouch.Disable();
+    }
+    
+    public void EnablePuzzleInputs()
+    {
+        _inputActions.Player.Enable();
     }
 
     // Movement.
