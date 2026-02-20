@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class GearSlotPuzzle : MonoBehaviour
 {
-
     [Header("GEARS SLOTS SETTINGS")]
     [SerializeField] private float snapDistance = 0.5f;
     [SerializeField] private float snapSpeed = 5f;
@@ -14,10 +13,19 @@ public class GearSlotPuzzle : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         GearDragSystem gear = other.GetComponent<GearDragSystem>();
+        
+        if (gear == null)
+            gear = other.GetComponentInParent<GearDragSystem>();
+        
         if (gear != null && !gear.IsDragging() && !isOccupied)
         {
+            // Until snap -> verified.
+            ChainGear chainGear = gear.GetChainGear();
+            if (chainGear == null || chainGear.teeth != requiredTeeth){
+                return;
+            }
+            
             gear.transform.position = Vector3.Lerp(gear.transform.position, transform.position, Time.deltaTime * snapSpeed);
-
             if (Vector3.Distance(gear.transform.position, transform.position) < snapDistance)
             {
                 PlaceGear(gear);
@@ -29,9 +37,14 @@ public class GearSlotPuzzle : MonoBehaviour
     {
         ChainGear chainGear = gear.GetChainGear();
         
+        if (chainGear == null)
+        {
+            return;
+        }
+        
         if (chainGear.teeth != requiredTeeth)
         {
-            Debug.LogWarning("¡Gear incorrecto! Este slot requiere " + requiredTeeth + " dientes.");
+            Debug.Log("Ese gear no tieene los dientes correspondientes");
             return;
         }
 
@@ -40,13 +53,18 @@ public class GearSlotPuzzle : MonoBehaviour
         gear.transform.position = transform.position;
         gear.SetCurrentSlot(this);
 
-        if (chainGear != null && inputGearForThisSlot != null)
+        if (inputGearForThisSlot != null)
         {
             chainGear.inputGear = inputGearForThisSlot;
             inputGearForThisSlot.RegisterFollower(chainGear);
         }
 
-        PuzzleManager.Instance.OnGearPlaced(this, gear);
+        Debug.Log("Gear colocado correctamente en slot");
+        
+        if (PuzzleManager.Instance != null)
+        {
+            PuzzleManager.Instance.OnGearPlaced(this, gear);
+        }
     }
 
     public bool IsOccupied() => isOccupied;

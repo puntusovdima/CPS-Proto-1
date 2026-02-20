@@ -32,7 +32,7 @@ public class InputManager : MonoBehaviour
         _inputActions.Player.Sprint.performed += OnRunPerformed;
         _inputActions.Player.Sprint.canceled += OnRunCanceled;
         _inputActions.Player.Jump.performed += OnJumpPerformed;
-        _inputActions.Player.Interact.performed += OnInteractPerformed;
+        _inputActions.Player.Interact.started += OnInteractPerformed;
         _inputActions.UI.Cancel.performed += OnUnPausePerformed;
         _inputActions.UI.Cancel.canceled += OnPausePerformed;
         
@@ -51,7 +51,7 @@ public class InputManager : MonoBehaviour
         _inputActions.Player.Sprint.performed -= OnRunPerformed;
         _inputActions.Player.Sprint.canceled -= OnRunCanceled;
         _inputActions.Player.Jump.performed -= OnJumpPerformed;
-        _inputActions.Player.Interact.performed -= OnInteractPerformed;
+        _inputActions.Player.Interact.started -= OnInteractPerformed;
         _inputActions.UI.Cancel.performed -= OnUnPausePerformed;
         _inputActions.UI.Cancel.canceled -= OnPausePerformed;
     }
@@ -80,8 +80,6 @@ public class InputManager : MonoBehaviour
     }
 
     private void OnInteractPerformed(InputAction.CallbackContext ctx){
-        Debug.Log("[INPUT] E presionado - PickUpPerformed");
-
         PickUpPerformed?.Invoke();
     }
 
