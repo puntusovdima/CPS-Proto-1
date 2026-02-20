@@ -246,6 +246,7 @@ public class PlayerController : MonoBehaviour
             if (respawnPoint != null)
             {
                 transform.position = respawnPoint.position;
+                transform.rotation = respawnPoint.rotation;
             }
 
             // RESET OF THE MOVEMENT.

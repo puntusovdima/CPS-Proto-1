@@ -24,10 +24,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    private void Start()
-    {
+        
         if(_checkpointManager == null) _checkpointManager = GetComponent<CheckpointManager>();
     }
     
