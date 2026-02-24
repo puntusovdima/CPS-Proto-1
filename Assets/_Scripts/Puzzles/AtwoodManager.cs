@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AtwoodManager : MonoBehaviour
 {
-    [Header("System References")] 
+    /*[Header("System References")] 
     public MassRegulator leftMass;
     public MassRegulator rightMass;
     public Transform pulley;
@@ -91,5 +91,5 @@ public class AtwoodManager : MonoBehaviour
         // If your pulley is oriented differently in 3D, change this back to (0, rotationStep, 0)
         float rotationStep = (velocity * Time.fixedDeltaTime / pulleyCircumference) * 360f;
         pulley.Rotate(0, rotationStep, 0, Space.Self);
-    }
+    }*/
 }
