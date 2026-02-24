@@ -47,12 +47,23 @@ public class PlayerController : MonoBehaviour
    // private bool _wasWalking = false;
     public bool _isCrouching = false;
     private static readonly int Speed = Animator.StringToHash("Speed");
+    
+    private float normalHeight;
+    private float crouchHeight = 0.6f;
+    private Vector3 cameraNormalPos;
+    private float cameraCrouchOffset = -0.5f;
 
     private void Start()
     {
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponentInChildren<Animator>();
         _camera = Camera.main;
+        
+        normalHeight = _characterController.height;
+        if (_camera != null)
+        {
+            cameraNormalPos = _camera.transform.localPosition;
+        }
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = true;
@@ -211,26 +222,28 @@ public class PlayerController : MonoBehaviour
             _isCrouching = true;
             _isRunning = false;
             
-            /*
-            if (SoundManager.Instance != null && SoundManager.Instance.playerOneShotSounds != null)
+            // Reduce character controller height
+            _characterController.height = crouchHeight;
+            
+            // Lower camera
+            if (_camera != null)
             {
-                // PlayOneshot -> ony one time, no loop.
-                SoundManager.Instance.playerOneShotSounds.PlayOneShot(SoundManager.Instance.m_fxClips[(int)AudioFX.CrouchSound]);
+                _camera.transform.localPosition = cameraNormalPos + Vector3.up * cameraCrouchOffset;
             }
-            if (_animator != null){
-                _animator.SetBool(IsCrouching, true);
-            }
-            */
         }
 
         private void CrouchOnCanceled()
         {
             _isCrouching = false;
-            /*
-            if (_animator != null) {
-                _animator.SetBool(IsCrouching, false);
+            
+            // Restore character controller height
+            _characterController.height = normalHeight;
+            
+            // Restore camera position
+            if (_camera != null)
+            {
+                _camera.transform.localPosition = cameraNormalPos;
             }
-            */
         }
         public Transform GetTransform(out bool playerOnSight)
         {
