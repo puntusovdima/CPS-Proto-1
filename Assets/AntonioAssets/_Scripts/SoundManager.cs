@@ -1,20 +1,28 @@
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class SoundManager : MonoBehaviour
 {
-    [Header("Ambiance Music Audio Source")]
-    [SerializeField] private AudioSource musicSource;
-    
-    [Header("Ambiance Music Clips")]
-    [SerializeField] private AudioClip safeZoneMusic;
+    [Header("General Settings")] [SerializeField]
+    private AudioMixer mixer;
+
+    [SerializeField] private Slider musicSlider;
+    [SerializeField] private Slider sfxSlider;
+
+    [Header("Ambiance Music Audio Source")] [SerializeField]
+    private AudioSource musicSource;
+
+    [Header("Ambiance Music Clips")] [SerializeField]
+    private AudioClip safeZoneMusic;
+
     [SerializeField] private AudioClip puzzleZoneMusic;
     [SerializeField] private AudioClip battleZoneMusic;
-    
+
     private AudioSource _source;
-    
+
     public static SoundManager Instance;
-    
+
     private void Awake()
     {
         if (Instance == null)
@@ -27,16 +35,29 @@ public class SoundManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    
+
+    private void Start()
+    {
+        if (PlayerPrefs.HasKey("musicVolume"))
+        {
+            LoadVolume();
+        }
+        else
+        {
+            SetMusicVolume();
+            SetSfxVolume();
+        }
+    }
+
     /// <summary>
     /// Function used to set the AudioSource where the sound will be played from
     /// </summary>
     /// <param name="source">AudioSource where the sound will be played from</param>
     public void SetAudioSource(AudioSource source)
     {
-        Instance._source = source; 
+        Instance._source = source;
     }
-    
+
     /// <summary>
     /// Plays a sound effect once,
     /// useful for sound effects that are only played once like opening a door
@@ -79,5 +100,29 @@ public class SoundManager : MonoBehaviour
                 Debug.LogError("ERROR: ZoneType not recognized in SoundManager SetMusic");
                 break;
         }
+    }
+
+    public void SetMusicVolume()
+    {
+        var volume = musicSlider.value;
+        mixer.SetFloat("music", Mathf.Log10(volume) * 20);
+
+        PlayerPrefs.SetFloat("musicVolume", volume);
+    }
+
+    public void SetSfxVolume()
+    {
+        var volume = sfxSlider.value;
+        mixer.SetFloat("sfx", Mathf.Log10(volume) * 20);
+
+        PlayerPrefs.SetFloat("sfxVolume", volume);
+    }
+
+    private void LoadVolume()
+    {
+        musicSlider.value = PlayerPrefs.GetFloat("musicVolume");
+        sfxSlider.value = PlayerPrefs.GetFloat("sfxVolume");
+        SetMusicVolume();
+        SetSfxVolume();
     }
 }

@@ -13,6 +13,8 @@ public class CheckpointManager : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        _currCheckpointIndex = 0;
+        
         for (var i = 0; i < checkpoints.Length; i++)
         {
             checkpoints[i].SetActive(i == _currCheckpointIndex);

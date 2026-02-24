@@ -65,8 +65,8 @@ public class PlayerController : MonoBehaviour
             cameraNormalPos = _camera.transform.localPosition;
         }
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = true;
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = true;
         
         InputManager.Instance.RunPerformed += RunOnPerformed;
         InputManager.Instance.RunCanceled += RunOnCanceled;
@@ -76,6 +76,8 @@ public class PlayerController : MonoBehaviour
         InputManager.Instance.PickUpPerformed += OnInteractPerformed;
 
         _currentSpeed = normalMovementSpeed;
+
+        respawnPoint = GameManager.Instance.GetCurrentCheckpointPosition();
     }
 
     private void Awake()
@@ -98,6 +100,7 @@ public class PlayerController : MonoBehaviour
         DetectNearestPuzzle();
         UpdateVerticalVelocity();
         ApplyTotalVelocity();
+        respawnPoint = GameManager.Instance.GetCurrentCheckpointPosition();
     }
 
     private void UpdateMovement()
@@ -266,6 +269,7 @@ public class PlayerController : MonoBehaviour
             if (respawnPoint != null)
             {
                 transform.position = respawnPoint.position;
+                transform.rotation = respawnPoint.rotation;
             }
 
             // RESET OF THE MOVEMENT.
