@@ -25,7 +25,14 @@ public class PlayerController : MonoBehaviour
     // RESPAWN SETTINGS
     [Header("RESPAWN SETTINGS")]
     [SerializeField] private Transform respawnPoint;
-    
+
+    [Header("PUZZLE INTERACTION SETTINGS")]
+    [SerializeField] private LayerMask puzzleG;
+    [SerializeField] private float playerInteractionRadius = 2f;
+
+    private GameObject nearestInteractable;
+    private PuzzleInteractLogic nearestPuzzle;
+
     private Vector2 _currentInput;
     private Vector3 _velocity;
     private float _verticalVelocity;
@@ -40,12 +47,23 @@ public class PlayerController : MonoBehaviour
    // private bool _wasWalking = false;
     public bool _isCrouching = false;
     private static readonly int Speed = Animator.StringToHash("Speed");
+    
+    private float normalHeight;
+    private float crouchHeight = 0.6f;
+    private Vector3 cameraNormalPos;
+    private float cameraCrouchOffset = -0.5f;
 
     private void Start()
     {
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponentInChildren<Animator>();
         _camera = Camera.main;
+        
+        normalHeight = _characterController.height;
+        if (_camera != null)
+        {
+            cameraNormalPos = _camera.transform.localPosition;
+        }
 
         //Cursor.lockState = CursorLockMode.Locked;
         //Cursor.visible = true;
@@ -55,6 +73,8 @@ public class PlayerController : MonoBehaviour
         InputManager.Instance.CrouchPerformed += CrouchOnPerformed;
         InputManager.Instance.CrouchOnCanceled += CrouchOnCanceled;
         InputManager.Instance.JumpPerformed += JumpOnPerformed;
+        InputManager.Instance.PickUpPerformed += OnInteractPerformed;
+
         _currentSpeed = normalMovementSpeed;
 
         respawnPoint = GameManager.Instance.GetCurrentCheckpointPosition();
@@ -77,6 +97,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         UpdateMovement();
+        DetectNearestPuzzle();
         UpdateVerticalVelocity();
         ApplyTotalVelocity();
         respawnPoint = GameManager.Instance.GetCurrentCheckpointPosition();
@@ -204,26 +225,28 @@ public class PlayerController : MonoBehaviour
             _isCrouching = true;
             _isRunning = false;
             
-            /*
-            if (SoundManager.Instance != null && SoundManager.Instance.playerOneShotSounds != null)
+            // Reduce character controller height
+            _characterController.height = crouchHeight;
+            
+            // Lower camera
+            if (_camera != null)
             {
-                // PlayOneshot -> ony one time, no loop.
-                SoundManager.Instance.playerOneShotSounds.PlayOneShot(SoundManager.Instance.m_fxClips[(int)AudioFX.CrouchSound]);
+                _camera.transform.localPosition = cameraNormalPos + Vector3.up * cameraCrouchOffset;
             }
-            if (_animator != null){
-                _animator.SetBool(IsCrouching, true);
-            }
-            */
         }
 
         private void CrouchOnCanceled()
         {
             _isCrouching = false;
-            /*
-            if (_animator != null) {
-                _animator.SetBool(IsCrouching, false);
+            
+            // Restore character controller height
+            _characterController.height = normalHeight;
+            
+            // Restore camera position
+            if (_camera != null)
+            {
+                _camera.transform.localPosition = cameraNormalPos;
             }
-            */
         }
         public Transform GetTransform(out bool playerOnSight)
         {
@@ -267,4 +290,38 @@ public class PlayerController : MonoBehaviour
             }
             _velocity.y = _verticalVelocity;
         }
+        private void DetectNearestPuzzle()
+        {
+            Collider[] c = Physics.OverlapSphere(transform.position, playerInteractionRadius, puzzleG);
+            nearestInteractable = null;
+            nearestPuzzle = null;
+            float nearestDistance = playerInteractionRadius;
+
+            for (int i = 0; i < c.Length; i++)
+            {
+                float distance = Vector3.Distance(transform.position, c[i].transform.position);
+                if (distance < nearestDistance)
+                {
+                    nearestInteractable = c[i].gameObject;
+                    nearestPuzzle = nearestInteractable.GetComponent<PuzzleInteractLogic>();
+                    nearestDistance = distance;
+                }
+            }
+        }
+        private void OnInteractPerformed()
+        {
+            if(nearestInteractable == null || nearestPuzzle == null) {
+                return;
+            }
+            nearestPuzzle.OpenPuzzle();
+        }
+
+        private void OnDestroy()
+        {
+            if (InputManager.Instance != null)
+            {
+                InputManager.Instance.PickUpPerformed -= OnInteractPerformed;
+            }
+        }
+
 }
