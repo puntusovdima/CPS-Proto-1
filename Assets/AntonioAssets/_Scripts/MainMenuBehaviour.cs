@@ -10,6 +10,7 @@ public class MainMenuBehaviour : MonoBehaviour
 
     public void StartNewGame(int index)
     {
+        Debug.Log("Start new game");
         SceneManager.LoadScene(index);
     }
     
