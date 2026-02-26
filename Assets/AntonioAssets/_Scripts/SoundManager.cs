@@ -4,11 +4,11 @@ using UnityEngine.UI;
 
 public class SoundManager : MonoBehaviour
 {
-    [Header("General Settings")] [SerializeField]
-    private AudioMixer mixer;
-
+    [Header("General Settings")] 
+    [SerializeField] private AudioMixer mixer;
     [SerializeField] private Slider musicSlider;
     [SerializeField] private Slider sfxSlider;
+    [SerializeField] private Slider masterSlider;
 
     [Header("Ambiance Music Audio Source")] [SerializeField]
     private AudioSource musicSource;
@@ -116,6 +116,14 @@ public class SoundManager : MonoBehaviour
         mixer.SetFloat("sfx", Mathf.Log10(volume) * 20);
 
         PlayerPrefs.SetFloat("sfxVolume", volume);
+    }
+
+    public void SetMasterVolume()
+    {
+        var volume = masterSlider.value;
+        mixer.SetFloat("master", Mathf.Log10(volume) * 20);
+        
+        PlayerPrefs.SetFloat("masterVolume", volume);
     }
 
     private void LoadVolume()
