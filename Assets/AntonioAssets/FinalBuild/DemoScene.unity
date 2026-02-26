@@ -582,8 +582,7 @@ GameObject:
   - component: {fileID: 89073407}
   - component: {fileID: 89073410}
   - component: {fileID: 89073409}
-  - component: {fileID: 89073408}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -599,35 +598,12 @@ Transform:
   m_GameObject: {fileID: 89073406}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.59, z: 0}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 0.5, y: 0.75, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 442250848}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &89073408
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 89073406}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!23 &89073409
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2129,7 +2105,8 @@ GameObject:
   m_Component:
   - component: {fileID: 442250848}
   - component: {fileID: 442250849}
-  m_Layer: 0
+  - component: {fileID: 442250850}
+  m_Layer: 10
   m_Name: MoveButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2168,7 +2145,30 @@ MonoBehaviour:
   movingObject: {fileID: 209404241}
   startMarker: {fileID: 2111873774}
   endMarker: {fileID: 34803937}
-  speed: 0.5
+  speed: 5
+--- !u!136 &442250850
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 442250847}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.3
+  m_Height: 1.75
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!1 &450451717
 GameObject:
   m_ObjectHideFlags: 0
@@ -3682,6 +3682,9 @@ MonoBehaviour:
   puzzleG:
     serializedVersion: 2
     m_Bits: 512
+  interactable:
+    serializedVersion: 2
+    m_Bits: 1024
   playerInteractionRadius: 5
   screenPaused: 0
   _isCrouching: 0
@@ -4272,8 +4275,7 @@ GameObject:
   - component: {fileID: 1246758703}
   - component: {fileID: 1246758706}
   - component: {fileID: 1246758705}
-  - component: {fileID: 1246758704}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4289,35 +4291,12 @@ Transform:
   m_GameObject: {fileID: 1246758702}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.296, z: 0}
+  m_LocalPosition: {x: 0, y: 2.25, z: 0}
   m_LocalScale: {x: 0.4, y: 0.1, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 442250848}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &1246758704
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1246758702}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!23 &1246758705
 MeshRenderer:
   m_ObjectHideFlags: 0

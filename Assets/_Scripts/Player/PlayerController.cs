@@ -26,8 +26,9 @@ public class PlayerController : MonoBehaviour
     [Header("RESPAWN SETTINGS")]
     [SerializeField] private Transform respawnPoint;
 
-    [Header("PUZZLE INTERACTION SETTINGS")]
+    [Header("INTERACTION SETTINGS")]
     [SerializeField] private LayerMask puzzleG;
+    [SerializeField] private LayerMask interactable;
     [SerializeField] private float playerInteractionRadius = 2f;
 
     private GameObject nearestInteractable;
@@ -187,141 +188,151 @@ public class PlayerController : MonoBehaviour
             {
                 _verticalVelocity = -2f;
             }
-        }
+    }
         
     public void setPause(bool p) => screenPaused = p;
     private void ApplyTotalVelocity()
     {
         _characterController.Move(_velocity * Time.deltaTime);
     }
-        private void RunOnPerformed()
-        {
+    private void RunOnPerformed()
+    {
 
-            // PLAYER MUSTN'T SPRINT IN THE MID AIR.
-            if(!_playerIsGrounded) {
+        // PLAYER MUSTN'T SPRINT IN THE MID AIR.
+        if(!_playerIsGrounded) {
                 
-                return;
-            }
-
-            _isRunning = true;
-            _currentSpeed = runSpeed;
+            return;
         }
 
-        private void RunOnCanceled()
-        {
-            _isRunning = false;
-            _currentSpeed = normalMovementSpeed;
-        }
-        private void JumpOnPerformed(){
-            if(_playerIsGrounded){
-                // If player is running -> runjumpforce || if player is walking -> normaljumpforce.
-                float jumpForceA = _isRunning ? runJumpForce : normalJumpForce;
-                _verticalVelocity = jumpForceA;
-                _playerIsGrounded = false;
-            }
-        }
-        private void CrouchOnPerformed()
-        {
-            _isCrouching = true;
-            _isRunning = false;
-            
-            // Reduce character controller height
-            _characterController.height = crouchHeight;
-            
-            // Lower camera
-            if (_camera != null)
-            {
-                _camera.transform.localPosition = cameraNormalPos + Vector3.up * cameraCrouchOffset;
-            }
-        }
+        _isRunning = true;
+        _currentSpeed = runSpeed;
+    }
 
-        private void CrouchOnCanceled()
-        {
-            _isCrouching = false;
-            
-            // Restore character controller height
-            _characterController.height = normalHeight;
-            
-            // Restore camera position
-            if (_camera != null)
-            {
-                _camera.transform.localPosition = cameraNormalPos;
-            }
+    private void RunOnCanceled()
+    {
+        _isRunning = false;
+        _currentSpeed = normalMovementSpeed;
+    }
+    private void JumpOnPerformed(){
+        if(_playerIsGrounded){
+            // If player is running -> runjumpforce || if player is walking -> normaljumpforce.
+            float jumpForceA = _isRunning ? runJumpForce : normalJumpForce;
+            _verticalVelocity = jumpForceA;
+            _playerIsGrounded = false;
         }
-        public Transform GetTransform(out bool playerOnSight)
+    }
+    private void CrouchOnPerformed()
+    {
+        _isCrouching = true;
+        _isRunning = false;
+            
+        // Reduce character controller height
+        _characterController.height = crouchHeight;
+            
+        // Lower camera
+        if (_camera != null)
         {
-            playerOnSight = true;
-            return transform;
+            _camera.transform.localPosition = cameraNormalPos + Vector3.up * cameraCrouchOffset;
         }
+    }
+
+    private void CrouchOnCanceled()
+    {
+        _isCrouching = false;
+            
+        // Restore character controller height
+        _characterController.height = normalHeight;
+            
+        // Restore camera position
+        if (_camera != null)
+        {
+            _camera.transform.localPosition = cameraNormalPos;
+        }
+    }
+    public Transform GetTransform(out bool playerOnSight)
+    {
+        playerOnSight = true;
+        return transform;
+    }
 
         
-        // For the "respawn" of the player.
-        public void RespawnCoroutine()
+    // For the "respawn" of the player.
+    public void RespawnCoroutine()
+    {
+        StartCoroutine(RespawnSystem());
+    }
+
+    private IEnumerator RespawnSystem()
+    {
+        yield return new WaitForSecondsRealtime(0.5f);
+        Time.timeScale = 0f;
+
+        if (respawnPoint != null)
         {
-            StartCoroutine(RespawnSystem());
+            transform.position = respawnPoint.position;
+            transform.rotation = respawnPoint.rotation;
         }
 
-        private IEnumerator RespawnSystem()
-        {
-            yield return new WaitForSecondsRealtime(0.5f);
-            Time.timeScale = 0f;
+        // RESET OF THE MOVEMENT.
+        _characterController.enabled = false;
+        _velocity = Vector3.zero;
+        _verticalVelocity = 0f;
+        _characterController.enabled = true;
 
-            if (respawnPoint != null)
+        yield return new WaitForSecondsRealtime(1f);
+        Time.timeScale = 1f;
+    }
+
+    private void UpdateVerticalVelocity()
+    {
+        if (!_playerIsGrounded)
+        {
+            _verticalVelocity -= gravity *Time.deltaTime;
+        }
+        _velocity.y = _verticalVelocity;
+    }
+    private void DetectNearestPuzzle()
+    {
+        LayerMask combined = puzzleG | interactable;
+        Collider[] c = Physics.OverlapSphere(transform.position, playerInteractionRadius, combined);
+        nearestInteractable = null;
+        nearestPuzzle = null;
+        float nearestDistance = playerInteractionRadius;
+
+        for (int i = 0; i < c.Length; i++)
+        {
+            float distance = Vector3.Distance(transform.position, c[i].transform.position);
+            if (distance < nearestDistance)
             {
-                transform.position = respawnPoint.position;
-                transform.rotation = respawnPoint.rotation;
-            }
-
-            // RESET OF THE MOVEMENT.
-            _characterController.enabled = false;
-            _velocity = Vector3.zero;
-            _verticalVelocity = 0f;
-            _characterController.enabled = true;
-
-            yield return new WaitForSecondsRealtime(1f);
-            Time.timeScale = 1f;
-        }
-
-        private void UpdateVerticalVelocity()
-        {
-            if (!_playerIsGrounded)
-            {
-                _verticalVelocity -= gravity *Time.deltaTime;
-            }
-            _velocity.y = _verticalVelocity;
-        }
-        private void DetectNearestPuzzle()
-        {
-            Collider[] c = Physics.OverlapSphere(transform.position, playerInteractionRadius, puzzleG);
-            nearestInteractable = null;
-            nearestPuzzle = null;
-            float nearestDistance = playerInteractionRadius;
-
-            for (int i = 0; i < c.Length; i++)
-            {
-                float distance = Vector3.Distance(transform.position, c[i].transform.position);
-                if (distance < nearestDistance)
-                {
-                    nearestInteractable = c[i].gameObject;
-                    nearestPuzzle = nearestInteractable.GetComponent<PuzzleInteractLogic>();
-                    nearestDistance = distance;
-                }
+                nearestInteractable = c[i].gameObject;
+                nearestPuzzle = nearestInteractable.GetComponent<PuzzleInteractLogic>();
+                nearestDistance = distance;
             }
         }
-        private void OnInteractPerformed()
+    }
+    
+    private void OnInteractPerformed()
+    {
+        if (nearestPuzzle)
         {
-            if(nearestInteractable == null || nearestPuzzle == null) {
-                return;
-            }
             nearestPuzzle.OpenPuzzle();
         }
-
-        private void OnDestroy()
+        else if (nearestInteractable != null)
         {
-            if (InputManager.Instance != null)
-            {
-                InputManager.Instance.PickUpPerformed -= OnInteractPerformed;
-            }
+            var interactable = nearestInteractable.GetComponent<IInteractable>();
+            if (interactable != null)
+                interactable.Interact();
+            else
+                Debug.LogError($"{nearestInteractable.name} has no IInteractable component!", nearestInteractable);
         }
+    }
+
+    private void OnDestroy()
+    {
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.PickUpPerformed -= OnInteractPerformed;
+        }
+    }
 
 }

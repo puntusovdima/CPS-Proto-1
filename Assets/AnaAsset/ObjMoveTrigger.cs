@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class ObjMoveTrigger : MonoBehaviour
+public class ObjMoveTrigger : MonoBehaviour, IInteractable
 {
     [Header ("Directed movement")]
     [SerializeField] private GameObject movingObject;//Object that falls
@@ -10,15 +10,15 @@ public class ObjMoveTrigger : MonoBehaviour
     [SerializeField, Range (0,1)]public float speed; //Speed of the lerp
   
 
-    private Rigidbody rb;
+    private Rigidbody _rb;
 
     void Start()
     {
         startMarker=movingObject.transform;
 
-        rb = movingObject.GetComponent<Rigidbody>();
+        _rb = movingObject.GetComponent<Rigidbody>();
     }
-    void OnTriggerStay()
+    void OnTriggerStay(Collider other)
     {
         //ChangeGravity();
         LerpObject();       
@@ -26,12 +26,19 @@ public class ObjMoveTrigger : MonoBehaviour
 
     private void ChangeGravity()
     {
-        rb.useGravity = true;
+        _rb.useGravity = true;
     }
 
     private void LerpObject()
     {
         movingObject.transform.position = Vector3.MoveTowards(startMarker.position, endMarker.position, speed);
+    }
+
+    public void Interact()
+    {
+        Debug.Log("Interaction with " + this.name);
+        
+        LerpObject();
     }
 }
     
