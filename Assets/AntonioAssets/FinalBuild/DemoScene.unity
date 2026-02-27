@@ -2145,7 +2145,7 @@ MonoBehaviour:
   movingObject: {fileID: 209404241}
   startMarker: {fileID: 2111873774}
   endMarker: {fileID: 34803937}
-  speed: 5
+  speed: 2.5
 --- !u!136 &442250850
 CapsuleCollider:
   m_ObjectHideFlags: 0

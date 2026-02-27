@@ -2,29 +2,39 @@ using UnityEngine;
 
 public class ObjMoveButton : MonoBehaviour, IInteractable
 {
-
     [Header("Directed movement")]
-    [SerializeField] private GameObject movingObject;//Object that falls
-    [SerializeField] private Transform startMarker;//Starting point of the object
-    [SerializeField] private Transform endMarker;//Final point of the object
-    [SerializeField] public float speed; //Speed of the lerp
+    [SerializeField] private GameObject movingObject;
+    [SerializeField] private Transform startMarker;
+    [SerializeField] private Transform endMarker;
+    [SerializeField] public float speed;
+
+    private bool _isMoving = false;
 
     private void Start()
     {
         movingObject.transform.position = startMarker.position;
     }
 
-    private void MoveObject()
+    private void Update()
     {
-        movingObject.transform.position = 
-            Vector3.MoveTowards(movingObject.transform.position, endMarker.position, 
-                speed * Time.deltaTime);
+        if (!_isMoving) return;
+
+        movingObject.transform.position = Vector3.MoveTowards(movingObject.transform.position, 
+            endMarker.position, speed * Time.deltaTime);
+
+        if (movingObject.transform.position == endMarker.position)
+        {
+            _isMoving = false;
+        }
     }
 
     public void Interact()
     {
         Debug.Log("Interaction with " + this.name);
-        
-        MoveObject();
+
+        if (movingObject.transform.position != endMarker.position)
+        {
+            _isMoving = true;
+        }
     }
 }
