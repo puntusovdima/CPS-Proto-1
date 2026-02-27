@@ -1481,10 +1481,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CheckpointManager
   checkpoints:
-  - {fileID: 1095244708854411902, guid: 4e4329ee063c5444a950dc0312175bc6, type: 3}
-  - {fileID: 1660302629610935340, guid: 62b9387e64af5fb44af45686c13270ef, type: 3}
-  - {fileID: 7963528985361261399, guid: 8ca7aefffaa03344b84087df37a5b441, type: 3}
-  - {fileID: 4498384027982637303, guid: 1227d2070415f0144a3de31b35237db0, type: 3}
+  - {fileID: 1192574270385953292, guid: e09b85b86fdd1444e88b3e6ef8259d74, type: 3}
+  - {fileID: 4013463755093062577, guid: fd318d5d9ae4f2143b24db9f1c69f7d2, type: 3}
+  - {fileID: 5382202775141969164, guid: f52a1c2405bc73a41871bc996d9e38f1, type: 3}
 --- !u!1 &502122477
 GameObject:
   m_ObjectHideFlags: 0

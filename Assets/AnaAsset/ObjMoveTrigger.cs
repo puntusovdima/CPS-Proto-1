@@ -1,44 +1,40 @@
+using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering;
 
-public class ObjMoveTrigger : MonoBehaviour, IInteractable
+public class ObjMoveTrigger : MonoBehaviour
 {
     [Header ("Directed movement")]
-    [SerializeField] private GameObject movingObject;//Object that falls
-    [SerializeField] private Transform startMarker;//Starting point of the object
-    [SerializeField] private Transform endMarker;//Final point of the object
-    [SerializeField, Range (0,1)]public float speed; //Speed of the lerp
+    [SerializeField] private GameObject fallingPlatform;//Object that falls
+    [SerializeField] private float countdownToFall;
   
-
     private Rigidbody _rb;
 
-    void Start()
+    private void Start()
     {
-        startMarker=movingObject.transform;
-
-        _rb = movingObject.GetComponent<Rigidbody>();
-    }
-    void OnTriggerStay(Collider other)
-    {
-        //ChangeGravity();
-        LerpObject();       
+        _rb = fallingPlatform.GetComponent<Rigidbody>();
+        _rb.useGravity = false;
+        _rb.isKinematic = true;
     }
 
-    private void ChangeGravity()
+    private void OnTriggerStay(Collider other)
+    {
+        if (!other.CompareTag("Player")) return;
+        
+        StartCoroutine(Countdown());
+    }
+
+    private IEnumerator Countdown()
+    {
+        yield return new WaitForSeconds(countdownToFall);
+        DropObject();
+    }
+
+    private void DropObject()
     {
         _rb.useGravity = true;
-    }
-
-    private void LerpObject()
-    {
-        movingObject.transform.position = Vector3.MoveTowards(startMarker.position, endMarker.position, speed);
-    }
-
-    public void Interact()
-    {
-        Debug.Log("Interaction with " + this.name);
+        _rb.isKinematic = false;
         
-        LerpObject();
+        this.gameObject.SetActive(false);
     }
 }
     
