@@ -10,12 +10,11 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private Slider sfxSlider;
     [SerializeField] private Slider masterSlider;
 
-    [Header("Ambiance Music Audio Source")] [SerializeField]
-    private AudioSource musicSource;
+    [Header("Ambiance Music Audio Source")] 
+    [SerializeField] private AudioSource musicSource;
 
-    [Header("Ambiance Music Clips")] [SerializeField]
-    private AudioClip safeZoneMusic;
-
+    [Header("Ambiance Music Clips")] 
+    [SerializeField] private AudioClip safeZoneMusic;
     [SerializeField] private AudioClip puzzleZoneMusic;
     [SerializeField] private AudioClip battleZoneMusic;
 
