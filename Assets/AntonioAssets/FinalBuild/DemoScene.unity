@@ -300,9 +300,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1758818938}
-    - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1758818942}
     - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       insertIndex: -1
@@ -310,6 +307,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1758818943}
+    - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1758818945}
   m_SourcePrefab: {fileID: 100100000, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
 --- !u!1 &34803936
 GameObject:
@@ -883,7 +883,7 @@ PrefabInstance:
       addedObject: {fileID: 99002866}
     - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 99002865}
+      addedObject: {fileID: 99002867}
   m_SourcePrefab: {fileID: 100100000, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
 --- !u!1 &99002863 stripped
 GameObject:
@@ -895,18 +895,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
   m_PrefabInstance: {fileID: 99002862}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &99002865
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 99002863}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6094f43dc38361b4bbc0d932f19c693d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Gear
 --- !u!64 &99002866
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -929,6 +917,23 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 8434996314012839928, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
+--- !u!114 &99002867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99002863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b82ed8ef247062547b71f76b17185340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChainGear
+  teeth: 10
+  axis: {x: 0, y: 1, z: 0}
+  inputGear: {fileID: 1666286928}
+  isMotor: 1
+  motorSpeed: 50
 --- !u!4 &156548946 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
@@ -2808,7 +2813,7 @@ PrefabInstance:
       addedObject: {fileID: 496368103}
     - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 496368102}
+      addedObject: {fileID: 496368104}
   m_SourcePrefab: {fileID: 100100000, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
 --- !u!4 &496368100 stripped
 Transform:
@@ -2820,18 +2825,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
   m_PrefabInstance: {fileID: 496368099}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &496368102
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 496368101}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6094f43dc38361b4bbc0d932f19c693d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Gear
 --- !u!64 &496368103
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2854,6 +2847,23 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 8434996314012839928, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
+--- !u!114 &496368104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 496368101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b82ed8ef247062547b71f76b17185340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChainGear
+  teeth: 20
+  axis: {x: 0, y: 1, z: 0}
+  inputGear: {fileID: 617169025}
+  isMotor: 0
+  motorSpeed: 50
 --- !u!1 &508878476
 GameObject:
   m_ObjectHideFlags: 0
@@ -3333,7 +3343,7 @@ PrefabInstance:
       addedObject: {fileID: 617169024}
     - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 617169023}
+      addedObject: {fileID: 617169025}
   m_SourcePrefab: {fileID: 100100000, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
 --- !u!1 &617169021 stripped
 GameObject:
@@ -3345,18 +3355,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
   m_PrefabInstance: {fileID: 617169020}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &617169023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 617169021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6094f43dc38361b4bbc0d932f19c693d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Gear
 --- !u!64 &617169024
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -3379,6 +3377,23 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 8434996314012839928, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
+--- !u!114 &617169025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 617169021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b82ed8ef247062547b71f76b17185340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChainGear
+  teeth: 12
+  axis: {x: 0, y: 1, z: 0}
+  inputGear: {fileID: 99002867}
+  isMotor: 0
+  motorSpeed: 50
 --- !u!1 &617885308
 GameObject:
   m_ObjectHideFlags: 0
@@ -3694,7 +3709,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       propertyPath: m_Name
-      value: Gear_3
+      value: Gear_4
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       propertyPath: m_Layer
@@ -3759,9 +3774,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2089630603}
-    - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 2089630607}
     - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       insertIndex: -1
@@ -3769,6 +3781,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2089630612}
+    - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2089630613}
   m_SourcePrefab: {fileID: 100100000, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
 --- !u!1 &758158589
 GameObject:
@@ -4746,7 +4761,7 @@ Transform:
   m_GameObject: {fileID: 1252685131}
   serializedVersion: 2
   m_LocalRotation: {x: -0.70691025, y: -0.016670104, z: -0.016670104, w: -0.70691025}
-  m_LocalPosition: {x: 3.14, y: 2.098, z: -0.2670002}
+  m_LocalPosition: {x: 3.14, y: 2.098, z: -0.3}
   m_LocalScale: {x: 0.12179274, y: 0.12179276, z: 0.12179277}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4766,7 +4781,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GearSlotPuzzle
   snapDistance: 0.5
   snapSpeed: 5
-  inputGearForThisSlot: {fileID: 1508211436}
+  inputGearForThisSlot: {fileID: 1263721561}
   requiredTeeth: 10
 --- !u!65 &1252685134
 BoxCollider:
@@ -4794,18 +4809,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
   m_PrefabInstance: {fileID: 2049244610}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1263721551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1263721549}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6094f43dc38361b4bbc0d932f19c693d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Gear
 --- !u!65 &1263721555
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4869,6 +4872,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1263721561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1263721549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b82ed8ef247062547b71f76b17185340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChainGear
+  teeth: 10
+  axis: {x: 0, y: 1, z: 0}
+  inputGear: {fileID: 1263721561}
+  isMotor: 0
+  motorSpeed: 50
 --- !u!1 &1273628994
 GameObject:
   m_ObjectHideFlags: 0
@@ -5244,7 +5264,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       propertyPath: m_Name
-      value: Gear_4
+      value: Gear_3
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       propertyPath: m_Layer
@@ -5305,9 +5325,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1508211436}
-    - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1508211442}
     - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       insertIndex: -1
@@ -5315,6 +5332,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1508211440}
+    - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1508211443}
   m_SourcePrefab: {fileID: 100100000, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
 --- !u!1 &1365103882
 GameObject:
@@ -5458,7 +5478,7 @@ Transform:
   m_GameObject: {fileID: 1380621900}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.1382217, y: 0.018650055, z: 0}
+  m_LocalPosition: {x: 3.1382217, y: 0.018650055, z: -0.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5478,7 +5498,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GearSlotPuzzle
   snapDistance: 0.5
   snapSpeed: 5
-  inputGearForThisSlot: {fileID: 2089630603}
+  inputGearForThisSlot: {fileID: 1508211443}
   requiredTeeth: 10
 --- !u!65 &1380621903
 BoxCollider:
@@ -5555,7 +5575,7 @@ Transform:
   m_GameObject: {fileID: 1384983720}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.019, y: 1.43965, z: -0.317}
+  m_LocalPosition: {x: 3.019, y: 1.43965, z: -0.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5575,7 +5595,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GearSlotPuzzle
   snapDistance: 0.5
   snapSpeed: 5
-  inputGearForThisSlot: {fileID: 1758818938}
+  inputGearForThisSlot: {fileID: 1758818945}
   requiredTeeth: 10
 --- !u!65 &1384983723
 BoxCollider:
@@ -5748,18 +5768,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
   m_PrefabInstance: {fileID: 1333252067}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1508211436
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1508211434}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6094f43dc38361b4bbc0d932f19c693d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Gear
 --- !u!65 &1508211440
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5823,6 +5831,23 @@ MonoBehaviour:
   distanceToDrag: 5
   speedToDrag: 10
   pCamera: {fileID: 1516226643}
+--- !u!114 &1508211443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1508211434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b82ed8ef247062547b71f76b17185340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChainGear
+  teeth: 10
+  axis: {x: 0, y: 1, z: 0}
+  inputGear: {fileID: 1508211443}
+  isMotor: 0
+  motorSpeed: 50
 --- !u!1 &1516226640
 GameObject:
   m_ObjectHideFlags: 0
@@ -6276,9 +6301,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1666286926}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6094f43dc38361b4bbc0d932f19c693d, type: 3}
+  m_Script: {fileID: 11500000, guid: b82ed8ef247062547b71f76b17185340, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Gear
+  m_EditorClassIdentifier: Assembly-CSharp::ChainGear
+  teeth: 8
+  axis: {x: 0, y: 1, z: 0}
+  inputGear: {fileID: 0}
+  isMotor: 0
+  motorSpeed: 50
 --- !u!1 &1683251381
 GameObject:
   m_ObjectHideFlags: 0
@@ -6456,7 +6486,7 @@ MonoBehaviour:
   - {fileID: 1384983722}
   - {fileID: 1252685133}
   - {fileID: 1380621902}
-  motorGear: {fileID: 1666286928}
+  motorGear: {fileID: 0}
   motorSpeed: 100
 --- !u!114 &1693916623
 MonoBehaviour:
@@ -6644,18 +6674,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
   m_PrefabInstance: {fileID: 21014820}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1758818938
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1758818937}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6094f43dc38361b4bbc0d932f19c693d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Gear
 --- !u!65 &1758818942
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6719,6 +6737,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1758818945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1758818937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b82ed8ef247062547b71f76b17185340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChainGear
+  teeth: 10
+  axis: {x: 0, y: 1, z: 0}
+  inputGear: {fileID: 1758818945}
+  isMotor: 0
+  motorSpeed: 50
 --- !u!1 &1774161789
 GameObject:
   m_ObjectHideFlags: 0
@@ -7519,7 +7554,7 @@ Transform:
   m_GameObject: {fileID: 1988259124}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.03, y: -2.13, z: 0}
+  m_LocalPosition: {x: 3.062, y: -1.953, z: -0.27}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7539,8 +7574,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GearSlotPuzzle
   snapDistance: 0.5
   snapSpeed: 5
-  inputGearForThisSlot: {fileID: 1263721551}
-  requiredTeeth: 5
+  inputGearForThisSlot: {fileID: 2089630613}
+  requiredTeeth: 10
 --- !u!65 &1988259127
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7754,7 +7789,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       propertyPath: m_Name
-      value: Gear_5
+      value: Gear_1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       propertyPath: m_Layer
@@ -7823,9 +7858,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1263721551}
-    - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1263721555}
     - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       insertIndex: -1
@@ -7833,6 +7865,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1263721559}
+    - targetCorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1263721561}
   m_SourcePrefab: {fileID: 100100000, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
 --- !u!1 &2089421654
 GameObject:
@@ -8090,18 +8125,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
   m_PrefabInstance: {fileID: 754824335}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2089630603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2089630601}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6094f43dc38361b4bbc0d932f19c693d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Gear
 --- !u!65 &2089630607
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8165,6 +8188,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2089630613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089630601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b82ed8ef247062547b71f76b17185340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChainGear
+  teeth: 10
+  axis: {x: 0, y: 1, z: 0}
+  inputGear: {fileID: 2089630613}
+  isMotor: 0
+  motorSpeed: 50
 --- !u!1 &2111873773
 GameObject:
   m_ObjectHideFlags: 0

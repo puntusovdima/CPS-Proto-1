@@ -38,6 +38,8 @@ public class CheckpointManager : MonoBehaviour
     /// <returns>Checkpoint Position</returns>
     public Transform GetCurrentCheckpointPosition()
     {
+        if (_currCheckpointIndex >= checkpoints.Length) _currCheckpointIndex = checkpoints.Length - 1;
+        
         return checkpoints[_currCheckpointIndex].transform;
     }
 }
