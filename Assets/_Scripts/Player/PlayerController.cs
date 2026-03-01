@@ -141,53 +141,53 @@ public class PlayerController : MonoBehaviour
         }
         _currentInput = InputManager.Instance.GetMovementInput();
 
-            // Direcction.
-            Vector3 forward = Vector3.forward;
-            Vector3 right =Vector3.right;
+        // Direcction.
+        Vector3 forward = Vector3.forward;
+        Vector3 right =Vector3.right;
 
-            Vector3 desiredMove = right * _currentInput.x + forward * _currentInput.y;
-            desiredMove.y = 0f;
+        Vector3 desiredMove = right * _currentInput.x + forward * _currentInput.y;
+        desiredMove.y = 0f;
 
-            // Rotation.
-            if (desiredMove.magnitude > 0.1f)
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(desiredMove);
-                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            }
+        // Rotation.
+        if (desiredMove.magnitude > 0.1f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(desiredMove);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
 
-            // States.
-            if (_isCrouching)
-            {
-                _currentSpeed = crouchSpeed;
-            }
-            else if (_isRunning)
-            {
-                _currentSpeed = runSpeed;
-            }
-            else
-            {
-                _currentSpeed = normalMovementSpeed;
-            }
-            
-            // Movement
-            _velocity = desiredMove * _currentSpeed;
+        // States.
+        if (_isCrouching)
+        {
+            _currentSpeed = crouchSpeed;
+        }
+        else if (_isRunning)
+        {
+            _currentSpeed = runSpeed;
+        }
+        else
+        {
+            _currentSpeed = normalMovementSpeed;
+        }
+        
+        // Movement
+        _velocity = desiredMove * _currentSpeed;
 
-            if (_animator != null)
-            {
-                _animator.SetFloat(Speed, _currentInput.magnitude);
-            }
+        if (_animator != null)
+        {
+            _animator.SetFloat(Speed, _currentInput.magnitude);
+        }
 
-            // Ground detection -> with raycast
-            Vector3 rayOriginPoint = transform.position + Vector3.up * 0.2f;
+        // Ground detection -> with raycast
+        Vector3 rayOriginPoint = transform.position + Vector3.up * 0.2f;
 
-            // Raycast -> ground.
-            bool raycastHitToTheGround = Physics.Raycast(rayOriginPoint, Vector3.down, 2.0f);
-            _playerIsGrounded = raycastHitToTheGround;
-            
-            if(_playerIsGrounded && _verticalVelocity <= 0)
-            {
-                _verticalVelocity = -2f;
-            }
+        // Raycast -> ground.
+        bool raycastHitToTheGround = Physics.Raycast(rayOriginPoint, Vector3.down, 2.0f);
+        _playerIsGrounded = raycastHitToTheGround;
+        
+        if(_playerIsGrounded && _verticalVelocity <= 0)
+        {
+            _verticalVelocity = -2f;
+        }
     }
         
     public void setPause(bool p) => screenPaused = p;
