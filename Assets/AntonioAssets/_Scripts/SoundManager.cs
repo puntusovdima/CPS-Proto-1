@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
@@ -9,16 +10,12 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private Slider musicSlider;
     [SerializeField] private Slider sfxSlider;
     [SerializeField] private Slider masterSlider;
+    [SerializeField] private AudioSource sfxSource;
 
-    [Header("Ambiance Music Audio Source")] 
+    [Header("Ambiance Settings")] 
     [SerializeField] private AudioSource musicSource;
+    [SerializeField] private AudioClip ambiance;
 
-    [Header("Ambiance Music Clips")] 
-    [SerializeField] private AudioClip safeZoneMusic;
-    [SerializeField] private AudioClip puzzleZoneMusic;
-    [SerializeField] private AudioClip battleZoneMusic;
-
-    private AudioSource _source;
 
     public static SoundManager Instance;
 
@@ -28,6 +25,7 @@ public class SoundManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -48,13 +46,11 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Function used to set the AudioSource where the sound will be played from
-    /// </summary>
-    /// <param name="source">AudioSource where the sound will be played from</param>
-    public void SetAudioSource(AudioSource source)
+    public void PlayAmbiance()
     {
-        Instance._source = source;
+        musicSource.clip = ambiance;
+        musicSource.loop = true;
+        musicSource.Play();
     }
 
     /// <summary>
@@ -63,10 +59,9 @@ public class SoundManager : MonoBehaviour
     /// </summary>
     /// <param name="clip">Sound effect which will be played</param>
     /// <param name="source">AudioSource where the sound will be played from</param>
-    public void PlaySound(AudioClip clip, AudioSource source)
+    public void PlaySound(AudioClip clip)
     {
-        SetAudioSource(source);
-        _source.PlayOneShot(clip);
+        sfxSource.PlayOneShot(clip);
     }
 
     /// <summary>
@@ -75,30 +70,10 @@ public class SoundManager : MonoBehaviour
     /// </summary>
     /// <param name="clip">Sound effect which will be played</param>
     /// <param name="source">AudioSource where the sound will be played from</param>
-    public void PlaySoundWithRandomPitch(AudioClip clip, AudioSource source)
+    public void PlaySoundWithRandomPitch(AudioClip clip)
     {
-        SetAudioSource(source);
-        _source.pitch = Random.Range(0.5f, 1.5f);
-        _source.PlayOneShot(clip);
-    }
-
-    public void SetMusic(ZoneTypeEnum zone)
-    {
-        switch (zone)
-        {
-            case ZoneTypeEnum.Safe:
-                _source.clip = safeZoneMusic;
-                break;
-            case ZoneTypeEnum.Puzzle:
-                _source.clip = puzzleZoneMusic;
-                break;
-            case ZoneTypeEnum.Battle:
-                _source.clip = battleZoneMusic;
-                break;
-            default:
-                Debug.LogError("ERROR: ZoneType not recognized in SoundManager SetMusic");
-                break;
-        }
+        sfxSource.pitch = Random.Range(0.5f, 1.5f);
+        sfxSource.PlayOneShot(clip);
     }
 
     public void SetMusicVolume()
@@ -131,5 +106,18 @@ public class SoundManager : MonoBehaviour
         sfxSlider.value = PlayerPrefs.GetFloat("sfxVolume");
         SetMusicVolume();
         SetSfxVolume();
+    }
+    
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "DemoScene")
+        {
+            PlayAmbiance();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

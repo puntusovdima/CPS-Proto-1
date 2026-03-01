@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour
 {
-    public static PlayerController Instance { get; private set; }// For the enemys.
+    public static PlayerController Instance { get; private set; }
 
     [Header("SPEED SETTINGS")]
     [Range(0f, 10f)] [SerializeField] private float normalMovementSpeed = 5f;
@@ -22,7 +22,6 @@ public class PlayerController : MonoBehaviour
     [Header("ROTATION SETTINGS")]
     [Range(0f, 10f)] [SerializeField] private float rotationSpeed = 5f;
 
-    // RESPAWN SETTINGS
     [Header("RESPAWN SETTINGS")]
     [SerializeField] private Transform respawnPoint;
 
@@ -30,6 +29,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask puzzleG;
     [SerializeField] private LayerMask interactable;
     [SerializeField] private float playerInteractionRadius = 2f;
+
+    [Header("SOUND SETTINGS")] 
+    [SerializeField] private AudioClip footstepSFX;
+    [SerializeField] private AudioClip jumpSFX;
 
     private GameObject nearestInteractable;
     private PuzzleInteractLogic nearestPuzzle;
@@ -44,8 +47,6 @@ public class PlayerController : MonoBehaviour
     private float gravity = 9.81f;
     public bool screenPaused;
     private bool _isRunning = false;
-    //private bool _wasRunning = false;
-   // private bool _wasWalking = false;
     public bool _isCrouching = false;
     private static readonly int Speed = Animator.StringToHash("Speed");
     
@@ -53,6 +54,23 @@ public class PlayerController : MonoBehaviour
     private float crouchHeight = 0.6f;
     private Vector3 cameraNormalPos;
     private float cameraCrouchOffset = -0.5f;
+
+    private Coroutine _footstepCoroutine;
+    private const float WalkStepInterval = 0.5f;
+    private const float RunStepInterval = 0.25f;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
@@ -65,9 +83,6 @@ public class PlayerController : MonoBehaviour
         {
             cameraNormalPos = _camera.transform.localPosition;
         }
-
-        //Cursor.lockState = CursorLockMode.Locked;
-        //Cursor.visible = true;
         
         InputManager.Instance.RunPerformed += RunOnPerformed;
         InputManager.Instance.RunCanceled += RunOnCanceled;
@@ -81,20 +96,6 @@ public class PlayerController : MonoBehaviour
         respawnPoint = GameManager.Instance.GetCurrentCheckpointPosition();
     }
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }
-    }
-
     private void Update()
     {
         UpdateMovement();
@@ -106,101 +107,92 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateMovement()
     {
-
-        // SOUNDS -> WALK AND RUN -> SOUNDMANAGER NEEDED FIRST.
-
-        /*
-        // PREFABS.
-        bool isMoving = _currentInput.magnitude > 0.1f;
-        bool playerIsWalking = !_isRunning && isMoving;
-        bool playerIsRunning = _isRunning && isMoving;
-        // Walk and Run sounds.
-        if (SoundManager.Instance != null && SoundManager.Instance.playerSounds != null)
+        if (screenPaused)
         {
-            if (playerIsRunning && (!_wasRunning || !SoundManager.Instance.playerSounds.isPlaying))
-            {
-                SoundManager.Instance.playerSounds.Stop();
-                SoundManager.Instance.PlayFx(AudioFX.RunSound, SoundManager.Instance.playerSounds);
-            }
-            else if (playerIsWalking && (!_wasWalking || !SoundManager.Instance.playerSounds.isPlaying))
-            {
-                SoundManager.Instance.playerSounds.Stop();
-                SoundManager.Instance.PlayFx(AudioFX.WalkSound, SoundManager.Instance.playerSounds);
-            }
-            else if (!playerIsRunning && !playerIsWalking && SoundManager.Instance.playerSounds.isPlaying)
-            {
-                SoundManager.Instance.playerSounds.Stop();
-            }
-            _wasRunning = playerIsRunning;
-            _wasWalking = playerIsWalking;
-        }
-        */
-
-        if (screenPaused) {
             return;
         }
+
         _currentInput = InputManager.Instance.GetMovementInput();
 
-            // Direcction.
-            Vector3 forward = Vector3.forward;
-            Vector3 right =Vector3.right;
+        Vector3 forward = Vector3.forward;
+        Vector3 right = Vector3.right;
 
-            Vector3 desiredMove = right * _currentInput.x + forward * _currentInput.y;
-            desiredMove.y = 0f;
+        Vector3 desiredMove = right * _currentInput.x + forward * _currentInput.y;
+        desiredMove.y = 0f;
 
-            // Rotation.
-            if (desiredMove.magnitude > 0.1f)
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(desiredMove);
-                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            }
+        if (desiredMove.magnitude > 0.1f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(desiredMove);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
 
-            // States.
-            if (_isCrouching)
-            {
-                _currentSpeed = crouchSpeed;
-            }
-            else if (_isRunning)
-            {
-                _currentSpeed = runSpeed;
-            }
-            else
-            {
-                _currentSpeed = normalMovementSpeed;
-            }
-            
-            // Movement
-            _velocity = desiredMove * _currentSpeed;
-
-            if (_animator != null)
-            {
-                _animator.SetFloat(Speed, _currentInput.magnitude);
-            }
-
-            // Ground detection -> with raycast
-            Vector3 rayOriginPoint = transform.position + Vector3.up * 0.2f;
-
-            // Raycast -> ground.
-            bool raycastHitToTheGround = Physics.Raycast(rayOriginPoint, Vector3.down, 2.0f);
-            _playerIsGrounded = raycastHitToTheGround;
-            
-            if(_playerIsGrounded && _verticalVelocity <= 0)
-            {
-                _verticalVelocity = -2f;
-            }
-    }
+        if (_isCrouching)
+        {
+            _currentSpeed = crouchSpeed;
+        }
+        else if (_isRunning)
+        {
+            _currentSpeed = runSpeed;
+        }
+        else
+        {
+            _currentSpeed = normalMovementSpeed;
+        }
         
+        _velocity = desiredMove * _currentSpeed;
+
+        if (_animator != null)
+        {
+            _animator.SetFloat(Speed, _currentInput.magnitude);
+        }
+
+        Vector3 rayOriginPoint = transform.position + Vector3.up * 0.2f;
+        bool raycastHitToTheGround = Physics.Raycast(rayOriginPoint, Vector3.down, 2.0f);
+        _playerIsGrounded = raycastHitToTheGround;
+        
+        if (_playerIsGrounded && _verticalVelocity <= 0)
+        {
+            _verticalVelocity = -2f;
+        }
+
+        // Footstep sounds
+        bool isMovingOnGround = _currentInput.magnitude > 0.1f && _playerIsGrounded;
+        if (isMovingOnGround && _footstepCoroutine == null)
+        {
+            _footstepCoroutine = StartCoroutine(FootstepLoop());
+        }
+        else if (!isMovingOnGround && _footstepCoroutine != null)
+        {
+            StopCoroutine(_footstepCoroutine);
+            _footstepCoroutine = null;
+        }
+    }
+
+    private IEnumerator FootstepLoop()
+    {
+        while (true)
+        {
+            float interval = _isRunning ? RunStepInterval : WalkStepInterval;
+            yield return new WaitForSeconds(interval);
+
+            if (_currentInput.magnitude > 0.1f && _playerIsGrounded && SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlaySoundWithRandomPitch(footstepSFX);
+            }
+        }
+    }
+
     public void setPause(bool p) => screenPaused = p;
+
     private void ApplyTotalVelocity()
     {
         _characterController.Move(_velocity * Time.deltaTime);
     }
+
     private void RunOnPerformed()
     {
-
-        // PLAYER MUSTN'T SPRINT IN THE MID AIR.
-        if(!_playerIsGrounded) {
-                
+        if (!_playerIsGrounded)
+        {
             return;
         }
 
@@ -213,23 +205,27 @@ public class PlayerController : MonoBehaviour
         _isRunning = false;
         _currentSpeed = normalMovementSpeed;
     }
-    private void JumpOnPerformed(){
-        if(_playerIsGrounded){
-            // If player is running -> runjumpforce || if player is walking -> normaljumpforce.
+
+    private void JumpOnPerformed()
+    {
+        if (_playerIsGrounded)
+        {
             float jumpForceA = _isRunning ? runJumpForce : normalJumpForce;
             _verticalVelocity = jumpForceA;
             _playerIsGrounded = false;
+
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySound(jumpSFX);
         }
     }
+
     private void CrouchOnPerformed()
     {
         _isCrouching = true;
         _isRunning = false;
             
-        // Reduce character controller height
         _characterController.height = crouchHeight;
             
-        // Lower camera
         if (_camera != null)
         {
             _camera.transform.localPosition = cameraNormalPos + Vector3.up * cameraCrouchOffset;
@@ -240,23 +236,20 @@ public class PlayerController : MonoBehaviour
     {
         _isCrouching = false;
             
-        // Restore character controller height
         _characterController.height = normalHeight;
             
-        // Restore camera position
         if (_camera != null)
         {
             _camera.transform.localPosition = cameraNormalPos;
         }
     }
+
     public Transform GetTransform(out bool playerOnSight)
     {
         playerOnSight = true;
         return transform;
     }
 
-        
-    // For the "respawn" of the player.
     public void RespawnCoroutine()
     {
         StartCoroutine(RespawnSystem());
@@ -273,7 +266,6 @@ public class PlayerController : MonoBehaviour
             transform.rotation = respawnPoint.rotation;
         }
 
-        // RESET OF THE MOVEMENT.
         _characterController.enabled = false;
         _velocity = Vector3.zero;
         _verticalVelocity = 0f;
@@ -287,10 +279,11 @@ public class PlayerController : MonoBehaviour
     {
         if (!_playerIsGrounded)
         {
-            _verticalVelocity -= gravity *Time.deltaTime;
+            _verticalVelocity -= gravity * Time.deltaTime;
         }
         _velocity.y = _verticalVelocity;
     }
+
     private void DetectNearestPuzzle()
     {
         LayerMask combined = puzzleG | interactable;
@@ -334,5 +327,4 @@ public class PlayerController : MonoBehaviour
             InputManager.Instance.PickUpPerformed -= OnInteractPerformed;
         }
     }
-
 }

@@ -4031,6 +4031,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   playerInteractionRadius: 5
+  footstepSFX: {fileID: 8300000, guid: b6c35579f9743734d91f05bc27cbae7c, type: 3}
+  jumpSFX: {fileID: 8300000, guid: de4b786d7f9d28843a13b50c9ee91c44, type: 3}
   screenPaused: 0
   _isCrouching: 0
 --- !u!143 &877596009
