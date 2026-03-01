@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class SoundManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -47,7 +49,8 @@ public class SoundManager : MonoBehaviour
     public void PlayAmbiance()
     {
         musicSource.clip = ambiance;
-        
+        musicSource.loop = true;
+        musicSource.Play();
     }
 
     /// <summary>
@@ -103,5 +106,18 @@ public class SoundManager : MonoBehaviour
         sfxSlider.value = PlayerPrefs.GetFloat("sfxVolume");
         SetMusicVolume();
         SetSfxVolume();
+    }
+    
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "DemoScene")
+        {
+            PlayAmbiance();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

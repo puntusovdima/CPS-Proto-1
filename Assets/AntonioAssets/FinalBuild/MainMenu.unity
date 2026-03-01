@@ -231,7 +231,7 @@ MonoBehaviour:
         m_MethodName: PlaySound
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: be1d460631ba6e440956857376f8a242, type: 3}
+          m_ObjectArgument: {fileID: 8300000, guid: 7d3d239bf6741a44a872310974e3cf68, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -376,7 +376,7 @@ MonoBehaviour:
         m_MethodName: PlaySound
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: be1d460631ba6e440956857376f8a242, type: 3}
+          m_ObjectArgument: {fileID: 8300000, guid: 7d3d239bf6741a44a872310974e3cf68, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -533,7 +533,7 @@ MonoBehaviour:
         m_MethodName: PlaySound
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: be1d460631ba6e440956857376f8a242, type: 3}
+          m_ObjectArgument: {fileID: 8300000, guid: 7d3d239bf6741a44a872310974e3cf68, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -678,7 +678,7 @@ MonoBehaviour:
         m_MethodName: PlaySound
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: cb5634795b4c8664f9a795cc7b93671d, type: 3}
+          m_ObjectArgument: {fileID: 8300000, guid: bb5b540bbd7038744a759a17cde1aa9d, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -775,7 +775,7 @@ MonoBehaviour:
   masterSlider: {fileID: 1773725412}
   sfxSource: {fileID: 1885703163}
   musicSource: {fileID: 1214487509}
-  ambiance: {fileID: 0}
+  ambiance: {fileID: 8300000, guid: 99531d5405abc63409d46ca5aeec31e6, type: 3}
 --- !u!1 &173093120
 GameObject:
   m_ObjectHideFlags: 0
@@ -888,7 +888,7 @@ MonoBehaviour:
         m_MethodName: PlaySound
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: be1d460631ba6e440956857376f8a242, type: 3}
+          m_ObjectArgument: {fileID: 8300000, guid: 7d3d239bf6741a44a872310974e3cf68, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -1667,7 +1667,7 @@ MonoBehaviour:
         m_MethodName: PlaySound
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: cb5634795b4c8664f9a795cc7b93671d, type: 3}
+          m_ObjectArgument: {fileID: 8300000, guid: bb5b540bbd7038744a759a17cde1aa9d, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -3233,7 +3233,7 @@ MonoBehaviour:
         m_MethodName: PlaySound
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: be1d460631ba6e440956857376f8a242, type: 3}
+          m_ObjectArgument: {fileID: 8300000, guid: 7d3d239bf6741a44a872310974e3cf68, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -3702,7 +3702,7 @@ MonoBehaviour:
         m_MethodName: PlaySound
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: cb5634795b4c8664f9a795cc7b93671d, type: 3}
+          m_ObjectArgument: {fileID: 8300000, guid: bb5b540bbd7038744a759a17cde1aa9d, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -5962,7 +5962,7 @@ MonoBehaviour:
         m_MethodName: PlaySound
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: cb5634795b4c8664f9a795cc7b93671d, type: 3}
+          m_ObjectArgument: {fileID: 8300000, guid: bb5b540bbd7038744a759a17cde1aa9d, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
