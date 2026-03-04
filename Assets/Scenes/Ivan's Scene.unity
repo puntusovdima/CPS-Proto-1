@@ -706,14 +706,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 99002863}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6094f43dc38361b4bbc0d932f19c693d, type: 3}
+  m_Script: {fileID: 11500000, guid: b82ed8ef247062547b71f76b17185340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gear
-  teeth: 5
+  teeth: 10
   axis: {x: 0, y: 1, z: 0}
   inputGear: {fileID: 1666286928}
   isMotor: 0
-  motorSpeed: 100
+  motorSpeed: 50
 --- !u!64 &99002866
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1394,7 +1394,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: a7986df339b4f544ba1e9c55bd8a2342, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: c70a04d4fe5622e4db32a695bf8ffa54, type: 2}
   m_BuildHeightMesh: 0
 --- !u!4 &421012275 stripped
 Transform:
@@ -2007,14 +2007,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 496368101}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6094f43dc38361b4bbc0d932f19c693d, type: 3}
+  m_Script: {fileID: 11500000, guid: b82ed8ef247062547b71f76b17185340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gear
-  teeth: 40
+  teeth: 20
   axis: {x: 0, y: 1, z: 0}
   inputGear: {fileID: 617169023}
   isMotor: 0
-  motorSpeed: 100
+  motorSpeed: 50
 --- !u!64 &496368103
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2537,14 +2537,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 617169021}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6094f43dc38361b4bbc0d932f19c693d, type: 3}
+  m_Script: {fileID: 11500000, guid: b82ed8ef247062547b71f76b17185340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gear
-  teeth: 20
+  teeth: 12
   axis: {x: 0, y: 1, z: 0}
   inputGear: {fileID: 99002865}
   isMotor: 0
-  motorSpeed: 100
+  motorSpeed: 50
 --- !u!64 &617169024
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -3734,14 +3734,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1263721549}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6094f43dc38361b4bbc0d932f19c693d, type: 3}
+  m_Script: {fileID: 11500000, guid: b82ed8ef247062547b71f76b17185340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gear
   teeth: 10
   axis: {x: 0, y: 1, z: 0}
   inputGear: {fileID: 1263721551}
   isMotor: 0
-  motorSpeed: 100
+  motorSpeed: 50
 --- !u!65 &1263721555
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4577,14 +4577,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1508211434}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6094f43dc38361b4bbc0d932f19c693d, type: 3}
+  m_Script: {fileID: 11500000, guid: b82ed8ef247062547b71f76b17185340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gear
   teeth: 10
   axis: {x: 0, y: 1, z: 0}
-  inputGear: {fileID: 2089630603}
+  inputGear: {fileID: 1508211436}
   isMotor: 0
-  motorSpeed: 100
+  motorSpeed: 50
 --- !u!65 &1508211440
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5066,7 +5066,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
       propertyPath: m_Name
-      value: Gear
+      value: Gear_!
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -5099,14 +5099,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1666286926}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6094f43dc38361b4bbc0d932f19c693d, type: 3}
+  m_Script: {fileID: 11500000, guid: b82ed8ef247062547b71f76b17185340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gear
-  teeth: 10
+  teeth: 8
   axis: {x: 0, y: 1, z: 0}
   inputGear: {fileID: 0}
   isMotor: 0
-  motorSpeed: 100
+  motorSpeed: 50
 --- !u!1 &1683251381
 GameObject:
   m_ObjectHideFlags: 0
@@ -5447,14 +5447,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1758818937}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6094f43dc38361b4bbc0d932f19c693d, type: 3}
+  m_Script: {fileID: 11500000, guid: b82ed8ef247062547b71f76b17185340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gear
   teeth: 10
   axis: {x: 0, y: 1, z: 0}
   inputGear: {fileID: 1758818938}
   isMotor: 0
-  motorSpeed: 100
+  motorSpeed: 50
 --- !u!65 &1758818942
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6086,7 +6086,7 @@ MonoBehaviour:
   snapDistance: 0.5
   snapSpeed: 5
   inputGearForThisSlot: {fileID: 1263721551}
-  requiredTeeth: 5
+  requiredTeeth: 10
 --- !u!65 &1988259127
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6712,14 +6712,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 2089630601}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6094f43dc38361b4bbc0d932f19c693d, type: 3}
+  m_Script: {fileID: 11500000, guid: b82ed8ef247062547b71f76b17185340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gear
-  teeth: 5
+  teeth: 10
   axis: {x: 0, y: 1, z: 0}
-  inputGear: {fileID: 1758818938}
+  inputGear: {fileID: 2089630603}
   isMotor: 0
-  motorSpeed: 100
+  motorSpeed: 50
 --- !u!65 &2089630607
 BoxCollider:
   m_ObjectHideFlags: 0
