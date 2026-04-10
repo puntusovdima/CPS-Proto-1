@@ -12,6 +12,8 @@ public class PuzzleManager : MonoBehaviour
 
     [Header("GEARS SETTINGS")]
     [SerializeField] private ChainGear motorGear;
+    [SerializeField] private float testMotorSpeed = 50f;
+    [SerializeField] private float testDuration = 0.5f;
 
     private bool isPuzzleSolved = false;
     private PuzzleInteractLogic puzzleLogic;
@@ -40,15 +42,41 @@ public class PuzzleManager : MonoBehaviour
 
         if (slot.isPossibleFinalSlot && !isPuzzleSolved)
         {
-            Debug.Log("[PuzzleManager] Target slot detected. Starting sync check...");
-            StartCoroutine(CheckSyncAfterFrame(gear.GetChainGear()));
+            Debug.Log("[PuzzleManager] Target slot detected. Testing chain connection...");
+            StartCoroutine(PerformTestSync(gear.GetChainGear()));
         }
     }
 
-    private IEnumerator CheckSyncAfterFrame(ChainGear placedGear)
+    private IEnumerator PerformTestSync(ChainGear placedGear)
     {
-        yield return null; 
+        if (motorGear == null) { Debug.LogError("[PuzzleManager] Motor Gear is not assigned!"); yield break; }
+
+        // Temporarily turn ON the motor to rotate the chain
+        bool wasMotorOn = motorGear.isMotor;
+        float originalSpeed = motorGear.motorSpeed;
+
+        motorGear.isMotor = true;
+        motorGear.motorSpeed = testMotorSpeed;
+
+        // Wait for some frames to let the gears start moving
+        yield return new WaitForSeconds(testDuration);
+
         CheckPuzzleCompletion(placedGear);
+
+        // If the puzzle is not solved, we turn the motor OFF again
+        if (!isPuzzleSolved)
+        {
+            motorGear.isMotor = wasMotorOn;
+            motorGear.motorSpeed = originalSpeed;
+            Debug.Log("[PuzzleManager] Test pulse finished - Puzzle NOT solved.");
+        }
+        else
+        {
+            // If it is solved, we keep it spinning!
+            motorGear.isMotor = true;
+            motorGear.motorSpeed = testMotorSpeed;
+            Debug.Log("[PuzzleManager] Test pulse finished - Puzzle SOLVED!");
+        }
     }
 
     private void CheckPuzzleCompletion(ChainGear placedGear)
@@ -61,8 +89,8 @@ public class PuzzleManager : MonoBehaviour
         float finalTeethVelocity = finalGear.currentSpeed * finalGear.teeth;
 
         Debug.Log($"[PuzzleManager] SYNC CHECK:\n" +
-                  $" - Placed Gear: Speed={placedGear.currentSpeed}, Teeth={placedGear.teeth}, Velocity={placedTeethVelocity}\n" +
-                  $" - Final Gear: Speed={finalGear.currentSpeed}, Teeth={finalGear.teeth}, Velocity={finalTeethVelocity}");
+                  $" - Placed Gear: Speed={placedGear.currentSpeed:F2}, Teeth={placedGear.teeth}, Velocity={placedTeethVelocity:F2}\n" +
+                  $" - Final Gear: Speed={finalGear.currentSpeed:F2}, Teeth={finalGear.teeth}, Velocity={finalTeethVelocity:F2}");
 
         if (Mathf.Abs(placedGear.currentSpeed) < 0.1f)
         {
@@ -85,7 +113,7 @@ public class PuzzleManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"[PuzzleManager] Sync Failed: Velocity mismatch. Diff: {velocityDiff} (Tolerance: {tolerance})");
+            Debug.LogWarning($"[PuzzleManager] Sync Failed: Velocity mismatch. Diff: {velocityDiff:F2} (Tolerance: {tolerance})");
         }
     }
 
