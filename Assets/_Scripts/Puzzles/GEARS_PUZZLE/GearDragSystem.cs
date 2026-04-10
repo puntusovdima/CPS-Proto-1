@@ -52,8 +52,8 @@ public class GearDragSystem : MonoBehaviour
     // DRAG LOGIC.
     private void TryToGrabGear()
     {
-        // Can't grab the gear if the gear is in the right slot.
-        if (currentSlot != null && currentSlot.IsOccupied())
+        // Don't allow moving gears if the puzzle is already done
+        if (PuzzleManager.Instance != null && PuzzleManager.Instance.IsPuzzleSolved())
         {
             return;
         }

@@ -5,6 +5,7 @@ public class GearSlotPuzzle : MonoBehaviour
     [Header("GEARS SLOTS SETTINGS")]
     [SerializeField] private float snapDistance = 0.5f;
     [SerializeField] private float snapSpeed = 5f;
+    [SerializeField] public bool isPossibleFinalSlot = false;
     [SerializeField] private ChainGear inputGearForThisSlot;
     [SerializeField] private GearSlotPuzzle inputSlotForThisSlot;
     public ChainGear myChainGear;
