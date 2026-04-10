@@ -106,17 +106,21 @@ public class GearSlotPuzzle : MonoBehaviour
             ChainGear chainGear = placedGear.GetChainGear();
             if (chainGear != null)
             {
-                // IMPORTANT: Unregister from the input gear list before nulling
                 if (chainGear.inputGear != null)
                 {
                     chainGear.inputGear.UnregisterFollower(chainGear);
                     chainGear.inputGear = null;
                 }
             }
+            
+            // Only clear the slot reference if it's still pointing here
+            // this prevents a loop where DragSystem and Slot clear each other.
             placedGear.SetCurrentSlot(null);
         }
+        
         placedGear = null;
+        myChainGear = null;
         isOccupied = false;
-        myChainGear = null; // Clear local reference too
+        Debug.Log($"Slot {gameObject.name} cleared and ready for new gear.");
     }
 }

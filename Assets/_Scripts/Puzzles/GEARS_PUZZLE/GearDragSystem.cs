@@ -76,8 +76,10 @@ public class GearDragSystem : MonoBehaviour
 
             if (currentSlot != null)
             {
-                currentSlot.RemoveGear();
-                currentSlot = null;
+                // Store reference to clear it, then null it locally
+                GearSlotPuzzle slotToClear = currentSlot;
+                currentSlot = null; 
+                slotToClear.RemoveGear();
             }
         }
     }
