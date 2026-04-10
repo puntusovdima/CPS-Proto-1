@@ -6,12 +6,23 @@ public class GearSlotPuzzle : MonoBehaviour
     [SerializeField] private float snapDistance = 0.5f;
     [SerializeField] private float snapSpeed = 5f;
     [SerializeField] private ChainGear inputGearForThisSlot;
+    [SerializeField] private GearSlotPuzzle inputSlotForThisSlot;
+    public ChainGear myChainGear;
     [SerializeField] private int requiredTeeth = 10;
     private GearDragSystem placedGear;
     private bool isOccupied = false;
-
+    [SerializeField] private Transform slotCenter;
+    
+    private void Awake()
+    {
+        // Si olvidas asignarlo en el inspector, intenta buscar el primer hijo
+        if (slotCenter == null && transform.childCount > 0)
+            slotCenter = transform.GetChild(0);
+    }
+    
     private void OnTriggerStay(Collider other)
     {
+        
         GearDragSystem gear = other.GetComponent<GearDragSystem>();
         
         if (gear == null)
@@ -35,14 +46,14 @@ public class GearSlotPuzzle : MonoBehaviour
 
     private void PlaceGear(GearDragSystem gear)
     {
-        ChainGear chainGear = gear.GetChainGear();
+        myChainGear = gear.GetChainGear();
         
-        if (chainGear == null)
+        if (myChainGear == null)
         {
             return;
         }
         
-        if (chainGear.teeth != requiredTeeth)
+        if (myChainGear.teeth != requiredTeeth)
         {
             Debug.Log("Ese gear no tieene los dientes correspondientes");
             return;
@@ -50,14 +61,21 @@ public class GearSlotPuzzle : MonoBehaviour
 
         placedGear = gear;
         isOccupied = true;
-        gear.transform.position = transform.position;
+        gear.transform.position = slotCenter.transform.position;
         gear.SetCurrentSlot(this);
 
         if (inputGearForThisSlot != null)
         {
-            chainGear.inputGear = inputGearForThisSlot;
-            inputGearForThisSlot.RegisterFollower(chainGear);
+            myChainGear.inputGear = inputGearForThisSlot;
+            inputGearForThisSlot.RegisterFollower(myChainGear);
         }
+        else if (inputGearForThisSlot == null && inputSlotForThisSlot)
+        {
+            myChainGear.inputGear = inputSlotForThisSlot.myChainGear;
+            inputSlotForThisSlot.myChainGear.RegisterFollower(myChainGear);
+        }
+        else
+            return;
 
         Debug.Log("Gear colocado correctamente en slot");
         

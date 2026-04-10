@@ -3,8 +3,9 @@ using UnityEngine.InputSystem;
 
 public class GearDragSystem : MonoBehaviour
 {
-    [Header("GEARS SETTINGS")]
-    [SerializeField] private float distanceToDrag;
+    [Header("GEARS SETTINGS")] [SerializeField]
+    private float distanceToDrag;
+
     [SerializeField] private float speedToDrag;
     [SerializeField] private Camera pCamera;
 
@@ -12,7 +13,7 @@ public class GearDragSystem : MonoBehaviour
     private Vector3 off;
     private ChainGear c;
     private Vector3 FirstPosition;
-    private GearSlotPuzzle currentSlot; 
+    private GearSlotPuzzle currentSlot;
 
 
     private void Start()
@@ -21,6 +22,7 @@ public class GearDragSystem : MonoBehaviour
         {
             pCamera = Camera.main;
         }
+
         c = GetComponent<ChainGear>();
         FirstPosition = transform.position;
     }
@@ -33,10 +35,12 @@ public class GearDragSystem : MonoBehaviour
         {
             TryToGrabGear();
         }
+
         if (Mouse.current.leftButton.wasReleasedThisFrame)
         {
             UndoG();
         }
+
         if (isDraggingAGear)
         {
             DragTheGear();
@@ -46,11 +50,12 @@ public class GearDragSystem : MonoBehaviour
     // DRAG LOGIC.
     private void TryToGrabGear()
     {
+        // Can't grab the gear if the gear is in the right slot.
+        if (currentSlot != null && currentSlot.IsOccupied())
+        {
+            return;
+        }
 
-    // Can't grab the gear if the gear is in the right slot.
-    if (currentSlot != null && currentSlot.IsOccupied()){
-        return;
-    }
         Ray rayC = pCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         bool hitThisGear = false;
 
@@ -65,7 +70,7 @@ public class GearDragSystem : MonoBehaviour
         if (hitThisGear)
         {
             isDraggingAGear = true;
-            
+
             if (currentSlot != null)
             {
                 currentSlot.RemoveGear();
@@ -84,7 +89,7 @@ public class GearDragSystem : MonoBehaviour
     {
         Ray rayC = pCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         Plane dragPlane = new Plane(Vector3.forward, new Vector3(0, 0, transform.position.z));
-        
+
         if (dragPlane.Raycast(rayC, out float hitDist))
         {
             Vector3 targetPos = rayC.origin + rayC.direction * hitDist;
@@ -94,10 +99,9 @@ public class GearDragSystem : MonoBehaviour
 
     public bool IsDragging() => isDraggingAGear;
     public ChainGear GetChainGear() => c;
-    
+
     public void SetCurrentSlot(GearSlotPuzzle slot)
     {
         currentSlot = slot;
     }
 }
-
