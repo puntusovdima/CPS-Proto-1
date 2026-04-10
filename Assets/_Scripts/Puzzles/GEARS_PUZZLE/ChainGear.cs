@@ -37,9 +37,18 @@ public class ChainGear : MonoBehaviour
     // Called by child gears during Start() to link the chain
     public void RegisterFollower(ChainGear follower)
     {
+        if (follower == this) return; // Cannot follow yourself
         if (!connectedFollowers.Contains(follower))
         {
             connectedFollowers.Add(follower);
+        }
+    }
+
+    public void UnregisterFollower(ChainGear follower)
+    {
+        if (connectedFollowers.Contains(follower))
+        {
+            connectedFollowers.Remove(follower);
         }
     }
 
@@ -58,8 +67,12 @@ public class ChainGear : MonoBehaviour
     }
 
     // This function is called recursively down the chain
+    private bool isDriving = false; // Recursion guard
     public void Drive(float angleDelta)
     {
+        if (isDriving) return;
+        isDriving = true;
+
         // 1. Rotate Myself
         currentTotalAngle += angleDelta;
         
@@ -69,6 +82,8 @@ public class ChainGear : MonoBehaviour
         // 2. Push the rotation to all followers instantly
         foreach (var follower in connectedFollowers)
         {
+            if (follower == null) continue;
+            
             // Calculate ratio: Input Teeth / Output Teeth
             float ratio = (float)teeth / (float)follower.teeth;
             
@@ -77,6 +92,8 @@ public class ChainGear : MonoBehaviour
             
             follower.Drive(outputAngle);
         }
+
+        isDriving = false;
     }
 
     void OnDrawGizmosSelected()

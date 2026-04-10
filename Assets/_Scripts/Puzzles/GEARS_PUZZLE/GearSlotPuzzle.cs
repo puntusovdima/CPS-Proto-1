@@ -72,20 +72,24 @@ public class GearSlotPuzzle : MonoBehaviour
         gear.transform.position = slotCenter.transform.position;
         gear.SetCurrentSlot(this);
 
+        // Chain connection logic
+        ChainGear inputToUse = null;
         if (inputGearForThisSlot != null)
         {
-            myChainGear.inputGear = inputGearForThisSlot;
-            inputGearForThisSlot.RegisterFollower(myChainGear);
+            inputToUse = inputGearForThisSlot;
         }
-        else if (inputGearForThisSlot == null && inputSlotForThisSlot)
+        else if (inputSlotForThisSlot != null)
         {
-            myChainGear.inputGear = inputSlotForThisSlot.myChainGear;
-            inputSlotForThisSlot.myChainGear.RegisterFollower(myChainGear);
+            inputToUse = inputSlotForThisSlot.myChainGear;
         }
-        else
-            return;
 
-        Debug.Log("Gear colocado correctamente en slot");
+        if (inputToUse != null && inputToUse != myChainGear) // Safety check
+        {
+            myChainGear.inputGear = inputToUse;
+            inputToUse.RegisterFollower(myChainGear);
+        }
+
+        Debug.Log($"Gear colocado correctamente en slot {gameObject.name}");
         
         if (PuzzleManager.Instance != null)
         {
@@ -94,6 +98,7 @@ public class GearSlotPuzzle : MonoBehaviour
     }
 
     public bool IsOccupied() => isOccupied;
+
     public void RemoveGear()
     {
         if (placedGear != null)
@@ -101,11 +106,17 @@ public class GearSlotPuzzle : MonoBehaviour
             ChainGear chainGear = placedGear.GetChainGear();
             if (chainGear != null)
             {
-                chainGear.inputGear = null;
+                // IMPORTANT: Unregister from the input gear list before nulling
+                if (chainGear.inputGear != null)
+                {
+                    chainGear.inputGear.UnregisterFollower(chainGear);
+                    chainGear.inputGear = null;
+                }
             }
             placedGear.SetCurrentSlot(null);
         }
         placedGear = null;
         isOccupied = false;
+        myChainGear = null; // Clear local reference too
     }
 }

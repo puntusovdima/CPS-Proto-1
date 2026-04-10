@@ -12,7 +12,6 @@ public class PuzzleManager : MonoBehaviour
 
     [Header("GEARS SETTINGS")]
     [SerializeField] private ChainGear motorGear;
-    [SerializeField] private float testMotorSpeed = 50f;
     [SerializeField] private float testDuration = 0.5f;
 
     private bool isPuzzleSolved = false;
@@ -56,7 +55,6 @@ public class PuzzleManager : MonoBehaviour
         float originalSpeed = motorGear.motorSpeed;
 
         motorGear.isMotor = true;
-        motorGear.motorSpeed = testMotorSpeed;
 
         // Wait for some frames to let the gears start moving
         yield return new WaitForSeconds(testDuration);
@@ -74,7 +72,6 @@ public class PuzzleManager : MonoBehaviour
         {
             // If it is solved, we keep it spinning!
             motorGear.isMotor = true;
-            motorGear.motorSpeed = testMotorSpeed;
             Debug.Log("[PuzzleManager] Test pulse finished - Puzzle SOLVED!");
         }
     }
