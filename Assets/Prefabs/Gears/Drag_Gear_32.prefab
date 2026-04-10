@@ -10,11 +10,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2558820722054791896, guid: a0f816f987348004ebcc005f53ec5b6d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -84.07402
+      value: -80.79
       objectReference: {fileID: 0}
     - target: {fileID: 2558820722054791896, guid: a0f816f987348004ebcc005f53ec5b6d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.91832
+      value: 8.048321
       objectReference: {fileID: 0}
     - target: {fileID: 2558820722054791896, guid: a0f816f987348004ebcc005f53ec5b6d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -52,12 +52,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Drag_Gear_32
       objectReference: {fileID: 0}
+    - target: {fileID: 3762955669710190339, guid: a0f816f987348004ebcc005f53ec5b6d, type: 3}
+      propertyPath: m_Center.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3762955669710190339, guid: a0f816f987348004ebcc005f53ec5b6d, type: 3}
+      propertyPath: m_Center.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5017480304577789784, guid: a0f816f987348004ebcc005f53ec5b6d, type: 3}
       propertyPath: isMotor
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8081409179451432074, guid: a0f816f987348004ebcc005f53ec5b6d, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2938899263629580386, guid: a0f816f987348004ebcc005f53ec5b6d, type: 3}

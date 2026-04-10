@@ -22,7 +22,6 @@ public class GearSlotPuzzle : MonoBehaviour
     
     private void OnTriggerStay(Collider other)
     {
-        
         GearDragSystem gear = other.GetComponent<GearDragSystem>();
         
         if (gear == null)
@@ -30,9 +29,17 @@ public class GearSlotPuzzle : MonoBehaviour
         
         if (gear != null && !gear.IsDragging() && !isOccupied)
         {
-            // Until snap -> verified.
             ChainGear chainGear = gear.GetChainGear();
-            if (chainGear == null || chainGear.teeth != requiredTeeth){
+            if (chainGear == null)
+            {
+                Debug.LogWarning($"[GearSlotPuzzle] ChainGear component not found on {gear.name}!");
+                return;
+            }
+
+            if (chainGear.teeth != requiredTeeth)
+            {
+                // Optionally log this if needed for debugging
+                // Debug.Log($"[GearSlotPuzzle] Teeth mismatch: {chainGear.teeth} != {requiredTeeth}");
                 return;
             }
             

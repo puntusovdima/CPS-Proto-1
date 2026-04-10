@@ -24,6 +24,8 @@ public class GearDragSystem : MonoBehaviour
         }
 
         c = GetComponent<ChainGear>();
+        if (c == null) c = GetComponentInChildren<ChainGear>();
+        
         FirstPosition = transform.position;
     }
 
@@ -61,7 +63,8 @@ public class GearDragSystem : MonoBehaviour
 
         if (Physics.Raycast(rayC, out RaycastHit hit, Mathf.Infinity))
         {
-            if (hit.collider.gameObject == gameObject)
+            // Check if the hit object is this object or one of its children
+            if (hit.collider.transform.IsChildOf(transform))
             {
                 hitThisGear = true;
             }
