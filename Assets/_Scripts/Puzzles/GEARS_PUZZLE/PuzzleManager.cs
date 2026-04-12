@@ -3,6 +3,7 @@ using UnityEngine;
 public class PuzzleManager : MonoBehaviour
 {
     public static PuzzleManager Instance { get; private set; }
+    [SerializeField] private Friendly_Robot friendlyRobotInstance;
 
     [Header("GEARS SETTINGS")]
     [SerializeField] private GearSlotPuzzle[] gSlots;
@@ -25,7 +26,6 @@ public class PuzzleManager : MonoBehaviour
     public void InitializePuzzle()
     {
         gearsPlaced = 0;
-        Debug.Log("Puzzle iniciado. Coloca los " + gSlots.Length + " engranajes.");
     }
 
     private void Update()
@@ -39,8 +39,6 @@ public class PuzzleManager : MonoBehaviour
     public void OnGearPlaced(GearSlotPuzzle slot, GearDragSystem gear)
     {
         gearsPlaced++;
-        Debug.Log($"Engranaje colocado. {gearsPlaced}/{gSlots.Length}");
-
         if (gearsPlaced == gSlots.Length)
         {
             CompletePuzzle();
@@ -49,16 +47,14 @@ public class PuzzleManager : MonoBehaviour
 
     private void CompletePuzzle()
     {
-        Debug.Log("¡Puzzle completado! Los engranajes comienzan a girar...");
-        
         if (motorGear != null)
         {
             motorGear.isMotor = true;
             motorGear.motorSpeed = motorSpeed;
-            Debug.Log("Motor activado con velocidad: " + motorSpeed);
         }
         
-        Invoke("ClosePuzzleAfterDelay", 3f);
+        Invoke("ClosePuzzleAfterDelay", 2.0f);
+        friendlyRobotInstance.FriendlyModeActivation();
     }
 
     private void ClosePuzzleAfterDelay()
