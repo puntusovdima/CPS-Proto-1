@@ -93,7 +93,8 @@ public class PlayerController : MonoBehaviour
 
         _currentSpeed = normalMovementSpeed;
 
-        respawnPoint = GameManager.Instance.GetCurrentCheckpointPosition();
+        if (GameManager.Instance)
+            respawnPoint = GameManager.Instance.GetCurrentCheckpointPosition();
     }
 
     private void Update()
@@ -102,7 +103,8 @@ public class PlayerController : MonoBehaviour
         DetectNearestPuzzle();
         UpdateVerticalVelocity();
         ApplyTotalVelocity();
-        respawnPoint = GameManager.Instance.GetCurrentCheckpointPosition();
+        if (GameManager.Instance)
+            respawnPoint = GameManager.Instance.GetCurrentCheckpointPosition();
     }
 
     private void UpdateMovement()
@@ -112,7 +114,9 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        _currentInput = InputManager.Instance.GetMovementInput();
+        if (InputManager.Instance != null)
+            _currentInput = InputManager.Instance.GetMovementInput();
+        else return;
 
         Vector3 forward = Vector3.forward;
         Vector3 right = Vector3.right;
