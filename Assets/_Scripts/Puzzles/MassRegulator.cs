@@ -14,13 +14,13 @@ public class MassRegulator : MonoBehaviour
 
     private void CalculateMass()
     {
-        // Safety check: if there are no children, we don't want to overwrite 
-        // the mass or we might reset a leaf-node's mass to zero.
+        // Only calculate if we have children to sum.
+        // If children is null or empty, this is a leaf node/base mass, so keep current mass.
         if (children == null || children.Length == 0) return;
 
         float totalMass = 0f;
 
-        // Loop through all children instead of just index 0 and 1
+        // Loop through all children
         foreach (MassRegulator child in children)
         {
             if (child != null)
