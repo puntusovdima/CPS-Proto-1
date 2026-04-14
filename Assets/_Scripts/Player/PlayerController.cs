@@ -93,8 +93,9 @@ public class PlayerController : MonoBehaviour
 
         _currentSpeed = normalMovementSpeed;
 
-        if (GameManager.Instance)
+        if (GameManager.Instance){
             respawnPoint = GameManager.Instance.GetCurrentCheckpointPosition();
+        }
     }
 
     private void Update()
@@ -103,8 +104,9 @@ public class PlayerController : MonoBehaviour
         DetectNearestPuzzle();
         UpdateVerticalVelocity();
         ApplyTotalVelocity();
-        if (GameManager.Instance)
+        if (GameManager.Instance){
             respawnPoint = GameManager.Instance.GetCurrentCheckpointPosition();
+        }
     }
 
     private void UpdateMovement()
@@ -275,6 +277,14 @@ public class PlayerController : MonoBehaviour
         _verticalVelocity = 0f;
         _characterController.enabled = true;
 
+        // RESPAWN THE NPCS -> friendly, neutral and the enemy.
+        Friendly_Robot[] friendly_Robots = FindObjectsByType<Friendly_Robot>(FindObjectsSortMode.None);
+
+        for(int k = 0; k< friendly_Robots.Length; k++)
+        {
+            friendly_Robots[k].ResetRobot();
+        }
+
         yield return new WaitForSecondsRealtime(1f);
         Time.timeScale = 1f;
     }
@@ -319,8 +329,6 @@ public class PlayerController : MonoBehaviour
             var interactable = nearestInteractable.GetComponent<IInteractable>();
             if (interactable != null)
                 interactable.Interact();
-            else
-                Debug.LogError($"{nearestInteractable.name} has no IInteractable component!", nearestInteractable);
         }
     }
 
