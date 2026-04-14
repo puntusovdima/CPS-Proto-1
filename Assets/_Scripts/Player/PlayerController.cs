@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using System.Collections;
 using System;
@@ -16,8 +17,8 @@ public class PlayerController : MonoBehaviour
     [Range(0f, 10f)] [SerializeField] private float crouchSpeed = 10f;
 
     [Header("JUMP SETTINGS")]
-    [Range(0f, 10f)][SerializeField] private float normalJumpForce = 5f;
-    [Range(0f, 10f)][SerializeField] private float runJumpForce = 8f;
+    [Range(0f, 20f)][SerializeField] private float normalJumpForce = 8f;
+    [Range(0f, 20f)][SerializeField] private float runJumpForce = 10f;
     [SerializeField] private bool _playerIsGrounded = true;
 
     [Header("ROTATION SETTINGS")]
@@ -153,13 +154,11 @@ public class PlayerController : MonoBehaviour
             _animator.SetFloat(Speed, _currentInput.magnitude);
         }
 
-        Vector3 rayOriginPoint = transform.position + Vector3.up * 0.2f;
-        bool raycastHitToTheGround = Physics.Raycast(rayOriginPoint, Vector3.down, 2.0f);
-        _playerIsGrounded = raycastHitToTheGround;
+        _playerIsGrounded = _characterController.isGrounded;
         
         if (_playerIsGrounded && _verticalVelocity <= 0)
         {
-            _verticalVelocity = -2f;
+            _verticalVelocity = 0f;
         }
 
         // Footstep sounds
@@ -193,7 +192,8 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyTotalVelocity()
     {
-        _characterController.Move(_velocity * Time.deltaTime);
+        Vector3 totalVelocity = new Vector3(_velocity.x, _verticalVelocity, _velocity.z);
+        _characterController.Move(totalVelocity * Time.deltaTime);
     }
 
     private void RunOnPerformed()
