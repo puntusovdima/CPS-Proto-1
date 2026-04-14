@@ -7,7 +7,7 @@ public class PuzzleManager : MonoBehaviour
     [SerializeField] private Friendly_Robot friendlyRobotInstance;
 
     [Header("GEAR SLOTS")]
-    [SerializeField] private GearSlotPuzzle[] gSlots;
+    // [SerializeField] private GearSlotPuzzle[] gSlots;
     private int gearsPlaced = 0;
     [Header("MOTOR SPEED")]
     [SerializeField] private float motorSpeed = 50f;
@@ -72,7 +72,7 @@ public class PuzzleManager : MonoBehaviour
         // Wait for some frames to let the gears start moving
         yield return new WaitForSeconds(testDuration);
 
-        CheckPuzzleCompletion(placedGear);
+        CheckMassPuzzleCompletion(placedGear);
 
         // If the puzzle is not solved, we turn the motor OFF again
         if (!isPuzzleSolved)
@@ -89,7 +89,7 @@ public class PuzzleManager : MonoBehaviour
         }
     }
 
-    private void CheckPuzzleCompletion(ChainGear placedGear)
+    private void CheckMassPuzzleCompletion(ChainGear placedGear)
     {
         if (finalGear == null) { Debug.LogError("[PuzzleManager] Final Gear is not assigned!"); return; }       
         if (placedGear == null) { Debug.LogError("[PuzzleManager] Placed Gear component is null!"); return; }   
