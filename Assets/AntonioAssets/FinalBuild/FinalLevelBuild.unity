@@ -15717,6 +15717,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1783149012}
     - target: {fileID: 3109071042021857145, guid: 97d78bd49d08a4c4597cbfa653affc23, type: 3}
+      propertyPath: tolerance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3109071042021857145, guid: 97d78bd49d08a4c4597cbfa653affc23, type: 3}
       propertyPath: atwoodManager
       value: 
       objectReference: {fileID: 1191209715}

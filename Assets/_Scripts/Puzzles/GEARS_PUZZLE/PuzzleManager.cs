@@ -19,7 +19,7 @@ public class PuzzleManager : MonoBehaviour
 
     [Header("GEARS SETTINGS")]
     [SerializeField] private ChainGear motorGear;
-    [SerializeField] private float testDuration = 0.5f;
+    [SerializeField] private float testDuration = 1.5f; // Increased for stability
 
     [Header("MASS PUZZLE SETTINGS")]
     [SerializeField] private AtwoodManager atwoodManager;
@@ -38,6 +38,44 @@ public class PuzzleManager : MonoBehaviour
     private void Start()
     {
         puzzleLogic = GetComponent<PuzzleInteractLogic>();
+
+        // Fallback: Auto-assign motor gears if missing
+        ChainGear[] allGears = FindObjectsOfType<ChainGear>();
+        System.Collections.Generic.List<ChainGear> motors = new System.Collections.Generic.List<ChainGear>();
+        
+        foreach (var gear in allGears)
+        {
+            if (gear != null && gear.isMotor) motors.Add(gear);
+        }
+
+        if (motorGear == null && motors.Count > 0)
+        {
+            motorGear = motors[0];
+            Debug.Log($"[PuzzleManager] Motor Gear auto-assigned: {motorGear.name}");
+        }
+
+        if (finalGear == null)
+        {
+            // If we have a second motor, it's likely the final gear
+            if (motors.Count > 1)
+            {
+                finalGear = (motors[0] == motorGear) ? motors[1] : motors[0];
+                Debug.Log($"[PuzzleManager] Final Gear auto-assigned from motors: {finalGear.name}");
+            }
+            // Otherwise, look for any gear named "Final" or similar, or just any gear that isn't the motor
+            else
+            {
+                foreach (var gear in allGears)
+                {
+                    if (gear != null && gear != motorGear && (gear.name.ToLower().Contains("final") || gear.name.ToLower().Contains("goal")))
+                    {
+                        finalGear = gear;
+                        Debug.Log($"[PuzzleManager] Final Gear auto-assigned by name: {finalGear.name}");
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public void InitializePuzzle()
@@ -50,38 +88,72 @@ public class PuzzleManager : MonoBehaviour
 
     public void OnGearPlaced(GearSlotPuzzle slot, GearDragSystem gear)
     {
-        Debug.Log($"[PuzzleManager] Gear placed in {slot.name}. IsPossibleFinal: {slot.isPossibleFinalSlot}");  
+        Debug.Log($"[PuzzleManager] Gear placed in {slot.name}. IsPossibleFinal: {slot.isPossibleFinalSlot}");
+
+        ChainGear placedChainGear = gear.GetChainGear();
 
         if (slot.isPossibleFinalSlot && !isPuzzleSolved)
         {
+            // Connect final gear to the gear being placed in this slot
+            if (finalGear != null && placedChainGear != null)
+            {
+                finalGear.inputGear = placedChainGear;
+                placedChainGear.RegisterFollower(finalGear);
+                Debug.Log($"[PuzzleManager] Connected {finalGear.name} to placed gear {placedChainGear.name}");
+            }
+
             Debug.Log("[PuzzleManager] Target slot detected. Testing chain connection...");
-            StartCoroutine(PerformTestSync(gear.GetChainGear()));
+            StartCoroutine(PerformTestSync(placedChainGear));
+        }
+    }
+
+    public void OnGearRemoved(GearSlotPuzzle slot, GearDragSystem gear)
+    {
+        if (slot.isPossibleFinalSlot && finalGear != null)
+        {
+            ChainGear removedChainGear = gear.GetChainGear();
+            if (removedChainGear != null)
+            {
+                removedChainGear.UnregisterFollower(finalGear);
+                if (finalGear.inputGear == removedChainGear)
+                {
+                    finalGear.inputGear = null;
+                }
+                Debug.Log($"[PuzzleManager] Disconnected {finalGear.name} from removed gear {removedChainGear.name}");
+            }
         }
     }
 
     private IEnumerator PerformTestSync(ChainGear placedGear)
     {
-        if (motorGear == null) { Debug.LogError("[PuzzleManager] Motor Gear is not assigned!"); yield break; }  
+        bool wasMotorOn = false;
+        float originalSpeed = 0f;
 
-        // Temporarily turn ON the motor to rotate the chain
-        bool wasMotorOn = motorGear.isMotor;
-        float originalSpeed = motorGear.motorSpeed;
-
-        motorGear.isMotor = true;
+        if (motorGear != null)
+        {
+            // Temporarily turn ON the motor to rotate the chain
+            wasMotorOn = motorGear.isMotor;
+            originalSpeed = motorGear.motorSpeed;
+            motorGear.isMotor = true;
+        }
+        else
+        {
+            Debug.LogWarning("[PuzzleManager] Motor Gear is not assigned! Checking if chain is already rotating...");
+        }
 
         // Wait for some frames to let the gears start moving
         yield return new WaitForSeconds(testDuration);
 
-        CheckMassPuzzleCompletion(placedGear);
+        CheckGearPuzzleCompletion(placedGear);
 
         // If the puzzle is not solved, we turn the motor OFF again
-        if (!isPuzzleSolved)
+        if (!isPuzzleSolved && motorGear != null)
         {
             motorGear.isMotor = wasMotorOn;
             motorGear.motorSpeed = originalSpeed;
             Debug.Log("[PuzzleManager] Test pulse finished - Puzzle NOT solved.");
         }
-        else
+        else if (isPuzzleSolved && motorGear != null)
         {
             // If it is solved, we keep it spinning!
             motorGear.isMotor = true;
@@ -89,10 +161,10 @@ public class PuzzleManager : MonoBehaviour
         }
     }
 
-    private void CheckMassPuzzleCompletion(ChainGear placedGear)
+    private void CheckGearPuzzleCompletion(ChainGear placedGear)
     {
-        if (finalGear == null) { Debug.LogError("[PuzzleManager] Final Gear is not assigned!"); return; }       
-        if (placedGear == null) { Debug.LogError("[PuzzleManager] Placed Gear component is null!"); return; }   
+        if (finalGear == null) { Debug.LogError("[PuzzleManager] Final Gear is not assigned!"); return; }
+        if (placedGear == null) { Debug.LogError("[PuzzleManager] Placed Gear component is null!"); return; }
         if (isPuzzleSolved) return;
 
         float placedTeethVelocity = placedGear.currentSpeed * placedGear.teeth;
@@ -104,7 +176,7 @@ public class PuzzleManager : MonoBehaviour
 
         if (Mathf.Abs(placedGear.currentSpeed) < 0.1f)
         {
-            Debug.LogWarning("[PuzzleManager] Placed gear is NOT rotating. Check your chain connection!");      
+            Debug.LogWarning("[PuzzleManager] Placed gear is NOT rotating. Check your chain connection!");
             return;
         }
 
@@ -113,7 +185,7 @@ public class PuzzleManager : MonoBehaviour
 
         if (!oppositeDirection)
         {
-            Debug.LogWarning($"[PuzzleManager] Sync Failed: Wrong direction. Both are rotating same way.");     
+            Debug.LogWarning($"[PuzzleManager] Sync Failed: Wrong direction. Both are rotating same way.");
             return;
         }
 
