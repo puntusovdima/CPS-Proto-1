@@ -15575,7 +15575,7 @@ MonoBehaviour:
   normalMovementSpeed: 5
   runSpeed: 10
   crouchSpeed: 10
-  normalJumpForce: 3
+  normalJumpForce: 4
   runJumpForce: 6
   _playerIsGrounded: 1
   rotationSpeed: 5
