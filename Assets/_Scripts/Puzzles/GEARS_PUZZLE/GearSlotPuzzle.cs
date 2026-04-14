@@ -5,11 +5,22 @@ public class GearSlotPuzzle : MonoBehaviour
     [Header("GEARS SLOTS SETTINGS")]
     [SerializeField] private float snapDistance = 0.5f;
     [SerializeField] private float snapSpeed = 5f;
+    [SerializeField] public bool isPossibleFinalSlot = false;
     [SerializeField] private ChainGear inputGearForThisSlot;
+    [SerializeField] private GearSlotPuzzle inputSlotForThisSlot;
+    public ChainGear myChainGear;
     [SerializeField] private int requiredTeeth = 10;
     private GearDragSystem placedGear;
     private bool isOccupied = false;
-
+    [SerializeField] private Transform slotCenter;
+    
+    private void Awake()
+    {
+        // Si olvidas asignarlo en el inspector, intenta buscar el primer hijo
+        if (slotCenter == null && transform.childCount > 0)
+            slotCenter = transform.GetChild(0);
+    }
+    
     private void OnTriggerStay(Collider other)
     {
         GearDragSystem gear = other.GetComponent<GearDragSystem>();
@@ -19,9 +30,17 @@ public class GearSlotPuzzle : MonoBehaviour
         
         if (gear != null && !gear.IsDragging() && !isOccupied)
         {
-            // Until snap -> verified.
             ChainGear chainGear = gear.GetChainGear();
-            if (chainGear == null || chainGear.teeth != requiredTeeth){
+            if (chainGear == null)
+            {
+                Debug.LogWarning($"[GearSlotPuzzle] ChainGear component not found on {gear.name}!");
+                return;
+            }
+
+            if (chainGear.teeth != requiredTeeth)
+            {
+                // Optionally log this if needed for debugging
+                // Debug.Log($"[GearSlotPuzzle] Teeth mismatch: {chainGear.teeth} != {requiredTeeth}");
                 return;
             }
             
@@ -35,14 +54,14 @@ public class GearSlotPuzzle : MonoBehaviour
 
     private void PlaceGear(GearDragSystem gear)
     {
-        ChainGear chainGear = gear.GetChainGear();
+        myChainGear = gear.GetChainGear();
         
-        if (chainGear == null)
+        if (myChainGear == null)
         {
             return;
         }
         
-        if (chainGear.teeth != requiredTeeth)
+        if (myChainGear.teeth != requiredTeeth)
         {
             Debug.Log("Ese gear no tieene los dientes correspondientes");
             return;
@@ -50,16 +69,27 @@ public class GearSlotPuzzle : MonoBehaviour
 
         placedGear = gear;
         isOccupied = true;
-        gear.transform.position = transform.position;
+        gear.transform.position = slotCenter.transform.position;
         gear.SetCurrentSlot(this);
 
+        // Chain connection logic
+        ChainGear inputToUse = null;
         if (inputGearForThisSlot != null)
         {
-            chainGear.inputGear = inputGearForThisSlot;
-            inputGearForThisSlot.RegisterFollower(chainGear);
+            inputToUse = inputGearForThisSlot;
+        }
+        else if (inputSlotForThisSlot != null)
+        {
+            inputToUse = inputSlotForThisSlot.myChainGear;
         }
 
-        Debug.Log("Gear colocado correctamente en slot");
+        if (inputToUse != null && inputToUse != myChainGear) // Safety check
+        {
+            myChainGear.inputGear = inputToUse;
+            inputToUse.RegisterFollower(myChainGear);
+        }
+
+        Debug.Log($"Gear colocado correctamente en slot {gameObject.name}");
         
         if (PuzzleManager.Instance != null)
         {
@@ -68,6 +98,7 @@ public class GearSlotPuzzle : MonoBehaviour
     }
 
     public bool IsOccupied() => isOccupied;
+
     public void RemoveGear()
     {
         if (placedGear != null)
@@ -75,11 +106,21 @@ public class GearSlotPuzzle : MonoBehaviour
             ChainGear chainGear = placedGear.GetChainGear();
             if (chainGear != null)
             {
-                chainGear.inputGear = null;
+                if (chainGear.inputGear != null)
+                {
+                    chainGear.inputGear.UnregisterFollower(chainGear);
+                    chainGear.inputGear = null;
+                }
             }
+            
+            // Only clear the slot reference if it's still pointing here
+            // this prevents a loop where DragSystem and Slot clear each other.
             placedGear.SetCurrentSlot(null);
         }
+        
         placedGear = null;
+        myChainGear = null;
         isOccupied = false;
+        Debug.Log($"Slot {gameObject.name} cleared and ready for new gear.");
     }
 }
