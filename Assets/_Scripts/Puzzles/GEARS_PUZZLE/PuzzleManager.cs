@@ -46,7 +46,7 @@ public class PuzzleManager : MonoBehaviour
     [SerializeField] private bool requireBalance = true;
     [SerializeField] private float massTolerance = 0.05f;
 
-    private bool isOverallSolved = false;
+    [SerializeField] private bool isOverallSolved = false;
     private PuzzleInteractLogic puzzleLogic;
 
     private void Awake()
@@ -285,6 +285,11 @@ public class PuzzleManager : MonoBehaviour
 
             Invoke("ClosePuzzleAfterDelay", 2.0f);
         }
+    }
+
+    private void CheckOverallCompletion(bool skipLogic) // Overload to handle potential legacy calls if any
+    {
+        CheckOverallCompletion();
     }
 
     private void ClosePuzzleAfterDelay()
