@@ -3125,7 +3125,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7469238148930999125, guid: 4a96e289a913bc947b4bd40fdf7ca0fd, type: 3}
       propertyPath: motorSpeed
-      value: 200
+      value: -200
       objectReference: {fileID: 0}
     - target: {fileID: 7553686636548025277, guid: 4a96e289a913bc947b4bd40fdf7ca0fd, type: 3}
       propertyPath: m_LocalPosition.x
