@@ -25,8 +25,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("RESPAWN SETTINGS")]
     [SerializeField] private Transform respawnPoint;
-    [SerializeField] private Image deathScreen;
-    [SerializeField] private float fadeTime = 0.75f;
 
     [Header("INTERACTION SETTINGS")]
     [SerializeField] private LayerMask puzzleG;
