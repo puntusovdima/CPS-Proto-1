@@ -6,6 +6,13 @@ public class PuzzleManager : MonoBehaviour
     public static PuzzleManager Instance { get; private set; }
     [SerializeField] private Friendly_Robot friendlyRobotInstance;
 
+    [Header("GEAR SLOTS")]
+    [SerializeField] private GearSlotPuzzle[] gSlots;
+    private int gearsPlaced = 0;
+    [Header("MOTOR SPEED")]
+    [SerializeField] private float motorSpeed = 50f;
+    private float velocityDiff = 0f;
+
     [Header("PUZZLE GOAL")]
     [SerializeField] private ChainGear finalGear;
     [SerializeField] private float tolerance = 0.5f;
