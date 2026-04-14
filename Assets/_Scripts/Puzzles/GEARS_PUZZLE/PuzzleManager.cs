@@ -21,6 +21,12 @@ public class PuzzleManager : MonoBehaviour
     [SerializeField] private ChainGear motorGear;
     [SerializeField] private float testDuration = 0.5f;
 
+    [Header("MASS PUZZLE SETTINGS")]
+    [SerializeField] private AtwoodManager atwoodManager;
+    [SerializeField] private float requiredLeftMass = -1f;
+    [SerializeField] private float requiredRightMass = -1f;
+    [SerializeField] private bool requireBalance = false;
+
     private bool isPuzzleSolved = false;
     private PuzzleInteractLogic puzzleLogic;
 
@@ -118,6 +124,57 @@ public class PuzzleManager : MonoBehaviour
         else
         {
             Debug.LogWarning($"[PuzzleManager] Sync Failed: Velocity mismatch. Diff: {velocityDiff:F2} (Tolerance: {tolerance})");
+        }
+    }
+
+    public void OnMassPlaced(MassSlotPuzzle slot, MassDragSystem mass)
+    {
+        Debug.Log($"[PuzzleManager] Mass placed in {slot.name}. IsPossibleFinal: {slot.isPossibleFinalSlot}");
+
+        if (slot.isPossibleFinalSlot && !isPuzzleSolved)
+        {
+            Debug.Log("[PuzzleManager] Target mass slot detected. Testing mass connection...");
+            StartCoroutine(PerformMassTestSync());
+        }
+    }
+
+    private IEnumerator PerformMassTestSync()
+    {
+        if (atwoodManager == null) { Debug.LogError("[PuzzleManager] Atwood Manager is not assigned!"); yield break; }
+
+        // Wait a bit to let the system stabilize if needed
+        yield return new WaitForSeconds(testDuration);
+
+        CheckMassPuzzleCompletion();
+    }
+
+    private void CheckMassPuzzleCompletion()
+    {
+        if (isPuzzleSolved) return;
+        if (atwoodManager == null) return;
+
+        float leftM = atwoodManager.leftMass != null ? atwoodManager.leftMass.mass : 0f;
+        float rightM = atwoodManager.rightMass != null ? atwoodManager.rightMass.mass : 0f;
+
+        bool isCorrect = true;
+
+        if (requireBalance)
+        {
+            if (Mathf.Abs(leftM - rightM) > 0.01f) isCorrect = false;
+        }
+        else
+        {
+            if (requiredLeftMass >= 0 && Mathf.Abs(leftM - requiredLeftMass) > 0.01f) isCorrect = false;
+            if (requiredRightMass >= 0 && Mathf.Abs(rightM - requiredRightMass) > 0.01f) isCorrect = false;
+        }
+
+        if (isCorrect)
+        {
+            CompletePuzzle();
+        }
+        else
+        {
+            Debug.LogWarning($"[PuzzleManager] Mass Sync Failed. Left: {leftM}, Right: {rightM}");
         }
     }
 
