@@ -66,7 +66,7 @@ public class MassSlotPuzzle : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        Debug.Log($"OnTriggerStay: Entering {other.name}");
+        // Debug.Log($"OnTriggerStay: Entering {other.name}");
         
         MassDragSystem massDrag = other.GetComponent<MassDragSystem>();
         if (massDrag == null) massDrag = other.GetComponentInParent<MassDragSystem>();
@@ -75,7 +75,7 @@ public class MassSlotPuzzle : MonoBehaviour
         if (massDrag != null)
         {
             bool dragging = massDrag.IsDragging();
-            Debug.Log($"OnTriggerStay: massDrag found on {massDrag.name}. IsDragging: {dragging}, isOccupied: {isOccupied}");
+            // Debug.Log($"OnTriggerStay: massDrag found on {massDrag.name}. IsDragging: {dragging}, isOccupied: {isOccupied}");
             
             if (!isOccupied && !dragging)
             {
@@ -115,7 +115,7 @@ public class MassSlotPuzzle : MonoBehaviour
             }
         }
 
-        Debug.Log($"Mass {massDrag.name} colocado correctamente en slot {gameObject.name}");
+        // Debug.Log($"Mass {massDrag.name} colocado correctamente en slot {gameObject.name}");
         
         if (PuzzleManager.Instance != null)
         {
