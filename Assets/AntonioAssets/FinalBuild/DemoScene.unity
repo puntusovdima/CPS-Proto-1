@@ -4024,6 +4024,8 @@ MonoBehaviour:
   _playerIsGrounded: 1
   rotationSpeed: 5
   respawnPoint: {fileID: 0}
+  deathScreen: {fileID: 0}
+  fadeTime: 0.75
   puzzleG:
     serializedVersion: 2
     m_Bits: 512
@@ -4783,8 +4785,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GearSlotPuzzle
   snapDistance: 0.5
   snapSpeed: 5
+  isPossibleFinalSlot: 0
   inputGearForThisSlot: {fileID: 1263721561}
+  inputSlotForThisSlot: {fileID: 0}
+  myChainGear: {fileID: 0}
   requiredTeeth: 10
+  slotCenter: {fileID: 0}
 --- !u!65 &1252685134
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5500,8 +5506,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GearSlotPuzzle
   snapDistance: 0.5
   snapSpeed: 5
+  isPossibleFinalSlot: 0
   inputGearForThisSlot: {fileID: 1508211443}
+  inputSlotForThisSlot: {fileID: 0}
+  myChainGear: {fileID: 0}
   requiredTeeth: 10
+  slotCenter: {fileID: 0}
 --- !u!65 &1380621903
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5597,8 +5607,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GearSlotPuzzle
   snapDistance: 0.5
   snapSpeed: 5
+  isPossibleFinalSlot: 0
   inputGearForThisSlot: {fileID: 1758818945}
+  inputSlotForThisSlot: {fileID: 0}
+  myChainGear: {fileID: 0}
   requiredTeeth: 10
+  slotCenter: {fileID: 0}
 --- !u!65 &1384983723
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6483,13 +6497,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90a0bf11fc117c14992b31d807689522, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PuzzleManager
+  friendlyRobotInstance: {fileID: 0}
   gSlots:
   - {fileID: 1988259126}
   - {fileID: 1384983722}
   - {fileID: 1252685133}
   - {fileID: 1380621902}
-  motorGear: {fileID: 0}
   motorSpeed: 100
+  finalGear: {fileID: 0}
+  tolerance: 0.5
+  motorGear: {fileID: 0}
+  testDuration: 0.5
+  atwoodManager: {fileID: 0}
+  requiredLeftMass: -1
+  requiredRightMass: -1
+  requireBalance: 0
 --- !u!114 &1693916623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7576,8 +7598,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GearSlotPuzzle
   snapDistance: 0.5
   snapSpeed: 5
+  isPossibleFinalSlot: 0
   inputGearForThisSlot: {fileID: 2089630613}
+  inputSlotForThisSlot: {fileID: 0}
+  myChainGear: {fileID: 0}
   requiredTeeth: 10
+  slotCenter: {fileID: 0}
 --- !u!65 &1988259127
 BoxCollider:
   m_ObjectHideFlags: 0
