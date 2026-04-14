@@ -13,8 +13,11 @@ public class PuzzleManager : MonoBehaviour
 {
     public static PuzzleManager Instance { get; private set; }
     
-    // Event for colleagues: PuzzleManager.OnPuzzleComplete += MyMethod;
+    // Event for individual puzzles: PuzzleManager.OnPuzzleComplete += MyMethod;
     public static event Action<PuzzleType> OnPuzzleComplete;
+    
+    // Event for overall completion: PuzzleManager.OnAllPuzzlesComplete += MyVictoryMethod;
+    public static event Action OnAllPuzzlesComplete;
 
     [SerializeField] private Friendly_Robot friendlyRobotInstance;
 
@@ -271,6 +274,9 @@ public class PuzzleManager : MonoBehaviour
         {
             isOverallSolved = true;
             Debug.Log("¡TODO EL PUZZLE COMPLETADO!");
+
+            // Fire the victory event for colleagues
+            OnAllPuzzlesComplete?.Invoke();
 
             if (friendlyRobotInstance != null)
             {
