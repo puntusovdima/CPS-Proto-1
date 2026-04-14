@@ -103,6 +103,11 @@ public class GearSlotPuzzle : MonoBehaviour
     {
         if (placedGear != null)
         {
+            if (PuzzleManager.Instance != null)
+            {
+                PuzzleManager.Instance.OnGearRemoved(this, placedGear);
+            }
+
             ChainGear chainGear = placedGear.GetChainGear();
             if (chainGear != null)
             {

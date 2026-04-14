@@ -1,33 +1,52 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System;
+
+public enum PuzzleType
+{
+    Gears,
+    Pulley
+}
 
 public class PuzzleManager : MonoBehaviour
 {
     public static PuzzleManager Instance { get; private set; }
+    
+    // Event for individual puzzles: PuzzleManager.OnPuzzleComplete += MyMethod;
+    public static event Action<PuzzleType> OnPuzzleComplete;
+    
+    // Event for overall completion: PuzzleManager.OnAllPuzzlesComplete += MyVictoryMethod;
+    public static event Action OnAllPuzzlesComplete;
+
     [SerializeField] private Friendly_Robot friendlyRobotInstance;
 
-    [Header("GEAR SLOTS")]
-    [SerializeField] private GearSlotPuzzle[] gSlots;
-    private int gearsPlaced = 0;
+    [Header("PUZZLE GOALS (SCALING)")]
+    [Tooltip("How many gear chains need to be completed?")]
+    [SerializeField] private int requiredGearsSolved = 1;
+    [Tooltip("How many pulley systems need to be balanced?")]
+    [SerializeField] private int requiredPulleysSolved = 1;
+
+    private int currentGearsSolved = 0;
+    private int currentPulleysSolved = 0;
+
     [Header("MOTOR SPEED")]
     [SerializeField] private float motorSpeed = 50f;
-    private float velocityDiff = 0f;
 
-    [Header("PUZZLE GOAL")]
+    [Header("PUZZLE GOAL (GEARS)")]
     [SerializeField] private ChainGear finalGear;
-    [SerializeField] private float tolerance = 0.5f;
+    [SerializeField] private float gearTolerance = 500f; 
 
     [Header("GEARS SETTINGS")]
     [SerializeField] private ChainGear motorGear;
-    [SerializeField] private float testDuration = 0.5f;
+    [SerializeField] private float testDuration = 1.5f; 
 
-    [Header("MASS PUZZLE SETTINGS")]
+    [Header("MASS PUZZLE SETTINGS (PULLEY)")]
     [SerializeField] private AtwoodManager atwoodManager;
-    [SerializeField] private float requiredLeftMass = -1f;
-    [SerializeField] private float requiredRightMass = -1f;
-    [SerializeField] private bool requireBalance = false;
+    [SerializeField] private bool requireBalance = true;
+    [SerializeField] private float massTolerance = 0.05f;
 
-    [SerializeField] private bool isPuzzleSolved = false;
+    [SerializeField] private bool isOverallSolved = false;
     private PuzzleInteractLogic puzzleLogic;
 
     private void Awake()
@@ -38,164 +57,243 @@ public class PuzzleManager : MonoBehaviour
     private void Start()
     {
         puzzleLogic = GetComponent<PuzzleInteractLogic>();
+
+        // Auto-assign motor gears if missing
+        ChainGear[] allGears = FindObjectsOfType<ChainGear>();
+        List<ChainGear> motors = new List<ChainGear>();
+        
+        foreach (var gear in allGears)
+        {
+            if (gear != null && gear.isMotor) motors.Add(gear);
+        }
+
+        if (motorGear == null && motors.Count > 0)
+        {
+            motorGear = motors[0];
+            Debug.Log($"[PuzzleManager] Motor Gear auto-assigned: {motorGear.name}");
+        }
+
+        if (finalGear == null)
+        {
+            if (motors.Count > 1)
+            {
+                finalGear = (motors[0] == motorGear) ? motors[1] : motors[0];
+                Debug.Log($"[PuzzleManager] Final Gear auto-assigned from motors: {finalGear.name}");
+            }
+            else
+            {
+                foreach (var gear in allGears)
+                {
+                    if (gear != null && gear != motorGear && (gear.name.ToLower().Contains("final") || gear.name.ToLower().Contains("goal")))
+                    {
+                        finalGear = gear;
+                        Debug.Log($"[PuzzleManager] Final Gear auto-assigned by name: {finalGear.name}");
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public void InitializePuzzle()
     {
-        isPuzzleSolved = false;
-        Debug.Log("Puzzle iniciado. Conecta el engranaje final.");
+        currentGearsSolved = 0;
+        currentPulleysSolved = 0;
+        isOverallSolved = false;
+        Debug.Log("Puzzle iniciado.");
     }
 
-    public bool IsPuzzleSolved() => isPuzzleSolved;
+    public bool IsPuzzleSolved() => isOverallSolved;
 
-    public void OnGearPlaced(GearSlotPuzzle slot, GearDragSystem gear)
+    private void Update()
     {
-        Debug.Log($"[PuzzleManager] Gear placed in {slot.name}. IsPossibleFinal: {slot.isPossibleFinalSlot}");  
-
-        if (slot.isPossibleFinalSlot && !isPuzzleSolved)
+        // Continuously check Pulley balance if it's not solved yet
+        if (atwoodManager != null && currentPulleysSolved < requiredPulleysSolved)
         {
-            Debug.Log("[PuzzleManager] Target slot detected. Testing chain connection...");
-            StartCoroutine(PerformTestSync(gear.GetChainGear()));
-        }
-    }
-
-    private IEnumerator PerformTestSync(ChainGear placedGear)
-    {
-        if (motorGear == null) { Debug.LogError("[PuzzleManager] Motor Gear is not assigned!"); yield break; }  
-
-        // Temporarily turn ON the motor to rotate the chain
-        bool wasMotorOn = motorGear.isMotor;
-        float originalSpeed = motorGear.motorSpeed;
-
-        motorGear.isMotor = true;
-
-        // Wait for some frames to let the gears start moving
-        yield return new WaitForSeconds(testDuration);
-
-        CheckPuzzleCompletion(placedGear);
-
-        // If the puzzle is not solved, we turn the motor OFF again
-        if (!isPuzzleSolved)
-        {
-            motorGear.isMotor = wasMotorOn;
-            motorGear.motorSpeed = originalSpeed;
-            Debug.Log("[PuzzleManager] Test pulse finished - Puzzle NOT solved.");
-        }
-        else
-        {
-            // If it is solved, we keep it spinning!
-            motorGear.isMotor = true;
-            Debug.Log("[PuzzleManager] Test pulse finished - Puzzle SOLVED!");
+            CheckPulleyPuzzleCompletion();
         }
     }
 
-    private void CheckPuzzleCompletion(ChainGear placedGear)
+    private void CheckPulleyPuzzleCompletion()
     {
-        if (finalGear == null) { Debug.LogError("[PuzzleManager] Final Gear is not assigned!"); return; }       
-        if (placedGear == null) { Debug.LogError("[PuzzleManager] Placed Gear component is null!"); return; }   
-        if (isPuzzleSolved) return;
-
-        float placedTeethVelocity = placedGear.currentSpeed * placedGear.teeth;
-        float finalTeethVelocity = finalGear.currentSpeed * finalGear.teeth;
-
-        Debug.Log($"[PuzzleManager] SYNC CHECK:\n" +
-                  $" - Placed Gear: Speed={placedGear.currentSpeed:F2}, Teeth={placedGear.teeth}, Velocity={placedTeethVelocity:F2}\n" +
-                  $" - Final Gear: Speed={finalGear.currentSpeed:F2}, Teeth={finalGear.teeth}, Velocity={finalTeethVelocity:F2}");
-
-        if (Mathf.Abs(placedGear.currentSpeed) < 0.1f)
-        {
-            Debug.LogWarning("[PuzzleManager] Placed gear is NOT rotating. Check your chain connection!");      
-            return;
-        }
-
-        bool oppositeDirection = (placedTeethVelocity * finalTeethVelocity) < 0;
-        float velocityDiff = Mathf.Abs(Mathf.Abs(placedTeethVelocity) - Mathf.Abs(finalTeethVelocity));
-
-        if (!oppositeDirection)
-        {
-            Debug.LogWarning($"[PuzzleManager] Sync Failed: Wrong direction. Both are rotating same way.");     
-            return;
-        }
-
-        if (velocityDiff < tolerance)
-        {
-            CompletePuzzle();
-        }
-        else
-        {
-            Debug.LogWarning($"[PuzzleManager] Sync Failed: Velocity mismatch. Diff: {velocityDiff:F2} (Tolerance: {tolerance})");
-        }
-    }
-
-    public void OnMassPlaced(MassSlotPuzzle slot, MassDragSystem mass)
-    {
-        Debug.Log($"[PuzzleManager] Mass placed in {slot.name}. IsPossibleFinal: {slot.isPossibleFinalSlot}");
-
-        if (slot.isPossibleFinalSlot && !isPuzzleSolved)
-        {
-            Debug.Log("[PuzzleManager] Target mass slot detected. Testing mass connection...");
-            StartCoroutine(PerformMassTestSync());
-        }
-    }
-
-    private IEnumerator PerformMassTestSync()
-    {
-        if (atwoodManager == null) { Debug.LogError("[PuzzleManager] Atwood Manager is not assigned!"); yield break; }
-
-        // Wait a bit to let the system stabilize if needed
-        yield return new WaitForSeconds(testDuration);
-
-        CheckMassPuzzleCompletion();
-    }
-
-    private void CheckMassPuzzleCompletion()
-    {
-        if (isPuzzleSolved) return;
-        if (atwoodManager == null) return;
+        if (atwoodManager == null || currentPulleysSolved >= requiredPulleysSolved) return;
 
         float leftM = atwoodManager.leftMass != null ? atwoodManager.leftMass.mass : 0f;
         float rightM = atwoodManager.rightMass != null ? atwoodManager.rightMass.mass : 0f;
 
-        bool isCorrect = true;
-
-        if (requireBalance)
+        // Only log if the masses are non-zero to avoid spamming at the start of the scene
+        if (leftM > 0.01f || rightM > 0.01f)
         {
-            if (Mathf.Abs(leftM - rightM) > 0.01f) isCorrect = false;
-        }
-        else
-        {
-            if (requiredLeftMass >= 0 && Mathf.Abs(leftM - requiredLeftMass) > 0.01f) isCorrect = false;
-            if (requiredRightMass >= 0 && Mathf.Abs(rightM - requiredRightMass) > 0.01f) isCorrect = false;
+            // We use a periodic log or only log on significant changes if needed, 
+            // but for now let's just ensure we have the check logic.
         }
 
-        if (isCorrect)
+        if (requireBalance && Mathf.Abs(leftM - rightM) < massTolerance && leftM > 0.01f)
         {
-            CompletePuzzle();
-        }
-        else
-        {
-            Debug.LogWarning($"[PuzzleManager] Mass Sync Failed. Left: {leftM}, Right: {rightM}");
+            Debug.Log($"[PuzzleManager] Pulley Balance Detected! Left: {leftM}, Right: {rightM}");
+            CompletePulleyPuzzle();
         }
     }
 
-    private void CompletePuzzle()
-    {
-        isPuzzleSolved = true;
-        Debug.Log("¡Puzzle completado! El engranaje final está sincronizado.");
+    #region GEARS LOGIC
 
-        if (friendlyRobotInstance != null)
+    public void OnGearPlaced(GearSlotPuzzle slot, GearDragSystem gear)
+    {
+        if (currentGearsSolved >= requiredGearsSolved) return;
+
+        ChainGear placedChainGear = gear.GetChainGear();
+
+        if (slot.isPossibleFinalSlot)
         {
-            friendlyRobotInstance.FriendlyModeActivation();
+            Debug.Log("[PuzzleManager] Final Gear slot detected. Testing...");
+            StartCoroutine(PerformGearTestSync(placedChainGear));
+        }
+    }
+
+    public void OnGearRemoved(GearSlotPuzzle slot, GearDragSystem gear)
+    {
+        // Safety: If the puzzle is already solved, we usually don't care, 
+        // but if we have multiple gear puzzles, we might want to handle disconnection
+        if (slot.isPossibleFinalSlot && finalGear != null)
+        {
+            ChainGear removedChainGear = gear.GetChainGear();
+            if (removedChainGear != null)
+            {
+                removedChainGear.UnregisterFollower(finalGear);
+                if (finalGear.inputGear == removedChainGear)
+                {
+                    finalGear.inputGear = null;
+                }
+                Debug.Log($"[PuzzleManager] Disconnected {finalGear.name} from removed gear {removedChainGear.name}");
+            }
+        }
+    }
+
+    private IEnumerator PerformGearTestSync(ChainGear placedGear)
+    {
+        bool wasMotorOn = false;
+        float originalSpeed = 0f;
+
+        if (motorGear != null)
+        {
+            wasMotorOn = motorGear.isMotor;
+            originalSpeed = motorGear.motorSpeed;
+            motorGear.isMotor = true;
         }
 
-        Invoke("ClosePuzzleAfterDelay", 2.0f);
+        yield return new WaitForSeconds(testDuration);
+
+        CheckGearPuzzleCompletion(placedGear);
+
+        // If this specific check didn't result in a solve, reset motor
+        if (currentGearsSolved < requiredGearsSolved && motorGear != null)
+        {
+            motorGear.isMotor = wasMotorOn;
+            motorGear.motorSpeed = originalSpeed;
+        }
+    }
+
+    private void CheckGearPuzzleCompletion(ChainGear placedGear)
+    {
+        if (finalGear == null || placedGear == null) return;
+
+        float placedTeethVelocity = placedGear.currentSpeed * placedGear.teeth;
+        float finalTeethVelocity = finalGear.currentSpeed * finalGear.teeth;
+
+        float diff = Mathf.Abs(Mathf.Abs(placedTeethVelocity) - Mathf.Abs(finalTeethVelocity));
+        bool oppositeDirection = (placedTeethVelocity * finalTeethVelocity) < 0;
+
+        Debug.Log($"[PuzzleManager] GEAR SYNC CHECK: Diff={diff:F2}, Opposite={oppositeDirection}");
+
+        if (Mathf.Abs(placedGear.currentSpeed) < 0.1f) return;
+
+        // Strictly check direction and speed
+        if (diff < gearTolerance && oppositeDirection)
+        {
+            CompleteGearsPuzzle(placedGear);
+        }
+    }
+
+    private void CompleteGearsPuzzle(ChainGear lastGearInChain)
+    {
+        currentGearsSolved++;
+        Debug.Log($"[PuzzleManager] Gear Puzzle Solved! ({currentGearsSolved}/{requiredGearsSolved})");
+
+        // Permanent connection for the final gear of this chain
+        if (finalGear != null && lastGearInChain != null)
+        {
+            finalGear.inputGear = lastGearInChain;
+            lastGearInChain.RegisterFollower(finalGear);
+            finalGear.isMotor = false;
+        }
+
+        if (motorGear != null) motorGear.isMotor = true;
+
+        TriggerPuzzleCompletion(PuzzleType.Gears);
+    }
+
+    #endregion
+
+    #region PULLEY / MASS LOGIC
+
+    public void OnMassPlaced(MassSlotPuzzle slot, MassDragSystem mass)
+    {
+        if (currentPulleysSolved >= requiredPulleysSolved) return;
+
+        if (slot.isPossibleFinalSlot)
+        {
+            StartCoroutine(PerformPulleyTestSync());
+        }
+    }
+
+    private IEnumerator PerformPulleyTestSync()
+    {
+        if (atwoodManager == null) yield break;
+        yield return new WaitForSeconds(testDuration);
+        CheckPulleyPuzzleCompletion();
+    }
+
+    private void CompletePulleyPuzzle()
+    {
+        currentPulleysSolved++;
+        Debug.Log($"[PuzzleManager] Pulley Puzzle Solved! ({currentPulleysSolved}/{requiredPulleysSolved})");
+        TriggerPuzzleCompletion(PuzzleType.Pulley);
+    }
+
+    #endregion
+
+    private void TriggerPuzzleCompletion(PuzzleType type)
+    {
+        OnPuzzleComplete?.Invoke(type);
+        CheckOverallCompletion();
+    }
+
+    private void CheckOverallCompletion()
+    {
+        if (currentGearsSolved >= requiredGearsSolved && currentPulleysSolved >= requiredPulleysSolved)
+        {
+            isOverallSolved = true;
+            Debug.Log("¡TODO EL PUZZLE COMPLETADO!");
+
+            // Fire the victory event for colleagues
+            OnAllPuzzlesComplete?.Invoke();
+
+            if (friendlyRobotInstance != null)
+            {
+                friendlyRobotInstance.FriendlyModeActivation();
+            }
+
+            Invoke("ClosePuzzleAfterDelay", 2.0f);
+        }
+    }
+
+    private void CheckOverallCompletion(bool skipLogic) // Overload to handle potential legacy calls if any
+    {
+        CheckOverallCompletion();
     }
 
     private void ClosePuzzleAfterDelay()
     {
-        if (puzzleLogic != null)
-        {
-            puzzleLogic.ClosePuzzle();
-        }
+        if (puzzleLogic != null) puzzleLogic.ClosePuzzle();
     }
 }
