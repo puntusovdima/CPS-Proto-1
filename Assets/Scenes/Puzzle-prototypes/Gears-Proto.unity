@@ -618,20 +618,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57e3e2fbc61cb3d4baa19df1df579e58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearSlot
-  requiredTeeth: 10
-  inputFixedGear: {fileID: 0}
-  inputSlot: {fileID: 0}
-  snapRadius: 1
-  reverseDirection: 1
-  onGearPlaced:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  onGearRemoved:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  <PlacedGear>k__BackingField: {fileID: 0}
 --- !u!4 &315762014 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
@@ -958,20 +944,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57e3e2fbc61cb3d4baa19df1df579e58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearSlot
-  requiredTeeth: 10
-  inputFixedGear: {fileID: 0}
-  inputSlot: {fileID: 0}
-  snapRadius: 1
-  reverseDirection: 1
-  onGearPlaced:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  onGearRemoved:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  <PlacedGear>k__BackingField: {fileID: 0}
 --- !u!1 &475180448
 GameObject:
   m_ObjectHideFlags: 0
@@ -1099,20 +1071,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57e3e2fbc61cb3d4baa19df1df579e58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearSlot
-  requiredTeeth: 10
-  inputFixedGear: {fileID: 0}
-  inputSlot: {fileID: 0}
-  snapRadius: 1
-  reverseDirection: 1
-  onGearPlaced:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  onGearRemoved:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  <PlacedGear>k__BackingField: {fileID: 0}
 --- !u!4 &541291345 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
@@ -1127,6 +1085,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 668230116}
+  - component: {fileID: 668230117}
   m_Layer: 0
   m_Name: PuzzleManager
   m_TagString: Untagged
@@ -1149,6 +1108,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &668230117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 668230115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90a0bf11fc117c14992b31d807689522, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleManager
+  friendlyRobotInstance: {fileID: 0}
+  gSlots: []
+  motorSpeed: 50
+  finalGear: {fileID: 0}
+  tolerance: 0.5
+  motorGear: {fileID: 0}
+  testDuration: 0.5
+  atwoodManager: {fileID: 0}
+  requiredLeftMass: -1
+  requiredRightMass: -1
+  requireBalance: 0
 --- !u!1 &704693095 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6949630532089740811, guid: 5d4fa67be0ed30c42ad6db6007d34813, type: 3}
@@ -1166,14 +1148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b465508754b7f3648925b3450e871996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearPiece
-  teeth: 10
-  rotationAxis: {x: 0, y: 0, z: 1}
-  isFixed: 1
-  isMotor: 1
-  motorSpeed: 90
-  currentAngularVelocity: 0
-  _initialRotation: {x: 0, y: 0, z: 0, w: 0}
-  _totalAngle: 0
 --- !u!1 &825714347 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
@@ -1218,14 +1192,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b465508754b7f3648925b3450e871996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearPiece
-  teeth: 10
-  rotationAxis: {x: 0, y: 1, z: 0}
-  isFixed: 0
-  isMotor: 0
-  motorSpeed: 90
-  currentAngularVelocity: 0
-  _initialRotation: {x: 0, y: 0, z: 0, w: 0}
-  _totalAngle: 0
 --- !u!1001 &934077476
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1386,14 +1352,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b465508754b7f3648925b3450e871996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearPiece
-  teeth: 10
-  rotationAxis: {x: 0, y: 1, z: 0}
-  isFixed: 0
-  isMotor: 0
-  motorSpeed: 90
-  currentAngularVelocity: 0
-  _initialRotation: {x: 0, y: 0, z: 0, w: 0}
-  _totalAngle: 0
 --- !u!1 &973529254 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8525606899787642121, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
@@ -1556,14 +1514,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b465508754b7f3648925b3450e871996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearPiece
-  teeth: 10
-  rotationAxis: {x: 0, y: 1, z: 0}
-  isFixed: 0
-  isMotor: 0
-  motorSpeed: 90
-  currentAngularVelocity: 0
-  _initialRotation: {x: 0, y: 0, z: 0, w: 0}
-  _totalAngle: 0
 --- !u!1001 &1258601233
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1713,14 +1663,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b465508754b7f3648925b3450e871996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearPiece
-  teeth: 10
-  rotationAxis: {x: 0, y: 1, z: 0}
-  isFixed: 0
-  isMotor: 0
-  motorSpeed: 90
-  currentAngularVelocity: 0
-  _initialRotation: {x: 0, y: 0, z: 0, w: 0}
-  _totalAngle: 0
 --- !u!4 &1414747201 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
@@ -1770,14 +1712,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b465508754b7f3648925b3450e871996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearPiece
-  teeth: 10
-  rotationAxis: {x: 0, y: 1, z: 0}
-  isFixed: 0
-  isMotor: 0
-  motorSpeed: 90
-  currentAngularVelocity: 0
-  _initialRotation: {x: 0, y: 0, z: 0, w: 0}
-  _totalAngle: 0
 --- !u!4 &1634250050 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 866a2b08e7ffdb141bc6387cb6747e9f, type: 3}
@@ -1795,14 +1729,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b465508754b7f3648925b3450e871996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearPiece
-  teeth: 10
-  rotationAxis: {x: 0, y: 1, z: 0}
-  isFixed: 0
-  isMotor: 0
-  motorSpeed: 90
-  currentAngularVelocity: 0
-  _initialRotation: {x: 0, y: 0, z: 0, w: 0}
-  _totalAngle: 0
 --- !u!1 &1634349926
 GameObject:
   m_ObjectHideFlags: 0
@@ -1930,20 +1856,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57e3e2fbc61cb3d4baa19df1df579e58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearSlot
-  requiredTeeth: 10
-  inputFixedGear: {fileID: 0}
-  inputSlot: {fileID: 0}
-  snapRadius: 1
-  reverseDirection: 1
-  onGearPlaced:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  onGearRemoved:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  <PlacedGear>k__BackingField: {fileID: 0}
 --- !u!1001 &1661673382
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2226,20 +2138,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57e3e2fbc61cb3d4baa19df1df579e58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearSlot
-  requiredTeeth: 10
-  inputFixedGear: {fileID: 0}
-  inputSlot: {fileID: 0}
-  snapRadius: 1
-  reverseDirection: 1
-  onGearPlaced:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  onGearRemoved:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  <PlacedGear>k__BackingField: {fileID: 0}
 --- !u!1 &1683688008
 GameObject:
   m_ObjectHideFlags: 0
@@ -2367,20 +2265,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57e3e2fbc61cb3d4baa19df1df579e58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearSlot
-  requiredTeeth: 10
-  inputFixedGear: {fileID: 0}
-  inputSlot: {fileID: 0}
-  snapRadius: 1
-  reverseDirection: 1
-  onGearPlaced:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  onGearRemoved:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  <PlacedGear>k__BackingField: {fileID: 0}
 --- !u!1 &1688639677 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1700759191423751790, guid: 5d4fa67be0ed30c42ad6db6007d34813, type: 3}
@@ -2398,20 +2282,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57e3e2fbc61cb3d4baa19df1df579e58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearSlot
-  requiredTeeth: 10
-  inputFixedGear: {fileID: 704693097}
-  inputSlot: {fileID: 0}
-  snapRadius: 1
-  reverseDirection: 1
-  onGearPlaced:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  onGearRemoved:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  <PlacedGear>k__BackingField: {fileID: 0}
 --- !u!1001 &1690473993
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2938,20 +2808,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57e3e2fbc61cb3d4baa19df1df579e58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearSlot
-  requiredTeeth: 10
-  inputFixedGear: {fileID: 0}
-  inputSlot: {fileID: 0}
-  snapRadius: 1
-  reverseDirection: 1
-  onGearPlaced:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  onGearRemoved:
-    m_PersistentCalls:
-      m_Calls: []
-    m_CallsDirty: 1
-  <PlacedGear>k__BackingField: {fileID: 0}
 --- !u!1 &2013410473
 GameObject:
   m_ObjectHideFlags: 1
@@ -3018,14 +2874,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b465508754b7f3648925b3450e871996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearPiece
-  teeth: 10
-  rotationAxis: {x: 0, y: 1, z: 0}
-  isFixed: 0
-  isMotor: 0
-  motorSpeed: 90
-  currentAngularVelocity: 0
-  _initialRotation: {x: 0, y: 0, z: 0, w: 0}
-  _totalAngle: 0
 --- !u!1001 &2131939800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3374,6 +3222,7 @@ MonoBehaviour:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 668230116}
   - {fileID: 1823688467}
   - {fileID: 157207114}
   - {fileID: 432432461}
@@ -3387,6 +3236,5 @@ SceneRoots:
   - {fileID: 438416718}
   - {fileID: 934077476}
   - {fileID: 1661673382}
-  - {fileID: 668230116}
   - {fileID: 2343224644818492471}
   - {fileID: 2135366361}
