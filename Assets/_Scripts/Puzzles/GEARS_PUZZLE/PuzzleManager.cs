@@ -102,6 +102,36 @@ public class PuzzleManager : MonoBehaviour
 
     public bool IsPuzzleSolved() => isOverallSolved;
 
+    private void Update()
+    {
+        // Continuously check Pulley balance if it's not solved yet
+        if (atwoodManager != null && currentPulleysSolved < requiredPulleysSolved)
+        {
+            CheckPulleyPuzzleCompletion();
+        }
+    }
+
+    private void CheckPulleyPuzzleCompletion()
+    {
+        if (atwoodManager == null || currentPulleysSolved >= requiredPulleysSolved) return;
+
+        float leftM = atwoodManager.leftMass != null ? atwoodManager.leftMass.mass : 0f;
+        float rightM = atwoodManager.rightMass != null ? atwoodManager.rightMass.mass : 0f;
+
+        // Only log if the masses are non-zero to avoid spamming at the start of the scene
+        if (leftM > 0.01f || rightM > 0.01f)
+        {
+            // We use a periodic log or only log on significant changes if needed, 
+            // but for now let's just ensure we have the check logic.
+        }
+
+        if (requireBalance && Mathf.Abs(leftM - rightM) < massTolerance && leftM > 0.01f)
+        {
+            Debug.Log($"[PuzzleManager] Pulley Balance Detected! Left: {leftM}, Right: {rightM}");
+            CompletePulleyPuzzle();
+        }
+    }
+
     #region GEARS LOGIC
 
     public void OnGearPlaced(GearSlotPuzzle slot, GearDragSystem gear)
@@ -218,19 +248,6 @@ public class PuzzleManager : MonoBehaviour
         if (atwoodManager == null) yield break;
         yield return new WaitForSeconds(testDuration);
         CheckPulleyPuzzleCompletion();
-    }
-
-    private void CheckPulleyPuzzleCompletion()
-    {
-        if (atwoodManager == null) return;
-
-        float leftM = atwoodManager.leftMass != null ? atwoodManager.leftMass.mass : 0f;
-        float rightM = atwoodManager.rightMass != null ? atwoodManager.rightMass.mass : 0f;
-
-        if (requireBalance && Mathf.Abs(leftM - rightM) < massTolerance)
-        {
-            CompletePulleyPuzzle();
-        }
     }
 
     private void CompletePulleyPuzzle()
