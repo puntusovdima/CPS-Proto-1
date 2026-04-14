@@ -14,11 +14,11 @@ public class MassRegulator : MonoBehaviour
 
     private void CalculateMass()
     {
-        // Only calculate if we have children to sum.
-        // If children is null or empty, this is a leaf node/base mass, so keep current mass.
+        // Only calculate if we have a children array and it's not empty.
         if (children == null || children.Length == 0) return;
 
         float totalMass = 0f;
+        bool hasValidChild = false;
 
         // Loop through all children
         foreach (MassRegulator child in children)
@@ -26,9 +26,15 @@ public class MassRegulator : MonoBehaviour
             if (child != null)
             {
                 totalMass += child.mass;
+                hasValidChild = true;
             }
         }
 
-        mass = totalMass;
+        // Only overwrite mass if we actually found children to sum.
+        // This preserves the manually set mass for leaf nodes (like "just a mass").
+        if (hasValidChild)
+        {
+            mass = totalMass;
+        }
     }
 }
