@@ -27,7 +27,7 @@ public class PuzzleManager : MonoBehaviour
     [SerializeField] private float requiredRightMass = -1f;
     [SerializeField] private bool requireBalance = false;
 
-    private bool isPuzzleSolved = false;
+    [SerializeField] private bool isPuzzleSolved = false;
     private PuzzleInteractLogic puzzleLogic;
 
     private void Awake()

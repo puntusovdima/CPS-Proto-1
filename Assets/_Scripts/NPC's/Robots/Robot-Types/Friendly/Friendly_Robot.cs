@@ -34,6 +34,16 @@ public class Friendly_Robot : Base_AI
             robotArm.localPosition = armStartPos;
         }
     }
+    public void ResetRobot()
+    {
+        isTheRobotActivated = false;
+        playerOnArm = false;
+        if (robotArm != null)
+        {
+            robotArm.localPosition = armStartPos;
+        }
+        agent.isStopped = true;
+    }
     public void FriendlyModeActivation()
     {
         isTheRobotActivated = true;
