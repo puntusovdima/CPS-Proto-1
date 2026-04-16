@@ -44,12 +44,6 @@ public class MassDragSystem : MonoBehaviour
     // DRAG LOGIC.
     private void TryToGrabMass()
     {
-        // Don't allow moving masses if the puzzle is already done
-        if (PuzzleManager.Instance != null && PuzzleManager.Instance.IsPuzzleSolved())
-        {
-            return;
-        }
-
         Ray rayC = pCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         bool hitThisMass = false;
 

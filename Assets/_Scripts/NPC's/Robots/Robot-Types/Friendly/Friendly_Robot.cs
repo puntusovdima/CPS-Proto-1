@@ -25,6 +25,7 @@ public class Friendly_Robot : Base_AI
     [Header("Puzzle Settings")]
     private bool isTheRobotActivated = false;
     private bool playerOnArm = false;
+    private bool armReachedMax = false;
 
     protected override void Start()
     {
@@ -38,20 +39,28 @@ public class Friendly_Robot : Base_AI
     {
         isTheRobotActivated = false;
         playerOnArm = false;
+        armReachedMax = false;
+        robotMode = FriendlyRobotModes.HelpPlayer;
         if (robotArm != null)
-        {
             robotArm.localPosition = armStartPos;
-        }
         agent.isStopped = true;
     }
-    public void FriendlyModeActivation()
+public void FriendlyModeActivation()
     {
         isTheRobotActivated = true;
+        armReachedMax = false;
     }
     protected override void Update()
     {
         base.Update();
-        if (!isTheRobotActivated)return;
+
+        if (!isTheRobotActivated && PuzzleManager.Instance != null && PuzzleManager.Instance.IsPuzzleSolved())
+        {
+            isTheRobotActivated = true;
+            armReachedMax = false;
+        }
+
+        if (!isTheRobotActivated) return;
 
         switch (robotMode)
         {
@@ -78,15 +87,24 @@ public class Friendly_Robot : Base_AI
             agent.isStopped = true;
         }
     }
-
     private void HelpPlayer()
     {
         if (robotArm == null) return;
-        if (playerOnArm)
+
+        if (playerOnArm && !armReachedMax)
         {
             robotArm.localPosition = Vector3.MoveTowards(robotArm.localPosition, armFinalPos, armSpeed * Time.deltaTime);
+            if (Vector3.Distance(robotArm.localPosition, armFinalPos) < 0.01f)
+            {
+                armReachedMax = true;
+                robotMode = FriendlyRobotModes.FollowPlayer;
+                playerOnArm = false;
+                agent.isStopped = false;
+                if (player != null)
+                    agent.SetDestination(player.position);
+            }
         }
-        else
+        else if (!playerOnArm && !armReachedMax)
         {
             robotArm.localPosition = Vector3.MoveTowards(robotArm.localPosition, armStartPos, armSpeed * Time.deltaTime);
         }
@@ -95,5 +113,4 @@ public class Friendly_Robot : Base_AI
     {
         playerOnArm = v;
     }
-
 }

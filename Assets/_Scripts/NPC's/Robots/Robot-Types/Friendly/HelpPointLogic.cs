@@ -8,6 +8,7 @@ public class HelpPointLogic : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            Debug.Log("player");
             friendlyRobot.SetPlayerOnArm(true);
         }
     }

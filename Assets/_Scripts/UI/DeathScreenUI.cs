@@ -11,7 +11,6 @@ public class DeathScreenUI : MonoBehaviour
     {
         blackFade.color = new Color(0, 0, 0, 1);
         deathPanel.SetActive(false);
-        PlayDeathSequence(); //
     }
 
     public void PlayDeathSequence()
@@ -23,6 +22,9 @@ public class DeathScreenUI : MonoBehaviour
     {
         yield return StartCoroutine(FadeImage(blackFade, 0, 1, 1f));
         deathPanel.SetActive(true);
+        Time.timeScale = 0f;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     private IEnumerator FadeImage(Image img, float from, float to, float duration)
@@ -43,6 +45,9 @@ public class DeathScreenUI : MonoBehaviour
     {
         deathPanel.SetActive(false);
         blackFade.color = new Color(0, 0, 0, 0);
-        PlayerController.Instance.RespawnCoroutine(); // r
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        PlayerController.Instance.RespawnCoroutine();
+        PlayerController.Instance.setPause(false);
     }
 }
