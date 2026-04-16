@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
-{
+{   
     public static PlayerController Instance { get; private set; }
 
     [Header("SPEED SETTINGS")]
@@ -17,8 +17,8 @@ public class PlayerController : MonoBehaviour
     [Range(0f, 10f)] [SerializeField] private float crouchSpeed = 10f;
 
     [Header("JUMP SETTINGS")]
-    [Range(0f, 20f)][SerializeField] private float normalJumpForce = 8f;
-    [Range(0f, 20f)][SerializeField] private float runJumpForce = 10f;
+    [Range(0f, 20f)][SerializeField] private float normalJumpForce = 0.0f;
+    [Range(0f, 20f)][SerializeField] private float runJumpForce = 14f;
     [SerializeField] private bool _playerIsGrounded = true;
 
     [Header("ROTATION SETTINGS")]
@@ -158,7 +158,7 @@ public class PlayerController : MonoBehaviour
         
         if (_playerIsGrounded && _verticalVelocity <= 0)
         {
-            _verticalVelocity = 0f;
+            _verticalVelocity = -2f;
         }
 
         // Footstep sounds
@@ -218,11 +218,13 @@ public class PlayerController : MonoBehaviour
         if (_playerIsGrounded)
         {
             float jumpForceA = _isRunning ? runJumpForce : normalJumpForce;
-            _verticalVelocity = jumpForceA;
-            _playerIsGrounded = false;
 
-            if (SoundManager.Instance != null)
+            _verticalVelocity = jumpForceA;
+
+            if (SoundManager.Instance != null){
                 SoundManager.Instance.PlaySound(jumpSFX);
+            }
+            
         }
     }
 

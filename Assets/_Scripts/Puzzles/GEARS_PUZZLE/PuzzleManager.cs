@@ -20,6 +20,7 @@ public class PuzzleManager : MonoBehaviour
     public static event Action OnAllPuzzlesComplete;
 
     [SerializeField] private Friendly_Robot friendlyRobotInstance;
+    public Friendly_Robot FriendlyRobotInstance => friendlyRobotInstance;
 
     [Header("PUZZLE GOALS (SCALING)")]
     [Tooltip("How many gear chains need to be completed?")]
@@ -57,29 +58,26 @@ public class PuzzleManager : MonoBehaviour
     private void Start()
     {
         puzzleLogic = GetComponent<PuzzleInteractLogic>();
+        if (puzzleLogic == null)
+            puzzleLogic = GetComponentInChildren<PuzzleInteractLogic>();
+        if (puzzleLogic == null)
+            puzzleLogic = FindObjectOfType<PuzzleInteractLogic>();
 
-        // Auto-assign motor gears if missing
         ChainGear[] allGears = FindObjectsOfType<ChainGear>();
         List<ChainGear> motors = new List<ChainGear>();
-        
+
         foreach (var gear in allGears)
         {
             if (gear != null && gear.isMotor) motors.Add(gear);
         }
 
         if (motorGear == null && motors.Count > 0)
-        {
             motorGear = motors[0];
-            Debug.Log($"[PuzzleManager] Motor Gear auto-assigned: {motorGear.name}");
-        }
 
         if (finalGear == null)
         {
             if (motors.Count > 1)
-            {
                 finalGear = (motors[0] == motorGear) ? motors[1] : motors[0];
-                Debug.Log($"[PuzzleManager] Final Gear auto-assigned from motors: {finalGear.name}");
-            }
             else
             {
                 foreach (var gear in allGears)
@@ -87,7 +85,6 @@ public class PuzzleManager : MonoBehaviour
                     if (gear != null && gear != motorGear && (gear.name.ToLower().Contains("final") || gear.name.ToLower().Contains("goal")))
                     {
                         finalGear = gear;
-                        Debug.Log($"[PuzzleManager] Final Gear auto-assigned by name: {finalGear.name}");
                         break;
                     }
                 }
@@ -100,7 +97,6 @@ public class PuzzleManager : MonoBehaviour
         currentGearsSolved = 0;
         currentPulleysSolved = 0;
         isOverallSolved = false;
-        Debug.Log("Puzzle iniciado.");
     }
 
     public bool IsPuzzleSolved() => isOverallSolved;
@@ -129,10 +125,7 @@ public class PuzzleManager : MonoBehaviour
         }
 
         if (requireBalance && Mathf.Abs(leftM - rightM) < massTolerance && leftM > 0.01f)
-        {
-            Debug.Log($"[PuzzleManager] Pulley Balance Detected! Left: {leftM}, Right: {rightM}");
             CompletePulleyPuzzle();
-        }
     }
 
     #region GEARS LOGIC
@@ -144,10 +137,7 @@ public class PuzzleManager : MonoBehaviour
         ChainGear placedChainGear = gear.GetChainGear();
 
         if (slot.isPossibleFinalSlot)
-        {
-            Debug.Log("[PuzzleManager] Final Gear slot detected. Testing...");
             StartCoroutine(PerformGearTestSync(placedChainGear));
-        }
     }
 
     public void OnGearRemoved(GearSlotPuzzle slot, GearDragSystem gear)
@@ -161,10 +151,7 @@ public class PuzzleManager : MonoBehaviour
             {
                 removedChainGear.UnregisterFollower(finalGear);
                 if (finalGear.inputGear == removedChainGear)
-                {
                     finalGear.inputGear = null;
-                }
-                Debug.Log($"[PuzzleManager] Disconnected {finalGear.name} from removed gear {removedChainGear.name}");
             }
         }
     }
@@ -203,23 +190,15 @@ public class PuzzleManager : MonoBehaviour
         float diff = Mathf.Abs(Mathf.Abs(placedTeethVelocity) - Mathf.Abs(finalTeethVelocity));
         bool oppositeDirection = (placedTeethVelocity * finalTeethVelocity) < 0;
 
-        Debug.Log($"[PuzzleManager] GEAR SYNC CHECK: Diff={diff:F2}, Opposite={oppositeDirection}");
-
         if (Mathf.Abs(placedGear.currentSpeed) < 0.1f) return;
 
-        // Strictly check direction and speed
         if (diff < gearTolerance && oppositeDirection)
-        {
             CompleteGearsPuzzle(placedGear);
-        }
     }
 
     private void CompleteGearsPuzzle(ChainGear lastGearInChain)
     {
         currentGearsSolved++;
-        Debug.Log($"[PuzzleManager] Gear Puzzle Solved! ({currentGearsSolved}/{requiredGearsSolved})");
-
-        // Permanent connection for the final gear of this chain
         if (finalGear != null && lastGearInChain != null)
         {
             finalGear.inputGear = lastGearInChain;
@@ -229,7 +208,12 @@ public class PuzzleManager : MonoBehaviour
 
         if (motorGear != null) motorGear.isMotor = true;
 
-        TriggerPuzzleCompletion(PuzzleType.Gears);
+        Debug.Log("[CompleteGearsPuzzle] friendlyRobotInstance=" + (friendlyRobotInstance != null ? "OK" : "NULL"));
+        if (friendlyRobotInstance != null)
+            friendlyRobotInstance.FriendlyModeActivation();
+
+        isOverallSolved = true;
+        puzzleLogic?.ClosePuzzle();
     }
 
     #endregion
@@ -256,8 +240,7 @@ public class PuzzleManager : MonoBehaviour
     private void CompletePulleyPuzzle()
     {
         currentPulleysSolved++;
-        Debug.Log($"[PuzzleManager] Pulley Puzzle Solved! ({currentPulleysSolved}/{requiredPulleysSolved})");
-        TriggerPuzzleCompletion(PuzzleType.Pulley);
+        TriggerSinglePuzzleCompletion(PuzzleType.Pulley);
     }
 
     #endregion
@@ -268,20 +251,23 @@ public class PuzzleManager : MonoBehaviour
         CheckOverallCompletion();
     }
 
+    private void TriggerSinglePuzzleCompletion(PuzzleType type)
+    {
+        OnPuzzleComplete?.Invoke(type);
+        
+        if (puzzleLogic != null)
+            puzzleLogic.ClosePuzzle();
+    }
+
     private void CheckOverallCompletion()
     {
         if (currentGearsSolved >= requiredGearsSolved && currentPulleysSolved >= requiredPulleysSolved)
         {
             isOverallSolved = true;
-            Debug.Log("¡TODO EL PUZZLE COMPLETADO!");
-
-            // Fire the victory event for colleagues
             OnAllPuzzlesComplete?.Invoke();
 
             if (friendlyRobotInstance != null)
-            {
                 friendlyRobotInstance.FriendlyModeActivation();
-            }
 
             Invoke("ClosePuzzleAfterDelay", 2.0f);
         }
