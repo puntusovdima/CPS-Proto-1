@@ -54,7 +54,7 @@ public void FriendlyModeActivation()
     {
         base.Update();
 
-        if (!isTheRobotActivated && PuzzleManager.Instance != null && PuzzleManager.Instance.IsPuzzleSolved())
+        if (!isTheRobotActivated && PuzzleManager.Instance != null && PuzzleManager.Instance.IsPuzzleSolved() && !PuzzleManager.Instance.DoorPuzzle)
         {
             isTheRobotActivated = true;
             armReachedMax = false;

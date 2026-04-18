@@ -6,11 +6,10 @@ public class HelpPointLogic : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            Debug.Log("player");
-            friendlyRobot.SetPlayerOnArm(true);
-        }
+        if (!other.CompareTag("Player")) return;
+        
+        Debug.Log("player");
+        friendlyRobot.SetPlayerOnArm(true);
     }
 
     private void OnTriggerExit(Collider other)

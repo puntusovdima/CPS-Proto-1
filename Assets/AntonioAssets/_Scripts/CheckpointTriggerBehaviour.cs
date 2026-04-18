@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class CheckpointTriggerBehaviour : MonoBehaviour
@@ -13,6 +12,7 @@ public class CheckpointTriggerBehaviour : MonoBehaviour
         
         ToggleHasPassedCheckpoint();// must be changed when the player finishes the room
         GameManager.Instance.IncreaseCheckpoint();
+
     }
     
     public void ToggleHasPassedCheckpoint()
