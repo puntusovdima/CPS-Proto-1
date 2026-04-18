@@ -24,7 +24,7 @@ public class Neutral_Robot : Friendly_Robot
     {
         state = NeutralState.Enemy;
         isA = true;
-        // ANIMATION OF THE DEAD OR SOMETRHING ELSE HERE.
+        // ANIMATION OF THE DEAD OR SOMETHING ELSE HERE.
 
     }
 

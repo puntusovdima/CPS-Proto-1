@@ -36,7 +36,9 @@ public class PuzzleManager : MonoBehaviour
 
     [Header("PUZZLE GOAL (GEARS)")]
     [SerializeField] private ChainGear finalGear;
-    [SerializeField] private float gearTolerance = 500f; 
+    [SerializeField] private float gearTolerance = 500f;
+    [SerializeField] private bool doorPuzzle = false;
+    public bool DoorPuzzle => doorPuzzle;
 
     [Header("GEARS SETTINGS")]
     [SerializeField] private ChainGear motorGear;
@@ -209,7 +211,7 @@ public class PuzzleManager : MonoBehaviour
         if (motorGear != null) motorGear.isMotor = true;
 
         Debug.Log("[CompleteGearsPuzzle] friendlyRobotInstance=" + (friendlyRobotInstance != null ? "OK" : "NULL"));
-        if (friendlyRobotInstance != null)
+        if (friendlyRobotInstance != null && !doorPuzzle)
             friendlyRobotInstance.FriendlyModeActivation();
 
         isOverallSolved = true;
@@ -266,7 +268,7 @@ public class PuzzleManager : MonoBehaviour
             isOverallSolved = true;
             OnAllPuzzlesComplete?.Invoke();
 
-            if (friendlyRobotInstance != null)
+            if (friendlyRobotInstance != null && !doorPuzzle)
                 friendlyRobotInstance.FriendlyModeActivation();
 
             Invoke("ClosePuzzleAfterDelay", 2.0f);
