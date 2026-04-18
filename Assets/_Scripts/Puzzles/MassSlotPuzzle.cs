@@ -113,6 +113,7 @@ public class MassSlotPuzzle : MonoBehaviour
                 childrenList.Add(draggedMassRegulator);
                 myMassRegulator.children = childrenList.ToArray();
             }
+            myMassRegulator.RecalculateAllUpwards();
         }
 
         // Debug.Log($"Mass {massDrag.name} colocado correctamente en slot {gameObject.name}");
@@ -129,6 +130,11 @@ public class MassSlotPuzzle : MonoBehaviour
     {
         if (placedMass != null)
         {
+            if (PuzzleManager.Instance != null)
+            {
+                PuzzleManager.Instance.OnMassRemoved(this, placedMass);
+            }
+
             // Unparent from the slot
             placedMass.transform.SetParent(null);
 
@@ -148,6 +154,8 @@ public class MassSlotPuzzle : MonoBehaviour
                 {
                     myMassRegulator.mass = 0;
                 }
+                
+                myMassRegulator.RecalculateAllUpwards();
             }
             
             // Clear the slot reference
