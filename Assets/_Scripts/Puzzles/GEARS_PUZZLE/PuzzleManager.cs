@@ -45,8 +45,8 @@ public class PuzzleManager : MonoBehaviour
     [SerializeField] private float testDuration = 1.5f; 
 
     [Header("MASS PUZZLE SETTINGS (PULLEY)")]
-    [SerializeField] private AtwoodManager atwoodManager;
-    [SerializeField] private bool requireBalance = true;
+    [SerializeField] private AtwoodManager[] atwoodManagers;
+    private bool requireBalance = true;
     [SerializeField] private float massTolerance = 0.05f;
 
     [SerializeField] private bool isOverallSolved = false;
@@ -55,6 +55,7 @@ public class PuzzleManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        requireBalance = true;
     }
 
     private void Start()
@@ -64,6 +65,11 @@ public class PuzzleManager : MonoBehaviour
             puzzleLogic = GetComponentInChildren<PuzzleInteractLogic>();
         if (puzzleLogic == null)
             puzzleLogic = FindObjectOfType<PuzzleInteractLogic>();
+
+        if (atwoodManagers == null || atwoodManagers.Length == 0)
+        {
+            atwoodManagers = FindObjectsOfType<AtwoodManager>();
+        }
 
         ChainGear[] allGears = FindObjectsOfType<ChainGear>();
         List<ChainGear> motors = new List<ChainGear>();
@@ -106,7 +112,7 @@ public class PuzzleManager : MonoBehaviour
     private void Update()
     {
         // Continuously check Pulley balance if it's not solved yet
-        if (atwoodManager != null && currentPulleysSolved < requiredPulleysSolved)
+        if (atwoodManagers != null && atwoodManagers.Length > 0 && currentPulleysSolved < requiredPulleysSolved)
         {
             CheckPulleyPuzzleCompletion();
         }
@@ -114,20 +120,31 @@ public class PuzzleManager : MonoBehaviour
 
     private void CheckPulleyPuzzleCompletion()
     {
-        if (atwoodManager == null || currentPulleysSolved >= requiredPulleysSolved) return;
+        if (atwoodManagers == null || atwoodManagers.Length == 0 || currentPulleysSolved >= requiredPulleysSolved) return;
 
-        float leftM = atwoodManager.leftMass != null ? atwoodManager.leftMass.mass : 0f;
-        float rightM = atwoodManager.rightMass != null ? atwoodManager.rightMass.mass : 0f;
+        int balancedCount = 0;
+        int totalPulleys = atwoodManagers.Length;
 
-        // Only log if the masses are non-zero to avoid spamming at the start of the scene
-        if (leftM > 0.01f || rightM > 0.01f)
+        foreach (var am in atwoodManagers)
         {
-            // We use a periodic log or only log on significant changes if needed, 
-            // but for now let's just ensure we have the check logic.
+            if (am == null) continue;
+
+            float leftM = am.leftMass != null ? am.leftMass.mass : 0f;
+            float rightM = am.rightMass != null ? am.rightMass.mass : 0f;
+            float diff = Mathf.Abs(leftM - rightM);
+
+            if (diff < massTolerance && leftM > 0.01f)
+            {
+                balancedCount++;
+                // Debug.Log($"[PulleyCheck] {am.name} balanced ({balancedCount}/{totalPulleys} completed)");
+            }
         }
 
-        if (requireBalance && Mathf.Abs(leftM - rightM) < massTolerance && leftM > 0.01f)
+        if (balancedCount == totalPulleys && totalPulleys > 0)
+        {
+            Debug.Log($"All pulleys balanced ({balancedCount}/{totalPulleys} completed)");
             CompletePulleyPuzzle();
+        }
     }
 
     #region GEARS LOGIC
@@ -136,10 +153,22 @@ public class PuzzleManager : MonoBehaviour
     {
         if (currentGearsSolved >= requiredGearsSolved) return;
 
-        ChainGear placedChainGear = gear.GetChainGear();
+        // Check if any possible final slot is occupied to trigger the test
+        GearSlotPuzzle[] allSlots = FindObjectsOfType<GearSlotPuzzle>();
+        GearSlotPuzzle occupiedFinalSlot = null;
+        foreach (var s in allSlots)
+        {
+            if (s.isPossibleFinalSlot && s.IsOccupied())
+            {
+                occupiedFinalSlot = s;
+                break;
+            }
+        }
 
-        if (slot.isPossibleFinalSlot)
-            StartCoroutine(PerformGearTestSync(placedChainGear));
+        if (occupiedFinalSlot != null)
+        {
+            StartCoroutine(PerformGearTestSync(occupiedFinalSlot.myChainGear));
+        }
     }
 
     public void OnGearRemoved(GearSlotPuzzle slot, GearDragSystem gear)
@@ -226,16 +255,25 @@ public class PuzzleManager : MonoBehaviour
     {
         if (currentPulleysSolved >= requiredPulleysSolved) return;
 
-        if (slot.isPossibleFinalSlot)
-        {
-            StartCoroutine(PerformPulleyTestSync());
-        }
+        // Check balance regardless of which slot was used
+        StartCoroutine(PerformPulleyTestSync());
+    }
+
+    public void OnMassRemoved(MassSlotPuzzle slot, MassDragSystem mass)
+    {
+        if (currentPulleysSolved >= requiredPulleysSolved) return;
+
+        // Recalculate balance when mass is removed as well
+        StartCoroutine(PerformPulleyTestSync());
     }
 
     private IEnumerator PerformPulleyTestSync()
     {
-        if (atwoodManager == null) yield break;
-        yield return new WaitForSeconds(testDuration);
+        if (atwoodManagers == null || atwoodManagers.Length == 0) yield break;
+        
+        // Wait a small bit for physics/mass regulators to settle
+        yield return new WaitForSeconds(0.1f);
+        
         CheckPulleyPuzzleCompletion();
     }
 

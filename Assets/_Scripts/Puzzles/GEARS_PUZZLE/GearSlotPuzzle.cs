@@ -72,22 +72,8 @@ public class GearSlotPuzzle : MonoBehaviour
         gear.transform.position = slotCenter.transform.position;
         gear.SetCurrentSlot(this);
 
-        // Chain connection logic
-        ChainGear inputToUse = null;
-        if (inputGearForThisSlot != null)
-        {
-            inputToUse = inputGearForThisSlot;
-        }
-        else if (inputSlotForThisSlot != null)
-        {
-            inputToUse = inputSlotForThisSlot.myChainGear;
-        }
-
-        if (inputToUse != null && inputToUse != myChainGear) // Safety check
-        {
-            myChainGear.inputGear = inputToUse;
-            inputToUse.RegisterFollower(myChainGear);
-        }
+        // Chain connection logic is now handled by RefreshAllSlots
+        RefreshAllSlots();
 
         Debug.Log($"Gear colocado correctamente en slot {gameObject.name}");
         
@@ -108,24 +94,52 @@ public class GearSlotPuzzle : MonoBehaviour
                 PuzzleManager.Instance.OnGearRemoved(this, placedGear);
             }
 
-            ChainGear chainGear = placedGear.GetChainGear();
-            if (chainGear != null)
-            {
-                if (chainGear.inputGear != null)
-                {
-                    chainGear.inputGear.UnregisterFollower(chainGear);
-                    chainGear.inputGear = null;
-                }
-            }
-            
-            // Only clear the slot reference if it's still pointing here
-            // this prevents a loop where DragSystem and Slot clear each other.
             placedGear.SetCurrentSlot(null);
         }
         
         placedGear = null;
         myChainGear = null;
         isOccupied = false;
+
+        RefreshAllSlots();
         Debug.Log($"Slot {gameObject.name} cleared and ready for new gear.");
+    }
+
+    private void RefreshAllSlots()
+    {
+        GearSlotPuzzle[] allSlots = FindObjectsOfType<GearSlotPuzzle>();
+        foreach (var slot in allSlots)
+        {
+            slot.UpdateChainConnection();
+        }
+    }
+
+    public void UpdateChainConnection()
+    {
+        if (!isOccupied || myChainGear == null) return;
+
+        ChainGear desiredInput = null;
+        if (inputGearForThisSlot != null)
+        {
+            desiredInput = inputGearForThisSlot;
+        }
+        else if (inputSlotForThisSlot != null && inputSlotForThisSlot.IsOccupied())
+        {
+            desiredInput = inputSlotForThisSlot.myChainGear;
+        }
+
+        // If current input is wrong or missing, disconnect
+        if (myChainGear.inputGear != null && myChainGear.inputGear != desiredInput)
+        {
+            myChainGear.inputGear.UnregisterFollower(myChainGear);
+            myChainGear.inputGear = null;
+        }
+
+        // If we need a new input, connect
+        if (desiredInput != null && myChainGear.inputGear == null)
+        {
+            myChainGear.inputGear = desiredInput;
+            desiredInput.RegisterFollower(myChainGear);
+        }
     }
 }
