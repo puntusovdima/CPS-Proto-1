@@ -122,7 +122,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7553686636548025277}
-  - component: {fileID: 2280430428155753123}
   - component: {fileID: 3279913697646042287}
   - component: {fileID: 7497893152329784208}
   m_Layer: 9
@@ -163,33 +162,6 @@ Transform:
   - {fileID: 5683061289641030058}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!114 &2280430428155753123
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8618927256269129309}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90a0bf11fc117c14992b31d807689522, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PuzzleManager
-  friendlyRobotInstance: {fileID: 0}
-  gSlots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  motorSpeed: 100
-  finalGear: {fileID: 0}
-  tolerance: 0.5
-  motorGear: {fileID: 0}
-  testDuration: 0.5
-  atwoodManager: {fileID: 0}
-  requiredLeftMass: -1
-  requiredRightMass: -1
-  requireBalance: 0
 --- !u!114 &3279913697646042287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,7 +176,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PuzzleInteractLogic
   puzzleCamera: {fileID: 0}
   mainCamera: {fileID: 0}
-  puzzleManager: {fileID: 2280430428155753123}
+  puzzleManager: {fileID: 0}
+  playerToHide: {fileID: 0}
+  wallToRemove: {fileID: 0}
 --- !u!65 &7497893152329784208
 BoxCollider:
   m_ObjectHideFlags: 0
