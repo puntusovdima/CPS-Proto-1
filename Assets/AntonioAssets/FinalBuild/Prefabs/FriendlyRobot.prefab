@@ -28,8 +28,8 @@ Transform:
   m_GameObject: {fileID: 3517476272151734310}
   serializedVersion: 2
   m_LocalRotation: {x: -0.0000000067520887, y: -0.000000029802322, z: -0.70710677, w: 0.7071068}
-  m_LocalPosition: {x: 2.1294203, y: -0.25619066, z: 0.12355513}
-  m_LocalScale: {x: 0.0546365, y: 1.1694133, z: 0.45476708}
+  m_LocalPosition: {x: 1.9893886, y: -0.840456, z: 0.123321965}
+  m_LocalScale: {x: 0.0546365, y: 1.4897988, z: 0.56977767}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3565099666863613869}
@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 506730719070157642}
   - component: {fileID: 2073708095144993647}
   - component: {fileID: 5733752663039114552}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: FriendlyRobot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,9 +141,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4873863298662767636}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.005043817, y: -0.7011235, z: 0.0071901036, w: 0.7129858}
+  m_LocalRotation: {x: 0.005046455, y: -0.7011223, z: 0.0071897907, w: 0.7129869}
   m_LocalPosition: {x: 35.89, y: 4.18, z: 24.376}
-  m_LocalScale: {x: 1.7548246, y: 1.6711407, z: 1.5547816}
+  m_LocalScale: {x: 1, y: 0.6, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2863024766158812329}
@@ -255,9 +255,12 @@ MonoBehaviour:
   robotMode: 1
   helpPoint: {fileID: 0}
   robotArm: {fileID: 2863024766158812329}
-  armStartPos: {x: 2.13, y: -0.09, z: 0.12}
-  armFinalPos: {x: 2.14, y: 4.18, z: 0.06}
+  attackRange: 5
+  chaseEnemyRobotRange: 2
+  armStartPos: {x: 1.33, y: -0.52, z: 0.12}
+  armFinalPos: {x: 1.33, y: 9, z: 0.12}
   armSpeed: 1.2
+  timeToDestroyRobotArm: 1.5
   followDistance: 2.5
 --- !u!195 &5733752663039114552
 NavMeshAgent:

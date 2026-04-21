@@ -6,7 +6,7 @@ TagManager:
   tags:
   - Safe
   - Puzzle
-  - Battle
+  - Enemy
   layers:
   - Default
   - TransparentFX

@@ -15,15 +15,16 @@ public class MassSlotPuzzle : MonoBehaviour
 
     private void Awake()
     {
-        // If you forget to assign it in the inspector, try to find the first child
         if (slotCenter == null && transform.childCount > 0)
+        {
             slotCenter = transform.GetChild(0);
-        
-        if (myMassRegulator == null)
-            myMassRegulator = GetComponent<MassRegulator>();
+        }
 
-        // Auto-register this slot to its parent MassRegulator (e.g., the Pulley) 
-        // so mass changes bubble up automatically for chained Atwood managers.
+        if (myMassRegulator == null)
+        {
+            myMassRegulator = GetComponent<MassRegulator>();
+        }
+
         if (myMassRegulator != null && transform.parent != null)
         {
             MassRegulator parentReg = transform.parent.GetComponentInParent<MassRegulator>();

@@ -99,7 +99,6 @@ public class PuzzleManager : MonoBehaviour
             }
         }
     }
-
     public void InitializePuzzle()
     {
         currentGearsSolved = 0;
