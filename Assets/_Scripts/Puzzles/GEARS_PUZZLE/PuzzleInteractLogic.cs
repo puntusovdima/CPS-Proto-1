@@ -9,7 +9,8 @@ public class PuzzleInteractLogic : MonoBehaviour
     [Header("PUZZLE SETTINGS")]
     [SerializeField] private PuzzleManager puzzleManager;
     [SerializeField] private GameObject playerToHide;
-    [SerializeField] private GameObject wallToRemove;
+    [SerializeField] private GameObject wallToRemoveFirst;
+    [SerializeField] private GameObject wallToRemoveSecond;
     private bool isPuzzleActive = false;
 
     private void Start()
@@ -17,6 +18,25 @@ public class PuzzleInteractLogic : MonoBehaviour
         puzzleCamera.enabled = false;
         if (puzzleManager == null)
             puzzleManager = GetComponent<PuzzleManager>();
+
+        PuzzleManager.OnPuzzleComplete += OnPuzzleCompleteHandler;
+    }
+
+    private void OnDestroy()
+    {
+        PuzzleManager.OnPuzzleComplete -= OnPuzzleCompleteHandler;
+    }
+
+    private void OnPuzzleCompleteHandler(PuzzleType type)
+    {
+        if (type == PuzzleType.Gears && wallToRemoveFirst != null)
+        {
+            Destroy(wallToRemoveFirst);
+        }
+        else if (type == PuzzleType.Pulley && wallToRemoveSecond != null)
+        {
+            Destroy(wallToRemoveSecond);
+        }
     }
 
     private void OnTriggerEnter(Collider collision)
@@ -85,8 +105,20 @@ public class PuzzleInteractLogic : MonoBehaviour
         if (playerToHide != null)
             playerToHide.SetActive(true);
 
-        if (wasSolved && wallToRemove != null)
-            Destroy(wallToRemove);
+        if (wasSolved)
+        {
+            if (wallToRemoveFirst != null) 
+            {
+                Destroy(wallToRemoveFirst);
+            }
+
+            if (wallToRemoveSecond != null)
+            {
+                
+             Destroy(wallToRemoveSecond);
+
+            } 
+        }
 
         PlayerController.Instance.setPause(false);
         Cursor.lockState = CursorLockMode.None;

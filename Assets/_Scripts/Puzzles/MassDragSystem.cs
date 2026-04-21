@@ -19,12 +19,14 @@ public class MassDragSystem : MonoBehaviour
         }
 
         m = GetComponent<MassRegulator>();
-        if (m == null) m = GetComponentInChildren<MassRegulator>();
+        if (m == null)
+        {
+            m = GetComponentInChildren<MassRegulator>();
+        }
     }
 
     private void Update()
     {
-        // PLAYER INPUTS -> TRY TO GRAB...
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             TryToGrabMass();
@@ -41,7 +43,6 @@ public class MassDragSystem : MonoBehaviour
         }
     }
 
-    // DRAG LOGIC.
     private void TryToGrabMass()
     {
         Ray rayC = pCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -49,7 +50,6 @@ public class MassDragSystem : MonoBehaviour
 
         if (Physics.Raycast(rayC, out RaycastHit hit, Mathf.Infinity))
         {
-            // Check if the hit object is this object or one of its children
             if (hit.collider.transform.IsChildOf(transform) || hit.collider.transform == transform)
             {
                 hitThisMass = true;
@@ -59,13 +59,12 @@ public class MassDragSystem : MonoBehaviour
         if (hitThisMass)
         {
             isDraggingAMass = true;
-            transform.SetParent(null); // Unparent when grabbed for free movement
+            transform.SetParent(null);
 
             if (currentSlot != null)
             {
-                // Store reference to clear it, then null it locally
                 MassSlotPuzzle slotToClear = currentSlot;
-                currentSlot = null; 
+                currentSlot = null;
                 slotToClear.RemoveMass();
             }
         }

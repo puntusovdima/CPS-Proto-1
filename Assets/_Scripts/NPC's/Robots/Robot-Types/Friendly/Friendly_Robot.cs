@@ -15,6 +15,11 @@ public class Friendly_Robot : Base_AI
     [SerializeField] private Transform helpPoint;
     [SerializeField] private Transform robotArm;
 
+
+    [Header("Friendly Robot Combat Settings")]
+    [SerializeField] private float attackRange = 5f;
+    [SerializeField] private float chaseEnemyRobotRange = 2f;
+
     [Header("Robot Arm Settings")]
     [SerializeField] private Vector3 armStartPos = new Vector3(0, -0.202f, 0); 
     [SerializeField] private Vector3 armFinalPos = new Vector3(0, 1.378f, 0);
@@ -44,7 +49,9 @@ public class Friendly_Robot : Base_AI
         armReachedMax = false;
         robotMode = FriendlyRobotModes.HelpPlayer;
         if (robotArm != null)
+        {
             robotArm.localPosition = armStartPos;
+        }
         agent.isStopped = true;
     }
 public void FriendlyModeActivation()
@@ -62,7 +69,10 @@ public void FriendlyModeActivation()
             armReachedMax = false;
         }
 
-        if (!isTheRobotActivated) return;
+        if (!isTheRobotActivated)
+        {
+            return;
+        }
 
         switch (robotMode)
         {
@@ -77,10 +87,29 @@ public void FriendlyModeActivation()
 
     private void FollowPlayerLogic()
     {
-        if(player == null)return;
+        if (player == null)
+        {
+            return;
+        }
+
+        GameObject enemyT = GameObject.FindGameObjectWithTag("Enemy");
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        if(distanceToPlayer > followDistance)
-        {            
+
+        if (enemyT != null)
+        {
+            if (distanceToPlayer <= attackRange)
+            {
+                Destroy(enemyT);
+            }
+            else
+            {
+                agent.isStopped = false;
+                agent.SetDestination(enemyT.transform.position);
+            }
+        }
+
+        if (distanceToPlayer > followDistance)
+        {
             agent.isStopped = false;
             agent.SetDestination(player.position);
         }
@@ -91,23 +120,37 @@ public void FriendlyModeActivation()
     }
     private void HelpPlayer()
     {
-        if (robotArm == null) return;
-
-        switch (playerOnArm)
+        if (robotArm == null)
         {
-            case true when !armReachedMax:
-            {
-                robotArm.localPosition = Vector3.MoveTowards(robotArm.localPosition, armFinalPos, armSpeed * Time.deltaTime);
-                if (Vector3.Distance(robotArm.localPosition, armFinalPos) < 0.01f)
-                {
-                    StartCoroutine(DestroyRobotArm());
-                }
+            return;
+        }
 
-                break;
+        if (playerOnArm && !armReachedMax)
+        {
+            Vector3 armPrevPos = robotArm.localPosition;
+            robotArm.localPosition = Vector3.MoveTowards(robotArm.localPosition, armFinalPos, armSpeed * Time.deltaTime);
+            Vector3 armDeltaLocal = robotArm.localPosition - armPrevPos;
+            Vector3 armDeltaWorld = robotArm.parent != null
+                ? robotArm.parent.TransformDirection(armDeltaLocal)
+                : armDeltaLocal;
+
+            if (PlayerController.Instance != null)
+            {
+                CharacterController cc = PlayerController.Instance.GetComponent<CharacterController>();
+                Vector3 newPos = PlayerController.Instance.transform.position + armDeltaWorld;
+                cc.enabled = false;
+                PlayerController.Instance.transform.position = newPos;
+                cc.enabled = true;
             }
-            case false when !armReachedMax:
-                robotArm.localPosition = Vector3.MoveTowards(robotArm.localPosition, armStartPos, armSpeed * Time.deltaTime);
-                break;
+
+            if (Vector3.Distance(robotArm.localPosition, armFinalPos) < 0.01f)
+            {
+                StartCoroutine(DestroyRobotArm());
+            }
+        }
+        else if (!armReachedMax)
+        {
+            robotArm.localPosition = Vector3.MoveTowards(robotArm.localPosition, armStartPos, armSpeed * Time.deltaTime);
         }
     }
 
@@ -117,7 +160,10 @@ public void FriendlyModeActivation()
         robotMode = FriendlyRobotModes.FollowPlayer;
         playerOnArm = false;
         agent.isStopped = false;
-        if (player != null) agent.SetDestination(player.position);
+        if (player != null)
+        {
+            agent.SetDestination(player.position);
+        }
         yield return new WaitForSeconds(timeToDestroyRobotArm);
         Destroy(robotArm.gameObject);
     }
