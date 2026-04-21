@@ -13,31 +13,15 @@ public class Neutral_Robot : Friendly_Robot
     [SerializeField] private NeutralState state = NeutralState.Waiting;
     private bool isA = false;
 
-    public void SetAsAlly()
-    {
-        state = NeutralState.Ally;
-        isA = true;
-        FriendlyModeActivation(); // same as friendly robot.
-    }
-
-    public void SetAsEnemy()
-    {
-        state = NeutralState.Enemy;
-        isA = true;
-        // ANIMATION OF THE DEAD OR SOMETHING ELSE HERE.
-
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (!isA)return;
-        if (state == NeutralState.Enemy && other.CompareTag("Player"))
+        if (state != NeutralState.Enemy || !other.CompareTag("Player")) return;
+        
+        var player = other.GetComponent<PlayerController>();
+        if (player != null)
         {
-            PlayerController player = other.GetComponent<PlayerController>();
-            if (player != null)
-            {
-                player.RespawnCoroutine();
-            }
+            player.RespawnCoroutine();
         }
     }
 }
