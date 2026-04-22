@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PuzzleInteractLogic : MonoBehaviour
@@ -9,8 +10,9 @@ public class PuzzleInteractLogic : MonoBehaviour
     [Header("PUZZLE SETTINGS")]
     [SerializeField] private PuzzleManager puzzleManager;
     [SerializeField] private GameObject playerToHide;
-    [SerializeField] private GameObject wallToRemoveFirst;
-    [SerializeField] private GameObject wallToRemoveSecond;
+    [SerializeField] private GameObject wallToRemove;
+    [SerializeField] private bool isDoorPuzzle = false;
+    
     private bool isPuzzleActive = false;
 
     private void Start()
@@ -29,13 +31,17 @@ public class PuzzleInteractLogic : MonoBehaviour
 
     private void OnPuzzleCompleteHandler(PuzzleType type)
     {
-        if (type == PuzzleType.Gears && wallToRemoveFirst != null)
+        switch (type)
         {
-            Destroy(wallToRemoveFirst);
-        }
-        else if (type == PuzzleType.Pulley && wallToRemoveSecond != null)
-        {
-            Destroy(wallToRemoveSecond);
+            case PuzzleType.Gears when wallToRemove != null:
+                if(!isDoorPuzzle) puzzleManager.ActivateFriendlyRobot();
+                Destroy(wallToRemove);
+                break;
+            case PuzzleType.Pulley when wallToRemove != null:
+                Destroy(wallToRemove);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }
     }
 
@@ -91,34 +97,17 @@ public class PuzzleInteractLogic : MonoBehaviour
         if (!isPuzzleActive)
             return;
 
-        bool wasSolved = PuzzleManager.Instance != null && PuzzleManager.Instance.IsPuzzleSolved();
+        var wasSolved = PuzzleManager.Instance && PuzzleManager.Instance.IsPuzzleSolved();
         isPuzzleActive = false;
 
-        if (puzzleCamera != null)
-            puzzleCamera.enabled = false;
+        if (puzzleCamera != null) puzzleCamera.enabled = false;
 
-        if (mainCamera != null)
-            mainCamera.enabled = true;
-        else if (Camera.main != null)
-            Camera.main.enabled = true;
+        if (mainCamera != null) mainCamera.enabled = true;
+        else if (Camera.main != null) Camera.main.enabled = true;
 
-        if (playerToHide != null)
-            playerToHide.SetActive(true);
+        if (playerToHide != null) playerToHide.SetActive(true);
 
-        if (wasSolved)
-        {
-            if (wallToRemoveFirst != null) 
-            {
-                Destroy(wallToRemoveFirst);
-            }
-
-            if (wallToRemoveSecond != null)
-            {
-                
-             Destroy(wallToRemoveSecond);
-
-            } 
-        }
+        if (wasSolved && wallToRemove != null) Destroy(wallToRemove);
 
         PlayerController.Instance.setPause(false);
         Cursor.lockState = CursorLockMode.None;
