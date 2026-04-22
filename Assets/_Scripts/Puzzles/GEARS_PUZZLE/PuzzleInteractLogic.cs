@@ -10,7 +10,7 @@ public class PuzzleInteractLogic : MonoBehaviour
     [Header("PUZZLE SETTINGS")]
     [SerializeField] private PuzzleManager puzzleManager;
     [SerializeField] private GameObject playerToHide;
-    [SerializeField] private GameObject wallToRemove;
+    [SerializeField] private PuzzleDoorBehaviour puzzleDoor;
     [SerializeField] private bool isDoorPuzzle = false;
     
     private bool isPuzzleActive = false;
@@ -33,16 +33,16 @@ public class PuzzleInteractLogic : MonoBehaviour
     {
         switch (type)
         {
-            case PuzzleType.Gears when wallToRemove != null:
+            case PuzzleType.Gears when puzzleDoor != null:
                 if(!isDoorPuzzle) puzzleManager.ActivateFriendlyRobot();
-                Destroy(wallToRemove);
                 break;
-            case PuzzleType.Pulley when wallToRemove != null:
-                Destroy(wallToRemove);
+            case PuzzleType.Pulley when puzzleDoor != null:
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }
+
+        puzzleDoor.OpenDoor();
     }
 
     private void OnTriggerEnter(Collider collision)
@@ -107,7 +107,7 @@ public class PuzzleInteractLogic : MonoBehaviour
 
         if (playerToHide != null) playerToHide.SetActive(true);
 
-        if (wasSolved && wallToRemove != null) Destroy(wallToRemove);
+        if (wasSolved && puzzleDoor != null) puzzleDoor.OpenDoor();
 
         PlayerController.Instance.setPause(false);
         Cursor.lockState = CursorLockMode.None;
