@@ -71,7 +71,7 @@ public class AtwoodManager : MonoBehaviour
         float mLeft = leftMass.mass;
         float mRight = rightMass.mass;
         float totalMass = mLeft + mRight;
-        
+
         float acceleration = totalMass > 0 ? 9.81f * (mRight - mLeft) / totalMass : 0f;
         float nextVelocity = (velocity + acceleration * Time.fixedDeltaTime) * friction;
         float nextTravel = systemTravelY + (nextVelocity * Time.fixedDeltaTime);
@@ -82,13 +82,13 @@ public class AtwoodManager : MonoBehaviour
         if (nextTravel >= maxTravelUp && nextVelocity > 0)
         {
             nextVelocity = 0;
-            nextTravel = maxTravelUp; 
+            nextTravel = maxTravelUp;
         }
         else if (nextTravel <= -maxTravelDown && nextVelocity < 0)
         {
             float bounceDamping = 0.6f;
             nextVelocity = -nextVelocity * bounceDamping;
-            nextTravel = -maxTravelDown; 
+            nextTravel = -maxTravelDown;
         }
 
         velocity = nextVelocity;

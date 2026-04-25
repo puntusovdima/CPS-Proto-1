@@ -18666,7 +18666,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GearPuzzleWithTime
   motorGear: {fileID: 5859665749685287455}
   finalGear: {fileID: 7469238148485743232}
-  gearTolerance: 4000
+  gearTolerance: 500
   testDuration: 1.5
   turnTimer: {fileID: 643518023}
   timeLimit: 50

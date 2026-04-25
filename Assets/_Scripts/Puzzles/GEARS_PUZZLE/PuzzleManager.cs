@@ -9,7 +9,7 @@ public enum PuzzleType
     Pulley
 }
 
-public class PuzzleManager : MonoBehaviour
+public class PuzzleManager : MonoBehaviour 
 {
     public static PuzzleManager Instance { get; private set; }
     
@@ -47,6 +47,10 @@ public class PuzzleManager : MonoBehaviour
     private bool requireBalance = true;
     [SerializeField] private float massTolerance = 0.05f;
 
+    [Header("REFERENCES")]
+    [SerializeField] private PuzzleInteractLogic puzzleLogicRef;
+    [SerializeField] private GameObject door2ToRemove;
+    [SerializeField] private Transform puzzleRoot;
     [SerializeField] private bool isOverallSolved = false;
     private PuzzleInteractLogic puzzleLogic;
 
@@ -58,18 +62,26 @@ public class PuzzleManager : MonoBehaviour
 
     private void Start()
     {
-        puzzleLogic = GetComponent<PuzzleInteractLogic>();
-        if (puzzleLogic == null)
-            puzzleLogic = GetComponentInChildren<PuzzleInteractLogic>();
-        if (puzzleLogic == null)
-            puzzleLogic = FindObjectOfType<PuzzleInteractLogic>();
+        if (puzzleLogicRef != null)
+            puzzleLogic = puzzleLogicRef;
+        else
+        {
+            puzzleLogic = GetComponent<PuzzleInteractLogic>();
+            if (puzzleLogic == null)
+                puzzleLogic = GetComponentInParent<PuzzleInteractLogic>();
+        }
 
         if (atwoodManagers == null || atwoodManagers.Length == 0)
         {
             atwoodManagers = FindObjectsOfType<AtwoodManager>();
         }
 
-        ChainGear[] allGears = FindObjectsOfType<ChainGear>();
+        ChainGear[] allGears;
+        if (puzzleRoot != null)
+            allGears = puzzleRoot.GetComponentsInChildren<ChainGear>();
+        else
+            allGears = FindObjectsOfType<ChainGear>();
+
         List<ChainGear> motors = new List<ChainGear>();
 
         foreach (var gear in allGears)
@@ -130,16 +142,18 @@ public class PuzzleManager : MonoBehaviour
             float rightM = am.rightMass != null ? am.rightMass.mass : 0f;
             float diff = Mathf.Abs(leftM - rightM);
 
+            // Debug logs removed
+
             if (diff < massTolerance && leftM > 0.01f)
             {
                 balancedCount++;
-                // Debug.Log($"[PulleyCheck] {am.name} balanced ({balancedCount}/{totalPulleys} completed)");
+
             }
         }
 
         if (balancedCount == totalPulleys && totalPulleys > 0)
         {
-            Debug.Log($"All pulleys balanced ({balancedCount}/{totalPulleys} completed)");
+
             CompletePulleyPuzzle();
         }
     }
@@ -236,7 +250,7 @@ public class PuzzleManager : MonoBehaviour
 
         if (motorGear != null) motorGear.isMotor = true;
 
-        Debug.Log("[CompleteGearsPuzzle] friendlyRobotInstance=" + (friendlyRobotInstance != null ? "OK" : "NULL"));
+        Debug.Log($"[CompleteGearsPuzzle] RESUELTO! puzzleLogic={(puzzleLogic != null ? "OK" : "NULL")}");
 
         isOverallSolved = true;
         puzzleLogic?.ClosePuzzle();
@@ -275,6 +289,11 @@ public class PuzzleManager : MonoBehaviour
     private void CompletePulleyPuzzle()
     {
         currentPulleysSolved++;
+        Debug.Log($"[Pulley Puzzle RESUELTO] currentPulleysSolved: {currentPulleysSolved}/{requiredPulleysSolved} - puzzleLogic={(puzzleLogic != null ? "OK" : "NULL")}");
+
+        if (door2ToRemove != null)
+            Destroy(door2ToRemove);
+
         TriggerSinglePuzzleCompletion(PuzzleType.Pulley);
     }
 
