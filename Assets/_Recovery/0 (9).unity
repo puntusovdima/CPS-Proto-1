@@ -3730,10 +3730,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 975817781}
     - target: {fileID: 3279913697646042287, guid: 4a96e289a913bc947b4bd40fdf7ca0fd, type: 3}
-      propertyPath: puzzleDoor
-      value: 
-      objectReference: {fileID: 1231651780}
-    - target: {fileID: 3279913697646042287, guid: 4a96e289a913bc947b4bd40fdf7ca0fd, type: 3}
       propertyPath: isDoorPuzzle
       value: 1
       objectReference: {fileID: 0}
@@ -3907,10 +3903,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7553686636548025277, guid: 4a96e289a913bc947b4bd40fdf7ca0fd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7553686636548025277, guid: 4a96e289a913bc947b4bd40fdf7ca0fd, type: 3}
-      propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8618927256269129309, guid: 4a96e289a913bc947b4bd40fdf7ca0fd, type: 3}
@@ -17461,7 +17453,6 @@ GameObject:
   - component: {fileID: 1231651778}
   - component: {fileID: 1231651777}
   - component: {fileID: 1231651776}
-  - component: {fileID: 1231651780}
   m_Layer: 0
   m_Name: DoorPuzzle1
   m_TagString: Untagged
@@ -17562,18 +17553,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1032842614}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1231651780
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1231651775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d0e08986de65ec43845ae433a6f4b27, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PuzzleDoorBehaviour
 --- !u!1 &1238729271
 GameObject:
   m_ObjectHideFlags: 0
@@ -18687,7 +18666,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GearPuzzleWithTime
   motorGear: {fileID: 5859665749685287455}
   finalGear: {fileID: 7469238148485743232}
-  gearTolerance: 4000
+  gearTolerance: 500
   testDuration: 1.5
   turnTimer: {fileID: 643518023}
   timeLimit: 50
@@ -23377,7 +23356,6 @@ GameObject:
   - component: {fileID: 1397145488}
   - component: {fileID: 1397145487}
   - component: {fileID: 1397145486}
-  - component: {fileID: 1397145489}
   m_Layer: 0
   m_Name: DoorPuzzle2
   m_TagString: Untagged
@@ -28805,10 +28783,6 @@ PrefabInstance:
       propertyPath: helpPoint
       value: 
       objectReference: {fileID: 416160688}
-    - target: {fileID: 2073708095144993647, guid: 85d8c075f97fa2a4eac12dd1e654f6ed, type: 3}
-      propertyPath: puzzleDoor
-      value: 
-      objectReference: {fileID: 1397145489}
     - target: {fileID: 2073708095144993647, guid: 85d8c075f97fa2a4eac12dd1e654f6ed, type: 3}
       propertyPath: attackRange
       value: 0.75

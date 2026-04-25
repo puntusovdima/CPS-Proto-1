@@ -3730,10 +3730,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 975817781}
     - target: {fileID: 3279913697646042287, guid: 4a96e289a913bc947b4bd40fdf7ca0fd, type: 3}
-      propertyPath: puzzleDoor
-      value: 
-      objectReference: {fileID: 1231651780}
-    - target: {fileID: 3279913697646042287, guid: 4a96e289a913bc947b4bd40fdf7ca0fd, type: 3}
       propertyPath: isDoorPuzzle
       value: 1
       objectReference: {fileID: 0}
@@ -3907,10 +3903,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7553686636548025277, guid: 4a96e289a913bc947b4bd40fdf7ca0fd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7553686636548025277, guid: 4a96e289a913bc947b4bd40fdf7ca0fd, type: 3}
-      propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8618927256269129309, guid: 4a96e289a913bc947b4bd40fdf7ca0fd, type: 3}
@@ -11525,7 +11517,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7897595164131326651, guid: 62e123858cc584a45a35f9a31067a35e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 68.9
+      value: 69.66
       objectReference: {fileID: 0}
     - target: {fileID: 7897595164131326651, guid: 62e123858cc584a45a35f9a31067a35e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -11533,7 +11525,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7897595164131326651, guid: 62e123858cc584a45a35f9a31067a35e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7897595164131326651, guid: 62e123858cc584a45a35f9a31067a35e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -17461,7 +17453,6 @@ GameObject:
   - component: {fileID: 1231651778}
   - component: {fileID: 1231651777}
   - component: {fileID: 1231651776}
-  - component: {fileID: 1231651780}
   m_Layer: 0
   m_Name: DoorPuzzle1
   m_TagString: Untagged
@@ -17562,18 +17553,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1032842614}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1231651780
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1231651775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d0e08986de65ec43845ae433a6f4b27, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PuzzleDoorBehaviour
 --- !u!1 &1238729271
 GameObject:
   m_ObjectHideFlags: 0
@@ -18090,7 +18069,7 @@ Transform:
   m_GameObject: {fileID: 1256393749}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.7, y: -0.074, z: 0}
+  m_LocalPosition: {x: 0, y: -0.074, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -18376,7 +18355,7 @@ PrefabInstance:
       objectReference: {fileID: 1397145484}
     - target: {fileID: 3109071042021857145, guid: 97d78bd49d08a4c4597cbfa653affc23, type: 3}
       propertyPath: gearTolerance
-      value: 500
+      value: 3000
       objectReference: {fileID: 0}
     - target: {fileID: 3109071042021857145, guid: 97d78bd49d08a4c4597cbfa653affc23, type: 3}
       propertyPath: massTolerance
@@ -18687,16 +18666,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GearPuzzleWithTime
   motorGear: {fileID: 5859665749685287455}
   finalGear: {fileID: 7469238148485743232}
-  gearTolerance: 4000
+  gearTolerance: 3000
   testDuration: 1.5
   turnTimer: {fileID: 643518023}
-  timeLimit: 50
+  timeLimit: 20
   neutralRobot: {fileID: 1826426226}
   neutralRobKillsPlayer: 1
   wallToRemove: {fileID: 0}
   puzzleLogicRef: {fileID: 3279913697153076602}
   puzzleRoot: {fileID: 7553686638133607016}
   timerPanel: {fileID: 643518021}
+  requiredGearsSolved: 1
 --- !u!1 &1312371390
 GameObject:
   m_ObjectHideFlags: 0
@@ -23244,7 +23224,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 48.12, y: 5.71}
+  m_AnchoredPosition: {x: 48.59, y: 5.71}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1389538986
@@ -23377,7 +23357,6 @@ GameObject:
   - component: {fileID: 1397145488}
   - component: {fileID: 1397145487}
   - component: {fileID: 1397145486}
-  - component: {fileID: 1397145489}
   m_Layer: 0
   m_Name: DoorPuzzle2
   m_TagString: Untagged
@@ -28806,10 +28785,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 416160688}
     - target: {fileID: 2073708095144993647, guid: 85d8c075f97fa2a4eac12dd1e654f6ed, type: 3}
-      propertyPath: puzzleDoor
-      value: 
-      objectReference: {fileID: 1397145489}
-    - target: {fileID: 2073708095144993647, guid: 85d8c075f97fa2a4eac12dd1e654f6ed, type: 3}
       propertyPath: attackRange
       value: 0.75
       objectReference: {fileID: 0}
@@ -29851,20 +29826,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 125031649}
     m_Modifications:
     - target: {fileID: 3119165050504802904, guid: e79c8b15dd59205428744e50150eb3cd, type: 3}
-      propertyPath: state
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3119165050504802904, guid: e79c8b15dd59205428744e50150eb3cd, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 1256393750}
     - target: {fileID: 3119165050504802904, guid: e79c8b15dd59205428744e50150eb3cd, type: 3}
       propertyPath: robotMode
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3119165050504802904, guid: e79c8b15dd59205428744e50150eb3cd, type: 3}
-      propertyPath: speedForChasing
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3119165050504802904, guid: e79c8b15dd59205428744e50150eb3cd, type: 3}
       propertyPath: chaseSpeedWhenEnemy
@@ -29880,7 +29847,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7476186855979877478, guid: e79c8b15dd59205428744e50150eb3cd, type: 3}
       propertyPath: m_TagString
-      value: Enemy
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 8133046866712714099, guid: e79c8b15dd59205428744e50150eb3cd, type: 3}
       propertyPath: m_LocalPosition.x
@@ -33082,7 +33049,7 @@ Transform:
   m_GameObject: {fileID: 774806097141097914}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.63, y: -3.9, z: -0.21320029}
+  m_LocalPosition: {x: 5.63, y: -2.76, z: -0.21320029}
   m_LocalScale: {x: 50, y: 50, z: 50}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -33693,13 +33660,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1251579235280285374}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.99896663, y: 0, z: -0.045450144, w: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 11.059985, y: 0.43, z: -0.21}
   m_LocalScale: {x: 50, y: 50, z: 50}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 7553686638133607016}
-  m_LocalEulerAnglesHint: {x: 180, y: 5.21, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1895852043519427464
 Transform:
   m_ObjectHideFlags: 0
@@ -33996,7 +33963,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b82ed8ef247062547b71f76b17185340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChainGear
-  teeth: 32
+  teeth: 50
   axis: {x: 0, y: 0, z: 1}
   inputGear: {fileID: 0}
   isMotor: 0
@@ -34059,7 +34026,7 @@ MonoBehaviour:
   timedPuzzleManager: {fileID: 1299290324}
   playerToHide: {fileID: 1256393749}
   wallToRemove: {fileID: 0}
-  isDoorPuzzle: 0
+  isDoorPuzzle: 1
 --- !u!33 &3295099558897236897
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -34439,7 +34406,7 @@ MonoBehaviour:
   teeth: 128
   axis: {x: 0, y: 0, z: 1}
   inputGear: {fileID: 8746852130370666088}
-  isMotor: 0
+  isMotor: 1
   motorSpeed: 50
 --- !u!23 &4719781977738556200
 MeshRenderer:
@@ -34732,7 +34699,7 @@ Transform:
   m_GameObject: {fileID: 5154811253841735912}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.18, y: -1.1, z: 0}
+  m_LocalPosition: {x: 5.18, y: -0.16, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -35155,7 +35122,7 @@ MonoBehaviour:
   axis: {x: 0, y: 0, z: 1}
   inputGear: {fileID: 0}
   isMotor: 0
-  motorSpeed: -50
+  motorSpeed: 50
 --- !u!54 &6410350540542382138
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -35538,7 +35505,7 @@ MonoBehaviour:
   axis: {x: 0, y: 0, z: 1}
   inputGear: {fileID: 0}
   isMotor: 1
-  motorSpeed: 50
+  motorSpeed: -200
 --- !u!65 &7497893152841091653
 BoxCollider:
   m_ObjectHideFlags: 0

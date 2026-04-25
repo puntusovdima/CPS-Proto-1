@@ -3,11 +3,13 @@ using UnityEngine.InputSystem;
 
 public class GearDragSystem : MonoBehaviour
 {
-    [Header("GEARS SETTINGS")] [SerializeField]
-    private float distanceToDrag;
-
+    [Header("GEARS SETTINGS")]
+    [SerializeField] private float distanceToDrag;
     [SerializeField] private float speedToDrag;
     [SerializeField] private Camera pCamera;
+
+    [Header("PUZZLE SETTINGS")]
+    [SerializeField] private GearPuzzleWhitTime timedPuzzle;
 
     private bool isDraggingAGear = false;
     private Vector3 off;
@@ -52,8 +54,12 @@ public class GearDragSystem : MonoBehaviour
     // DRAG LOGIC.
     private void TryToGrabGear()
     {
-        // Don't allow moving gears if the puzzle is already done
-        if (PuzzleManager.Instance != null && PuzzleManager.Instance.IsPuzzleSolved())
+        if (timedPuzzle != null)
+        {
+            if (timedPuzzle.IsPuzzleSolved())
+                return;
+        }
+        else if (PuzzleManager.Instance != null && PuzzleManager.Instance.IsPuzzleSolved())
         {
             return;
         }
