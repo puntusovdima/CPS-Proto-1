@@ -27,7 +27,9 @@ public class Friendly_Robot : Base_AI
     [Header("Follow Mode Settings")]
     [SerializeField] private float followDistance = 3.1f;
 
-    [Header("Puzzle Settings")]
+    [Header("Puzzle Settings")] 
+    [SerializeField] private PuzzleDoorBehaviour puzzleDoor;
+    
     private bool isTheRobotActivated = false;
     private bool playerOnArm = false;
     private bool armReachedMax = false;
@@ -108,6 +110,7 @@ public class Friendly_Robot : Base_AI
                 if (enemyAttackTimer <= 0f)
                 {
                     Destroy(enemyT);
+                    puzzleDoor.OpenDoor();
                     Destroy(gameObject);
                     hasReachedEnemy = false;
                     enemyAttackTimer = 0f;
