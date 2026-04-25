@@ -14,7 +14,7 @@ public class PuzzleInteractLogic : MonoBehaviour
 
     [Header("PUZZLE SETTINGS")]
     [SerializeField] private GameObject playerToHide;
-    [SerializeField] private GameObject wallToRemove;
+    [SerializeField] private PuzzleDoorBehaviour puzzleDoor;
     [SerializeField] private bool isDoorPuzzle = false;
 
     private bool isPuzzleActive = false;
@@ -43,10 +43,11 @@ public class PuzzleInteractLogic : MonoBehaviour
                     puzzleManager.ActivateFriendlyRobot();
                 Destroy(wallToRemove);
                 break;
-            case PuzzleType.Pulley when wallToRemove != null:
-                Destroy(wallToRemove);
+            case PuzzleType.Pulley when puzzleDoor != null:
                 break;
         }
+
+        puzzleDoor.OpenDoor();
     }
 
     private void OnTriggerEnter(Collider collision)
