@@ -17,7 +17,7 @@ public class PuzzleInteractLogic : MonoBehaviour
     [SerializeField] private PuzzleDoorBehaviour puzzleDoor;
     [SerializeField] private bool isDoorPuzzle = false;
 
-    private bool isPuzzleActive = false;
+    private bool _isPuzzleActive = false;
 
     private void Start()
     {
@@ -38,15 +38,16 @@ public class PuzzleInteractLogic : MonoBehaviour
     {
         switch (type)
         {
-            case PuzzleType.Gears when wallToRemove != null:
-                if (!isDoorPuzzle && puzzleManager != null)
-                    puzzleManager.ActivateFriendlyRobot();
-                Destroy(wallToRemove);
+            case PuzzleType.Gears when puzzleDoor != null:
+                if (!isDoorPuzzle && puzzleManager != null) puzzleManager.ActivateFriendlyRobot();
                 break;
             case PuzzleType.Pulley when puzzleDoor != null:
                 break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }
-
+        
+        puzzleManager.PlayCompletionSound();
         puzzleDoor.OpenDoor();
     }
 
@@ -74,8 +75,8 @@ public class PuzzleInteractLogic : MonoBehaviour
         if (TimedPuzzleIsSolved())
             return;
 
-        if (isPuzzleActive) return;
-        isPuzzleActive = true;
+        if (_isPuzzleActive) return;
+        _isPuzzleActive = true;
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -105,10 +106,10 @@ public class PuzzleInteractLogic : MonoBehaviour
 
     public void ClosePuzzle()
     {
-        if (!isPuzzleActive)
+        if (!_isPuzzleActive)
             return;
 
-        bool wasSolved = false;
+        var wasSolved = false;
 
         if (puzzleManager != null)
             wasSolved = puzzleManager.IsPuzzleSolved();
@@ -116,7 +117,7 @@ public class PuzzleInteractLogic : MonoBehaviour
         if (!wasSolved)
             wasSolved = TimedPuzzleIsSolved();
 
-        isPuzzleActive = false;
+        _isPuzzleActive = false;
 
         if (puzzleCamera != null) puzzleCamera.enabled = false;
 
@@ -125,8 +126,11 @@ public class PuzzleInteractLogic : MonoBehaviour
 
         if (playerToHide != null) playerToHide.SetActive(true);
 
-        if (wasSolved && wallToRemove != null)
-            Destroy(wallToRemove);
+        if (wasSolved && puzzleDoor != null)
+        {
+            puzzleDoor.OpenDoor();
+            puzzleManager.PlayCompletionSound();
+        }
 
         PlayerController.Instance.setPause(false);
         Cursor.lockState = CursorLockMode.None;
@@ -139,7 +143,7 @@ public class PuzzleInteractLogic : MonoBehaviour
         if (timedPuzzleManager == null)
             return false;
 
-        object result = InvokeTimedPuzzleMethod("IsPuzzleSolved");
+        var result = InvokeTimedPuzzleMethod("IsPuzzleSolved");
         return result is bool solved && solved;
     }
 
@@ -148,7 +152,7 @@ public class PuzzleInteractLogic : MonoBehaviour
         if (timedPuzzleManager == null)
             return null;
 
-        MethodInfo method = timedPuzzleManager.GetType().GetMethod(
+        var method = timedPuzzleManager.GetType().GetMethod(
             methodName,
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
