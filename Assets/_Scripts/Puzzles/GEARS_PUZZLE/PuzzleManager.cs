@@ -28,8 +28,6 @@ public class PuzzleManager : MonoBehaviour
     [Tooltip("How many pulley systems need to be balanced?")]
     [SerializeField] private int requiredPulleysSolved = 1;
 
-    private int currentGearsSolved = 0;
-    private int currentPulleysSolved = 0;
 
     [Header("MOTOR SPEED")]
     [SerializeField] private float motorSpeed = 50f;
@@ -44,7 +42,6 @@ public class PuzzleManager : MonoBehaviour
 
     [Header("MASS PUZZLE SETTINGS (PULLEY)")]
     [SerializeField] private AtwoodManager[] atwoodManagers;
-    private bool requireBalance = true;
     [SerializeField] private float massTolerance = 0.05f;
 
     [Header("REFERENCES")]
@@ -52,23 +49,29 @@ public class PuzzleManager : MonoBehaviour
     [SerializeField] private GameObject door2ToRemove;
     [SerializeField] private Transform puzzleRoot;
     [SerializeField] private bool isOverallSolved = false;
-    private PuzzleInteractLogic puzzleLogic;
+    [SerializeField] private AudioClip completionSfx;
+    [SerializeField] private AudioSource audioSource;
+    
+    private int _currentGearsSolved = 0;
+    private int _currentPulleysSolved = 0;
+    private bool _requireBalance = true;
+    private PuzzleInteractLogic _puzzleLogic;
 
     private void Awake()
     {
         Instance = this;
-        requireBalance = true;
+        _requireBalance = true;
     }
 
     private void Start()
     {
         if (puzzleLogicRef != null)
-            puzzleLogic = puzzleLogicRef;
+            _puzzleLogic = puzzleLogicRef;
         else
         {
-            puzzleLogic = GetComponent<PuzzleInteractLogic>();
-            if (puzzleLogic == null)
-                puzzleLogic = GetComponentInParent<PuzzleInteractLogic>();
+            _puzzleLogic = GetComponent<PuzzleInteractLogic>();
+            if (_puzzleLogic == null)
+                _puzzleLogic = GetComponentInParent<PuzzleInteractLogic>();
         }
 
         if (atwoodManagers == null || atwoodManagers.Length == 0)
@@ -111,8 +114,8 @@ public class PuzzleManager : MonoBehaviour
     }
     public void InitializePuzzle()
     {
-        currentGearsSolved = 0;
-        currentPulleysSolved = 0;
+        _currentGearsSolved = 0;
+        _currentPulleysSolved = 0;
         isOverallSolved = false;
     }
 
@@ -121,7 +124,7 @@ public class PuzzleManager : MonoBehaviour
     private void Update()
     {
         // Continuously check Pulley balance if it's not solved yet
-        if (atwoodManagers != null && atwoodManagers.Length > 0 && currentPulleysSolved < requiredPulleysSolved)
+        if (atwoodManagers != null && atwoodManagers.Length > 0 && _currentPulleysSolved < requiredPulleysSolved)
         {
             CheckPulleyPuzzleCompletion();
         }
@@ -129,18 +132,18 @@ public class PuzzleManager : MonoBehaviour
 
     private void CheckPulleyPuzzleCompletion()
     {
-        if (atwoodManagers == null || atwoodManagers.Length == 0 || currentPulleysSolved >= requiredPulleysSolved) return;
+        if (atwoodManagers == null || atwoodManagers.Length == 0 || _currentPulleysSolved >= requiredPulleysSolved) return;
 
-        int balancedCount = 0;
-        int totalPulleys = atwoodManagers.Length;
+        var balancedCount = 0;
+        var totalPulleys = atwoodManagers.Length;
 
         foreach (var am in atwoodManagers)
         {
             if (am == null) continue;
 
-            float leftM = am.leftMass != null ? am.leftMass.mass : 0f;
-            float rightM = am.rightMass != null ? am.rightMass.mass : 0f;
-            float diff = Mathf.Abs(leftM - rightM);
+            var leftM = am.leftMass != null ? am.leftMass.mass : 0f;
+            var rightM = am.rightMass != null ? am.rightMass.mass : 0f;
+            var diff = Mathf.Abs(leftM - rightM);
 
             // Debug logs removed
 
@@ -153,7 +156,6 @@ public class PuzzleManager : MonoBehaviour
 
         if (balancedCount == totalPulleys && totalPulleys > 0)
         {
-
             CompletePulleyPuzzle();
         }
     }
@@ -162,7 +164,7 @@ public class PuzzleManager : MonoBehaviour
 
     public void OnGearPlaced(GearSlotPuzzle slot, GearDragSystem gear)
     {
-        if (currentGearsSolved >= requiredGearsSolved) return;
+        if (_currentGearsSolved >= requiredGearsSolved) return;
 
         // Check if any possible final slot is occupied to trigger the test
         GearSlotPuzzle[] allSlots = FindObjectsOfType<GearSlotPuzzle>();
@@ -215,7 +217,7 @@ public class PuzzleManager : MonoBehaviour
         CheckGearPuzzleCompletion(placedGear);
 
         // If this specific check didn't result in a solve, reset motor
-        if (currentGearsSolved < requiredGearsSolved && motorGear != null)
+        if (_currentGearsSolved < requiredGearsSolved && motorGear != null)
         {
             motorGear.isMotor = wasMotorOn;
             motorGear.motorSpeed = originalSpeed;
@@ -240,7 +242,7 @@ public class PuzzleManager : MonoBehaviour
 
     private void CompleteGearsPuzzle(ChainGear lastGearInChain)
     {
-        currentGearsSolved++;
+        _currentGearsSolved++;
         if (finalGear != null && lastGearInChain != null)
         {
             finalGear.inputGear = lastGearInChain;
@@ -250,10 +252,10 @@ public class PuzzleManager : MonoBehaviour
 
         if (motorGear != null) motorGear.isMotor = true;
 
-        Debug.Log($"[CompleteGearsPuzzle] RESUELTO! puzzleLogic={(puzzleLogic != null ? "OK" : "NULL")}");
+        Debug.Log($"[CompleteGearsPuzzle] RESUELTO! puzzleLogic={(_puzzleLogic != null ? "OK" : "NULL")}");
 
         isOverallSolved = true;
-        puzzleLogic?.ClosePuzzle();
+        _puzzleLogic?.ClosePuzzle();
     }
 
     #endregion
@@ -262,7 +264,7 @@ public class PuzzleManager : MonoBehaviour
 
     public void OnMassPlaced(MassSlotPuzzle slot, MassDragSystem mass)
     {
-        if (currentPulleysSolved >= requiredPulleysSolved) return;
+        if (_currentPulleysSolved >= requiredPulleysSolved) return;
 
         // Check balance regardless of which slot was used
         StartCoroutine(PerformPulleyTestSync());
@@ -270,7 +272,7 @@ public class PuzzleManager : MonoBehaviour
 
     public void OnMassRemoved(MassSlotPuzzle slot, MassDragSystem mass)
     {
-        if (currentPulleysSolved >= requiredPulleysSolved) return;
+        if (_currentPulleysSolved >= requiredPulleysSolved) return;
 
         // Recalculate balance when mass is removed as well
         StartCoroutine(PerformPulleyTestSync());
@@ -288,8 +290,8 @@ public class PuzzleManager : MonoBehaviour
 
     private void CompletePulleyPuzzle()
     {
-        currentPulleysSolved++;
-        Debug.Log($"[Pulley Puzzle RESUELTO] currentPulleysSolved: {currentPulleysSolved}/{requiredPulleysSolved} - puzzleLogic={(puzzleLogic != null ? "OK" : "NULL")}");
+        _currentPulleysSolved++;
+        Debug.Log($"[Pulley Puzzle RESUELTO] currentPulleysSolved: {_currentPulleysSolved}/{requiredPulleysSolved} - puzzleLogic={(_puzzleLogic != null ? "OK" : "NULL")}");
 
         if (door2ToRemove != null)
             Destroy(door2ToRemove);
@@ -299,6 +301,11 @@ public class PuzzleManager : MonoBehaviour
 
     #endregion
 
+    public void PlayCompletionSound()
+    {
+        audioSource.PlayOneShot(completionSfx);
+    }
+    
     private void TriggerPuzzleCompletion(PuzzleType type)
     {
         OnPuzzleComplete?.Invoke(type);
@@ -309,13 +316,13 @@ public class PuzzleManager : MonoBehaviour
     {
         OnPuzzleComplete?.Invoke(type);
         
-        if (puzzleLogic != null)
-            puzzleLogic.ClosePuzzle();
+        if (_puzzleLogic != null)
+            _puzzleLogic.ClosePuzzle();
     }
 
     private void CheckOverallCompletion()
     {
-        if (currentGearsSolved >= requiredGearsSolved && currentPulleysSolved >= requiredPulleysSolved)
+        if (_currentGearsSolved >= requiredGearsSolved && _currentPulleysSolved >= requiredPulleysSolved)
         {
             isOverallSolved = true;
             OnAllPuzzlesComplete?.Invoke();
@@ -331,7 +338,7 @@ public class PuzzleManager : MonoBehaviour
 
     private void ClosePuzzleAfterDelay()
     {
-        if (puzzleLogic != null) puzzleLogic.ClosePuzzle();
+        if (_puzzleLogic != null) _puzzleLogic.ClosePuzzle();
     }
     
     public void ActivateFriendlyRobot()
