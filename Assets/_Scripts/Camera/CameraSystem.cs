@@ -24,7 +24,6 @@ public class CameraSystem : MonoBehaviour
         if (CameraIndex < cameraTargetPoints.Length && CameraIndex >= 0)
         {
             cIndex = CameraIndex;
-            Debug.Log(cIndex);
             StartCoroutine(SmoothMoveAp(cameraTargetPoints[CameraIndex].position, cameraSmoothSpeed));
         }
     }

@@ -8,6 +8,7 @@ TagManager:
   - Puzzle
   - Enemy
   - GearPuzzle2
+  - Stairs
   layers:
   - Default
   - TransparentFX
