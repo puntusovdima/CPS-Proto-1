@@ -169,8 +169,7 @@ public class PlayerController : MonoBehaviour
     }
     private void ChangeToWalkState()
     {
-        print("line 172");
-        //if (cState != PlayerCurrentState.Walk) return;
+        if (cState != PlayerCurrentState.Walk) return;
 
         UpdateMovementAndRotation();
 
@@ -189,7 +188,6 @@ public class PlayerController : MonoBehaviour
     }
     private void ChangeToRunState()
     {
-        print("line 191");
         if (cState != PlayerCurrentState.Run) return;
 
         UpdateMovementAndRotation();
