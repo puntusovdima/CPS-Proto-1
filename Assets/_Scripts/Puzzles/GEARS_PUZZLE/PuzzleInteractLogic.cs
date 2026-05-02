@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using UnityEngine;
 
 public class PuzzleInteractLogic : MonoBehaviour
@@ -6,15 +8,47 @@ public class PuzzleInteractLogic : MonoBehaviour
     [SerializeField] private Camera puzzleCamera;
     [SerializeField] private Camera mainCamera;
 
-    [Header("PUZZLE SETTINGS")]
+    [Header("PUZZLE MANAGERS")]
     [SerializeField] private PuzzleManager puzzleManager;
-    private bool isPuzzleActive = false;
+    [SerializeField] private MonoBehaviour timedPuzzleManager;
+
+    [Header("PUZZLE SETTINGS")]
+    [SerializeField] private GameObject playerToHide;
+    [SerializeField] private PuzzleDoorBehaviour puzzleDoor;
+    [SerializeField] private bool isDoorPuzzle = false;
+
+    private bool _isPuzzleActive = false;
 
     private void Start()
     {
         puzzleCamera.enabled = false;
+
         if (puzzleManager == null)
             puzzleManager = GetComponent<PuzzleManager>();
+
+        PuzzleManager.OnPuzzleComplete += OnPuzzleCompleteHandler;
+    }
+
+    private void OnDestroy()
+    {
+        PuzzleManager.OnPuzzleComplete -= OnPuzzleCompleteHandler;
+    }
+
+    private void OnPuzzleCompleteHandler(PuzzleType type)
+    {
+        switch (type)
+        {
+            case PuzzleType.Gears when puzzleDoor != null:
+                if (!isDoorPuzzle && puzzleManager != null) puzzleManager.ActivateFriendlyRobot();
+                break;
+            case PuzzleType.Pulley when puzzleDoor != null:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+        }
+        
+        puzzleManager.PlayCompletionSound();
+        puzzleDoor.OpenDoor();
     }
 
     private void OnTriggerEnter(Collider collision)
@@ -35,41 +69,93 @@ public class PuzzleInteractLogic : MonoBehaviour
 
     public void OpenPuzzle()
     {
-        if (isPuzzleActive)
+        if (puzzleManager != null && puzzleManager.IsPuzzleSolved())
             return;
-        
-        isPuzzleActive = true;
+
+        if (TimedPuzzleIsSolved())
+            return;
+
+        if (_isPuzzleActive) return;
+        _isPuzzleActive = true;
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
         if (mainCamera != null)
             mainCamera.enabled = false;
+        else if (Camera.main != null)
+            Camera.main.enabled = false;
 
         if (puzzleCamera != null)
             puzzleCamera.enabled = true;
-        
+
         InputManager.Instance.DisablePuzzleInputs();
-        
+        PlayerController.Instance.setPause(true);
+
         if (puzzleManager != null)
             puzzleManager.InitializePuzzle();
+        else if (timedPuzzleManager != null)
+        {
+            InvokeTimedPuzzleMethod("InitializePuzzle");
+            InvokeTimedPuzzleMethod("StartPuzzle");
+        }
+
+        if (playerToHide != null)
+            playerToHide.SetActive(false);
     }
 
     public void ClosePuzzle()
     {
-        if (!isPuzzleActive)
+        if (!_isPuzzleActive)
             return;
-            
-        isPuzzleActive = false;
 
-        Cursor.lockState = CursorLockMode.Locked;
+        var wasSolved = false;
+
+        if (puzzleManager != null)
+            wasSolved = puzzleManager.IsPuzzleSolved();
+
+        if (!wasSolved)
+            wasSolved = TimedPuzzleIsSolved();
+
+        _isPuzzleActive = false;
+
+        if (puzzleCamera != null) puzzleCamera.enabled = false;
+
+        if (mainCamera != null) mainCamera.enabled = true;
+        else if (Camera.main != null) Camera.main.enabled = true;
+
+        if (playerToHide != null) playerToHide.SetActive(true);
+
+        if (wasSolved && puzzleDoor != null)
+        {
+            puzzleDoor.OpenDoor();
+            puzzleManager.PlayCompletionSound();
+        }
+
+        PlayerController.Instance.setPause(false);
+        Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-
-        if (puzzleCamera != null)
-            puzzleCamera.enabled = false;
-        if (mainCamera != null)
-            mainCamera.enabled = true;
-        
         InputManager.Instance.EnablePuzzleInputs();
+    }
+
+    private bool TimedPuzzleIsSolved()
+    {
+        if (timedPuzzleManager == null)
+            return false;
+
+        var result = InvokeTimedPuzzleMethod("IsPuzzleSolved");
+        return result is bool solved && solved;
+    }
+
+    private object InvokeTimedPuzzleMethod(string methodName)
+    {
+        if (timedPuzzleManager == null)
+            return null;
+
+        var method = timedPuzzleManager.GetType().GetMethod(
+            methodName,
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+        return method != null ? method.Invoke(timedPuzzleManager, null) : null;
     }
 }

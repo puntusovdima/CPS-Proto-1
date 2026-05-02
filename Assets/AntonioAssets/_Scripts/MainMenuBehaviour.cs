@@ -13,7 +13,21 @@ public class MainMenuBehaviour : MonoBehaviour
         Debug.Log("Start new game");
         SceneManager.LoadScene(index);
     }
-    
+    /*
+    public void Resume()
+    {
+        if (pausePanel != null){
+            pausePanel.SetActive(false);
+        }
+        if (inGamePauseButton != null){
+            inGamePauseButton.gameObject.SetActive(true);
+        }
+        
+        Time.timeScale = 1f;
+        _isPaused = false;
+        PlayerFSM.IsPaused = false;
+    }
+    */
     public void QuitGame()
     {
         Debug.Log("Quit game");

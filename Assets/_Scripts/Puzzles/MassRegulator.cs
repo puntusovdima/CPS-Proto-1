@@ -7,28 +7,50 @@ public class MassRegulator : MonoBehaviour
 
     private void Start()
     {
-        // InvokeRepeating takes the name of the method as a string.
-        // Use nameof() to avoid typos and make it refactor-friendly.
-        InvokeRepeating(nameof(CalculateMass), 0f, 0.5f);
+        // Periodic check as a fallback
+        InvokeRepeating(nameof(CalculateMass), 0.5f, 0.5f);
     }
 
-    private void CalculateMass()
+    public void CalculateMass()
     {
-        // Safety check: if there are no children, we don't want to overwrite 
-        // the mass or we might reset a leaf-node's mass to zero.
-        if (children == null || children.Length == 0) return;
+        // Only calculate if we have a children array and it's not empty.
+        if (children == null || children.Length == 0)
+        {
+            // If we have no children, we don't overwrite the base mass
+            return;
+        }
 
         float totalMass = 0f;
+        bool hasValidChild = false;
 
-        // Loop through all children instead of just index 0 and 1
+        // Loop through all children
         foreach (MassRegulator child in children)
         {
             if (child != null)
             {
                 totalMass += child.mass;
+                hasValidChild = true;
             }
         }
 
-        mass = totalMass;
+        if (hasValidChild)
+        {
+            mass = totalMass;
+        }
+    }
+
+    public void RecalculateAllUpwards()
+    {
+        CalculateMass();
+        
+        // Find parent if it exists and tell it to recalculate
+        if (transform.parent != null)
+        {
+            MassRegulator parentReg = transform.parent.GetComponentInParent<MassRegulator>();
+            if (parentReg != null && parentReg != this)
+            {
+                parentReg.RecalculateAllUpwards();
+            }
+        }
     }
 }

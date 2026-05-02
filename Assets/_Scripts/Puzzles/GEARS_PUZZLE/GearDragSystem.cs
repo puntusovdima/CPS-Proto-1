@@ -8,11 +8,14 @@ public class GearDragSystem : MonoBehaviour
     [SerializeField] private float speedToDrag;
     [SerializeField] private Camera pCamera;
 
+    [Header("PUZZLE SETTINGS")]
+    [SerializeField] private GearPuzzleWhitTime timedPuzzle;
+
     private bool isDraggingAGear = false;
     private Vector3 off;
     private ChainGear c;
     private Vector3 FirstPosition;
-    private GearSlotPuzzle currentSlot; 
+    private GearSlotPuzzle currentSlot;
 
 
     private void Start()
@@ -21,7 +24,10 @@ public class GearDragSystem : MonoBehaviour
         {
             pCamera = Camera.main;
         }
+
         c = GetComponent<ChainGear>();
+        if (c == null) c = GetComponentInChildren<ChainGear>();
+        
         FirstPosition = transform.position;
     }
 
@@ -33,10 +39,12 @@ public class GearDragSystem : MonoBehaviour
         {
             TryToGrabGear();
         }
+
         if (Mouse.current.leftButton.wasReleasedThisFrame)
         {
             UndoG();
         }
+
         if (isDraggingAGear)
         {
             DragTheGear();
@@ -46,17 +54,23 @@ public class GearDragSystem : MonoBehaviour
     // DRAG LOGIC.
     private void TryToGrabGear()
     {
+        if (timedPuzzle != null)
+        {
+            if (timedPuzzle.IsPuzzleSolved())
+                return;
+        }
+        else if (PuzzleManager.Instance != null && PuzzleManager.Instance.IsPuzzleSolved())
+        {
+            return;
+        }
 
-    // Can't grab the gear if the gear is in the right slot.
-    if (currentSlot != null && currentSlot.IsOccupied()){
-        return;
-    }
         Ray rayC = pCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         bool hitThisGear = false;
 
         if (Physics.Raycast(rayC, out RaycastHit hit, Mathf.Infinity))
         {
-            if (hit.collider.gameObject == gameObject)
+            // Check if the hit object is this object or one of its children
+            if (hit.collider.transform.IsChildOf(transform))
             {
                 hitThisGear = true;
             }
@@ -65,11 +79,13 @@ public class GearDragSystem : MonoBehaviour
         if (hitThisGear)
         {
             isDraggingAGear = true;
-            
+
             if (currentSlot != null)
             {
-                currentSlot.RemoveGear();
-                currentSlot = null;
+                // Store reference to clear it, then null it locally
+                GearSlotPuzzle slotToClear = currentSlot;
+                currentSlot = null; 
+                slotToClear.RemoveGear();
             }
         }
     }
@@ -84,7 +100,7 @@ public class GearDragSystem : MonoBehaviour
     {
         Ray rayC = pCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         Plane dragPlane = new Plane(Vector3.forward, new Vector3(0, 0, transform.position.z));
-        
+
         if (dragPlane.Raycast(rayC, out float hitDist))
         {
             Vector3 targetPos = rayC.origin + rayC.direction * hitDist;
@@ -94,10 +110,9 @@ public class GearDragSystem : MonoBehaviour
 
     public bool IsDragging() => isDraggingAGear;
     public ChainGear GetChainGear() => c;
-    
+
     public void SetCurrentSlot(GearSlotPuzzle slot)
     {
         currentSlot = slot;
     }
 }
-

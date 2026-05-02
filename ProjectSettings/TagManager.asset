@@ -6,7 +6,8 @@ TagManager:
   tags:
   - Safe
   - Puzzle
-  - Battle
+  - Enemy
+  - GearPuzzle2
   layers:
   - Default
   - TransparentFX
@@ -18,8 +19,8 @@ TagManager:
   - Player
   - Enemy
   - Puzzle
-  - 
-  - 
+  - Interactable
+  - Wall
   - 
   - 
   - 
