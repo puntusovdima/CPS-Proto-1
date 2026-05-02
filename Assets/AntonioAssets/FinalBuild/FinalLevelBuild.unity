@@ -31778,8 +31778,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   cState: 0
-  normalMovementSpeed: 5
-  runSpeed: 8
+  normalMovementSpeed: 1.88
+  runSpeed: 5
   crouchSpeed: 4
   normalJumpForce: 4
   runJumpForce: 6

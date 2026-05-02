@@ -134,7 +134,7 @@ public class PlayerController : MonoBehaviour
         {
             ChangeToWalkState();
         }
-        else if (cState == PlayerCurrentState.StepUp)
+       else if (cState == PlayerCurrentState.StepUp)
         {
             ChangeToStepUpState();
         }
@@ -169,7 +169,8 @@ public class PlayerController : MonoBehaviour
     }
     private void ChangeToWalkState()
     {
-        if (cState != PlayerCurrentState.Walk) return;
+        print("line 172");
+        //if (cState != PlayerCurrentState.Walk) return;
 
         UpdateMovementAndRotation();
 
@@ -188,11 +189,12 @@ public class PlayerController : MonoBehaviour
     }
     private void ChangeToRunState()
     {
+        print("line 191");
         if (cState != PlayerCurrentState.Run) return;
 
         UpdateMovementAndRotation();
 
-        if (!_isRunning || _currentInput.magnitude <= 0.1f)
+       if (!_isRunning || _currentInput.magnitude <= 0.1f)
         {
             SwitchState(PlayerCurrentState.Walk);
         }
