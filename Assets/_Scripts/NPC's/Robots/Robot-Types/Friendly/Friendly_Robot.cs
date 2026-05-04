@@ -98,7 +98,7 @@ public class Friendly_Robot : Base_AI
             return;
         }
 
-        GameObject enemyT = GameObject.FindGameObjectWithTag("Enemy");
+        GameObject enemyT = GameObject.FindWithTag("Enemy");
 
         if (enemyT != null)
         {

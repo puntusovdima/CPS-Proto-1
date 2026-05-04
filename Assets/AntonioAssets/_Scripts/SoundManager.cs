@@ -46,7 +46,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void PlayAmbiance()
+    private void PlayAmbiance()
     {
         musicSource.clip = ambiance;
         musicSource.loop = true;
@@ -72,7 +72,7 @@ public class SoundManager : MonoBehaviour
     /// <param name="source">AudioSource where the sound will be played from</param>
     public void PlaySoundWithRandomPitch(AudioClip clip)
     {
-        sfxSource.pitch = Random.Range(0.5f, 1.5f);
+        sfxSource.pitch = Random.Range(0.75f, 1.25f);
         sfxSource.PlayOneShot(clip);
     }
 
