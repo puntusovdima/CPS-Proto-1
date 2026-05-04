@@ -55,16 +55,21 @@ public class Base_AI : MonoBehaviour
 
     protected virtual void Start()
     {
+        if (!TryGetComponent(out agent))
+        {
+            return;
+        }
+        if (!TryGetComponent(out animator))
+        {
+            return;
+        }
         GameObject playerTag = GameObject.FindWithTag("Player");
-        if(playerTag == null) {
+        if (playerTag == null)
+        {
             return;
         }
         player = playerTag.transform;
-        
-        if(agent == null) {
-            return;
-        }
-        agent.speed = patrolSpeed;  
+        agent.speed = patrolSpeed;
     }
 
     protected virtual void Update()

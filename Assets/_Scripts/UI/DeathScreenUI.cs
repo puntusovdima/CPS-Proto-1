@@ -48,6 +48,6 @@ public class DeathScreenUI : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         PlayerController.Instance.RespawnCoroutine();
-        PlayerController.Instance.setPause(false);
+        PlayerController.Instance.SetPause(false);
     }
 }

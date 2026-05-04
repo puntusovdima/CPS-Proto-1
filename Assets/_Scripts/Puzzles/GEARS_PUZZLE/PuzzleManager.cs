@@ -50,7 +50,6 @@ public class PuzzleManager : MonoBehaviour
     [SerializeField] private Transform puzzleRoot;
     [SerializeField] private bool isOverallSolved = false;
     [SerializeField] private AudioClip completionSfx;
-    [SerializeField] private AudioSource audioSource;
     
     private int _currentGearsSolved = 0;
     private int _currentPulleysSolved = 0;
@@ -303,7 +302,7 @@ public class PuzzleManager : MonoBehaviour
 
     public void PlayCompletionSound()
     {
-        audioSource.PlayOneShot(completionSfx);
+        SoundManager.Instance.PlaySound(completionSfx);
     }
     
     private void TriggerPuzzleCompletion(PuzzleType type)

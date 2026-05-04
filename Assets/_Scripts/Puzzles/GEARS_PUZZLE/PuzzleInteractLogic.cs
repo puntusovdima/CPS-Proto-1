@@ -90,7 +90,7 @@ public class PuzzleInteractLogic : MonoBehaviour
             puzzleCamera.enabled = true;
 
         InputManager.Instance.DisablePuzzleInputs();
-        PlayerController.Instance.setPause(true);
+        PlayerController.Instance.SetPause(true);
 
         if (puzzleManager != null)
             puzzleManager.InitializePuzzle();
@@ -132,7 +132,7 @@ public class PuzzleInteractLogic : MonoBehaviour
             puzzleManager.PlayCompletionSound();
         }
 
-        PlayerController.Instance.setPause(false);
+        PlayerController.Instance.SetPause(false);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         InputManager.Instance.EnablePuzzleInputs();
