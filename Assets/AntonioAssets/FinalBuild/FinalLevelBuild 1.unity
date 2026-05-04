@@ -3120,8 +3120,8 @@ Transform:
   m_GameObject: {fileID: 241121709}
   serializedVersion: 2
   m_LocalRotation: {x: -0.000000030908623, y: 0.7071068, z: -0.7071068, w: -0.000000030908623}
-  m_LocalPosition: {x: 2.2, y: 4.26, z: 28.9}
-  m_LocalScale: {x: 0.42, y: 0.42, z: 0.42}
+  m_LocalPosition: {x: 2.2, y: 4.26, z: 28.99}
+  m_LocalScale: {x: 0.26, y: 0.26, z: 0.26}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 292375107}
@@ -7180,7 +7180,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 477731221}
+  m_Mesh: {fileID: 922072841}
 --- !u!33 &433184202
 MeshFilter:
   m_ObjectHideFlags: 10
@@ -11514,11 +11514,11 @@ PrefabInstance:
     - target: {fileID: 7541520726863832273, guid: 9a921b952d8b89546bb6874cafe501b4, type: 3}
       propertyPath: pCamera
       value: 
-      objectReference: {fileID: 887780570}
+      objectReference: {fileID: 975817781}
     - target: {fileID: 7769243099149561535, guid: 9a921b952d8b89546bb6874cafe501b4, type: 3}
       propertyPath: pCamera
       value: 
-      objectReference: {fileID: 887780570}
+      objectReference: {fileID: 975817781}
     - target: {fileID: 8852941670630785426, guid: 9a921b952d8b89546bb6874cafe501b4, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.27
