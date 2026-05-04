@@ -299,24 +299,28 @@ public class PlayerController : MonoBehaviour
         bool isMovingOnGround = _currentInput.magnitude > 0.1f && _playerIsGrounded;
         if (isMovingOnGround && _footstepCoroutine == null)
         {
-            _footstepCoroutine = StartCoroutine(FootstepLoop());
-        }
-        else if (!isMovingOnGround && _footstepCoroutine != null)
-        {
-            StopCoroutine(_footstepCoroutine);
-            _footstepCoroutine = null;
+            case true when _footstepCoroutine == null:
+                _footstepCoroutine = StartCoroutine(FootstepLoop());
+                break;
+            case false when _footstepCoroutine != null:
+                StopCoroutine(_footstepCoroutine);
+                _footstepCoroutine = null;
+                break;
         }
     }
+}
     private IEnumerator FootstepLoop()
     {
         while (true)
         {
-            float interval = _isRunning ? RunStepInterval : WalkStepInterval;
+            var interval = _isRunning ? RunStepInterval : WalkStepInterval;
             yield return new WaitForSeconds(interval);
             if (_currentInput.magnitude > 0.1f && _playerIsGrounded && SoundManager.Instance != null)
             {
-                SoundManager.Instance.PlaySoundWithRandomPitch(footstepSFX);
+                continue;
             }
+            
+            SoundManager.Instance.PlaySoundWithRandomPitch(footstepSFX);
         }
     }
     public void setPause(bool p) => screenPaused = p;

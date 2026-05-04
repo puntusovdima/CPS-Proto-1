@@ -10,7 +10,7 @@ public class DeathTrigger : MonoBehaviour
         if (deathUI != null)
         {
             deathUI.PlayDeathSequence();
-            PlayerController.Instance.setPause(true);
+            PlayerController.Instance.SetPause(true);
         }
     }
 }
