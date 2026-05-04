@@ -15,6 +15,12 @@ public class CameraSystem : MonoBehaviour
         Instance = this;
         
     }
+
+    private void Start()
+    {
+        Debug.Log("hwo");
+        StartCoroutine(SmoothMoveAp(cameraTargetPoints[0].position, cameraSmoothSpeed));
+    }
     public void MoveCamera(int CameraIndex)
     {
         if (CameraIndex == cIndex) {
