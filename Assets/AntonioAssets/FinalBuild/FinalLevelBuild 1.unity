@@ -11442,7 +11442,7 @@ PrefabInstance:
     - target: {fileID: 4496208041475399702, guid: 9a921b952d8b89546bb6874cafe501b4, type: 3}
       propertyPath: pCamera
       value: 
-      objectReference: {fileID: 887780570}
+      objectReference: {fileID: 975817781}
     - target: {fileID: 4802450529938361729, guid: 9a921b952d8b89546bb6874cafe501b4, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.4
@@ -26981,15 +26981,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8def002ab5b28f544afa3d5194fed049, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  cState: 0
   normalMovementSpeed: 1.88
   runSpeed: 5
   crouchSpeed: 4
   normalJumpForce: 4
   runJumpForce: 6
-  stepUpSpeed: 2
-  stepHeight: 0.5
-  stepDetectionDistance: 0.5
+  _playerIsGrounded: 1
   rotationSpeed: 5
   respawnPoint: {fileID: 0}
   puzzleG:
@@ -26999,20 +26996,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   playerInteractionRadius: 5
-  animator: {fileID: 1941290131}
-  idleASpeed: 1
-  walkASpeed: 1
-  runASpeed: 1
-  crouchIdleASpeed: 1
-  crouchWalkASpeed: 1
-  jumpAASpeed: 1
-  jumpBASpeed: 1
-  jumpCASpeed: 1
-  stepUpASpeed: 1
   footstepSFX: {fileID: 0}
   jumpSFX: {fileID: 0}
   screenPaused: 0
-  _isRunning: 0
   _isCrouching: 0
 --- !u!95 &1941290131
 Animator:

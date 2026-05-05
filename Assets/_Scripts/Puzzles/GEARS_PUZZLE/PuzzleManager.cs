@@ -302,7 +302,14 @@ public class PuzzleManager : MonoBehaviour
 
     public void PlayCompletionSound()
     {
-        SoundManager.Instance.PlaySound(completionSfx);
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySound(completionSfx);
+        }
+        else
+        {
+            Debug.LogWarning("[PuzzleManager] SoundManager.Instance is null. Cannot play completion sound.");
+        }
     }
     
     private void TriggerPuzzleCompletion(PuzzleType type)
